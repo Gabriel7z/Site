@@ -1,0 +1,157 @@
+*{
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+}
+body{
+   font: arial;
+}
+
+.header-conteudo{
+    max-width: 1300px;
+    margin-left:auto ;
+   margin-right: auto;
+}
+.menu{
+    background-color: #ffffff;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    box-shadow: 10px 0px 10px #598A8F;
+    z-index: 99;
+}
+.menu>div{
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.logo{
+    color: #000000;
+}
+.logo> span{
+color: #CB9BA9;
+}
+ul {
+    list-style: none;
+    align-items: center;
+}
+
+ul li {
+    display: inline; /* Alterado para aplicar a propriedade display inline aos itens da lista */
+    margin-right: 60px;
+   
+}
+
+
+.icon{
+    display: flex;
+    align-items: center;
+}
+.icon>img{
+    width: 30px;
+    cursor:pointer;
+}
+.icon img:first-child{
+    margin-right: 6px;
+}
+.menu ul li{
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+}
+.menu ul li:hover{
+    transform: translateY(-5px);
+    transition: all 0.2s;
+    font-weight: bold;
+    color: #E1C1CE;
+
+}
+/* Adicione este CSS ao seu arquivo style.css */
+
+.menu ul li.roupas:hover .sub-menu {
+    display: block;
+}
+
+.sub-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sub-menu ul li {
+    padding: 10px;
+}
+
+.sub-menu ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.m-botton{
+  display: none;
+}
+.apre{
+    background-image: linear-gradient(to bottom, #CB9BA9 100% ,#E1C1CE, #EED1DD  );
+    box-shadow: 10px 0px 10px #598A8F;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-self: center; 
+    padding: 1rem;
+   
+        opacity: 0; /* Elemento inicialmente invisível */
+        transition: opacity 3s; /* Adiciona uma transição de 1 segundo para a propriedade de opacidade */
+       
+}
+.apre.aparece{
+    opacity: 1;
+}
+.apre-left{
+height: 100%;
+flex-basis: 50%;
+opacity: 1;
+}
+.apre-left h2{
+ font-size: 3.2rem;
+ margin-bottom: 1.5rem;
+}
+.apre-left p{
+ line-height: 1.5rem;
+ margin-bottom: 1.5rem;
+} 
+.bt{
+    background-color:#ffffff;
+    border: none;
+    cursor: pointer;
+    padding: 0.8rem  3.8rem;
+    border-radius: 9999px;
+    color: #000000;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s;
+
+}
+.bt:hover{
+    background-color: #EED1DD;
+}
+.apre-right{
+    
+  flex-basis: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apre-right img{
+    width: 60%;
+    
+    
+}
