@@ -6,7 +6,9 @@ margin: 0;
 body{
    font: arial;
 }
-
+a{
+    text-decoration: none;
+}
 .header-conteudo{
     max-width: 1300px;
     margin-left:auto ;
@@ -65,34 +67,44 @@ ul li {
     color: #E1C1CE;
 
 }
-/* Adicione este CSS ao seu arquivo style.css */
-
-.menu ul li.roupas:hover .sub-menu {
-    display: block;
+/* Adicionado para mostrar o submenu quando o item "Roupas" é clicado */
+.menu ul li.roupas.clicked .sub-menu {
+    display: block; /* Mostra o submenu quando o item "Roupas" é clicado */
 }
 
 .sub-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
+     
+        display: none; /* Inicialmente, o submenu está oculto */
+        position: absolute; /* Posição absoluta em relação ao item "Roupas" */
+        top: 100%; /* Posiciona o topo do submenu 100% abaixo do item "Roupas" */
+        text-align:center ; /* Alinha ao centro" */
+        color: #ffffff; /* Cor da letra */
+        
+        border-top: none; /* Remove a borda superior do submenu */
+        z-index: 99; /* Garante que o submenu esteja na frente de outros elementos */
+        
+    }
+    
+
 
 .sub-menu ul {
+    display: inline-table;
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
 .sub-menu ul li {
-    padding: 10px;
-}
+    
+        display: block; /* Mostra os itens do submenu um abaixo do outro */
+        padding: 10px;
+    }
+  
+
 
 .sub-menu ul li:hover {
-    background-color: #f0f0f0;
+   color: #f0f0f0;
+   font-weight: bold;
 }
 
 .m-botton{
@@ -154,4 +166,124 @@ opacity: 1;
     width: 60%;
     
     
+}
+
+.t1{
+    text-align: center;
+    font-weight: bold;
+    background-color: #CB9BA9;
+    margin-top: 15px;
+    border-radius: 15%;
+}
+.mae{
+    display: flex;
+    justify-content: center;
+ 
+   
+}
+.filho1{
+    background-color: #CB9BA9;
+    width: 250px; /* Largura da div */
+    height: 350px; /* Altura da div */
+    overflow: hidden; /* Garante que a imagem não ultrapasse os limites da div */
+    border-radius: 3%; /* Define as bordas da div como redondas */
+    margin: 10px;
+}
+.filho2{
+    background-color: #CB9BA9;
+    width: 250px; /* Largura da div */
+    height: 350px; /* Altura da div */
+    overflow: hidden; /* Garante que a imagem não ultrapasse os limites da div */
+    border-radius: 3%; 
+    margin: 10px;
+}
+.filho3{
+    background-color: #CB9BA9;
+    width: 250px; /* Largura da div */
+    height: 350px; /* Altura da div */
+    overflow: hidden; /* Garante que a imagem não ultrapasse os limites da div */
+    border-radius: 3%; 
+    margin: 10px;
+    
+}
+.filho3:last-child {
+    margin-right: 0; /* remove a margem à direita da última div */
+}
+
+.filho4{
+    background-color: #CB9BA9;
+    width: 250px; /* Largura da div */
+    height: 350px; /* Altura da div */
+    overflow: hidden; /* Garante que a imagem não ultrapasse os limites da div */
+    border-radius: 3%; 
+    margin: 10px;
+}
+
+span{
+    color: #d66c8a;
+}
+.botao1{
+   
+    background-color:#CB9BA9;
+    border: none;
+    cursor: pointer;
+    padding: 0.8rem  3.8rem;
+    margin-top: 10px;
+    border-radius: 9999px;
+    color: #000000;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s;
+    margin: 0 auto ; /* Define as margens superior e inferior como 0 e as laterais como automático */
+    display: block; /* Transforma o botão em um bloco para ocupar toda a largura disponível */
+    text-decoration: none;
+}
+   
+
+.botao1:hover{
+    background-color:#d66c8a ;
+}
+
+figcaption{
+   text-align: center;
+}
+
+.footer {
+    margin-top: 10px;
+    background-color: #333; /* Cor de fundo do footer */
+    color: #fff; /* Cor do texto no footer */
+    padding: 20px; /* Espaçamento interno do footer */
+    text-align: center; /* Alinhamento do texto */
+    height: 500px;
+}
+
+.footer-content {
+    max-width: 1200px; /* Largura máxima do conteúdo do footer */
+    margin: 0 auto; /* Centraliza o conteúdo do footer */
+    display: flex; /* Usa flexbox para alinhar itens horizontalmente */
+    justify-content: space-between; /* Distribui os itens igualmente */
+    align-items: center; /* Centraliza verticalmente os itens */
+}
+
+.footer-links {
+    list-style: none; /* Remove os estilos padrão da lista */
+    padding: 0; /* Remove o espaçamento interno da lista */
+    display: flex; /* Usa flexbox para alinhar os links horizontalmente */
+}
+
+.footer-links li {
+    margin-right: 20px; /* Espaçamento entre os links */
+}
+
+.footer-links li:last-child {
+    margin-right: 0; /* Remove o espaçamento do último link */
+}
+
+.footer-links a {
+    color: #fff; /* Cor do texto dos links */
+    text-decoration: none; /* Remove a decoração padrão dos links */
+}
+
+.footer-links a:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse sobre os links */
 }
