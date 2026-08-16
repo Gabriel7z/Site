@@ -1,0 +1,10 @@
+Coloque aqui as fotos de vocês:
+
+1.jpg
+2.jpg
+3.jpg
+4.jpg
+5.jpg
+6.jpg
+
+Se preferir outros nomes, edite a lista "fotos" no arquivo config.js.

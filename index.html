@@ -1,102 +1,132 @@
 <!DOCTYPE html>
-<html lang="Pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="style.css">
-   <link rel="icon" href="imagem/ICON/ICONLOGO.ico" type="image/x-icon">
-  
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b1020" />
+    <meta name="description" content="Uma homenagem feita com o coração." />
+    <title>Para você</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="petalas" aria-hidden="true"></canvas>
 
-    <title>Di algodão</title>
-</head>
-<body>
-   
- 
-   <div class="menu">
-     <div class="header-conteudo">
-      <h1 class="logo">Di <span>Algodão</span></h1>
-        <nav class="itens">
-          <ul>
-            <li>HOME</li>
-            <li class="roupas">ROUPAS
-               <div class="sub-menu">
-                  <ul>
-                    <li>Feminino</li>
-                    <li>Masculino</li>
-                  </ul>
-               </div>
-            </li>
-            <li>SOBRE</li>
-            <li>CONTATO</li>
-           
-          </ul>
-        </nav>
-        <div class="icon">
-          <img src="imagem/carrinho-compra.png" >
-          <img src="imagem/menu.png" class="m-botton" >
+    <div id="capa" class="capa">
+      <div class="capa-ceu"></div>
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir a carta">
+        <div class="envelope-sombra"></div>
+        <div class="envelope-corpo">
+          <div class="envelope-carta">
+            <p class="envelope-mini" data-campo="fraseCapa">Uma carta que eu escrevi só para você</p>
+          </div>
+          <div class="envelope-aba"></div>
+          <div class="lacre" id="lacre">
+            <span>♥</span>
+          </div>
         </div>
-     </div>
-   </div>
-
-   
-     <div class="apre">
-        
-            <div class="apre-left">
-              <h2>Na nossa loja, moda é diversão! </h2>
-          <p>Transformamos cada peça em um conto de estilo para seus pequenos reinarem com confiança e alegria</p>
-          <button class="bt">Ver mais &#8594;</button>
-            </div>
-            <div class="apre-right">
-              <img src="imagem/ROUPAS2.png" >
-            </div>
-         
-     </div>
-
-     <header>
-      <h2 class="t1"> O que você Procura?</h2>
-      <div class="mae">
-
-        <figure>
-          <img class="filho1" src="imagem/ROUPAS2.png" alt="Descrição da imagem">
-          <figcaption>Conjunto verão infantil. Até 12 anos!<br><span> R$ 99,90</span></figcaption>
-          <a href="#"><button type="button" class="botao1">Comprar</button></a>
-        </figure>
-    
-        <figure>
-          <img class="filho2" src="imagem/conjuntos-transparente.png" >
-          <figcaption>Conjunto infantil 6 a 8 anos! <br><span> R$ 99,90</span></figcaption>
-          <a href="#"><button type="button" class="botao1">Comprar</button></a>
-        </figure>
-        <figure>
-          <img class="filho3"  src="imagem/vestidos-transpareente.png" >
-          <figcaption>Vestido infantil branco. Tam P . M<br><span>R$ 99,90</span></figcaption>
-          <a href="#"><button type="button" class="botao1">Comprar</button></a>
-        </figure>
-        <figure>
-          <img class="filho4" src="imagem/filho1-transparente.png" > 
-          <figcaption>Vestido florecer. Tam P, M <br><span> R$ 99,90</span></figcaption>
-          <a href="#"><button type="button" class="botao1">Comprar</button></a>
-        </figure>
       </div>
+      <p class="capa-dica">Toque no lacre para abrir, <span data-campo="apelido">princesa</span></p>
+    </div>
 
-     </header>
+    <main id="site" class="site" hidden>
+      <header class="topo">
+        <p class="topo-marca">para <span data-campo="nomeDela">você</span></p>
+        <button type="button" class="btn-musica" id="btnMusica" hidden aria-label="Tocar música">
+          <span class="musica-icone" aria-hidden="true">♪</span>
+          <span class="musica-texto">nossa música</span>
+        </button>
+      </header>
 
+      <section class="hero" id="inicio">
+        <p class="hero-olho">uma homenagem para</p>
+        <h1 class="hero-nome" data-campo="nomeDela">Meu Amor</h1>
+        <p class="hero-titulo" data-campo="tituloHero">Você é o meu lugar favorito no mundo</p>
+        <div class="contador" id="contador" aria-live="polite">
+          <div class="contador-bloco">
+            <strong id="c-dias">0</strong>
+            <span>dias</span>
+          </div>
+          <div class="contador-bloco">
+            <strong id="c-horas">0</strong>
+            <span>horas</span>
+          </div>
+          <div class="contador-bloco">
+            <strong id="c-min">0</strong>
+            <span>min</span>
+          </div>
+          <div class="contador-bloco">
+            <strong id="c-seg">0</strong>
+            <span>seg</span>
+          </div>
+        </div>
+        <p class="contador-legenda">desde o dia em que a nossa história ganhou um “nós”</p>
+        <a class="btn-rolar" href="#carta">Ler a carta ↓</a>
+      </section>
 
+      <section class="secao carta-secao" id="carta">
+        <div class="papel revelar">
+          <p class="papel-topo">minha carta</p>
+          <h2>Para <span data-campo="nomeDela">você</span>,</h2>
+          <div class="papel-corpo" id="textoCarta"></div>
+          <p class="papel-assinatura">
+            Com todo o meu coração,<br />
+            <span data-campo="seuNome">Gabriel</span>
+          </p>
+        </div>
+      </section>
 
+      <section class="secao" id="motivos">
+        <p class="secao-olho revelar">uma homenagem em pedaços</p>
+        <h2 class="secao-titulo revelar">O que eu mais amo em você</h2>
+        <div class="grade-motivos" id="gradeMotivos"></div>
+      </section>
 
+      <section class="secao historia-secao" id="historia">
+        <p class="secao-olho revelar">a gente, em capítulos</p>
+        <h2 class="secao-titulo revelar">A nossa história</h2>
+        <ol class="linha" id="linhaTempo"></ol>
+      </section>
 
+      <section class="secao" id="galeria">
+        <p class="secao-olho revelar">memórias</p>
+        <h2 class="secao-titulo revelar">Um álbum só nosso</h2>
+        <p class="secao-sub revelar">
+          Coloque as fotos de vocês na pasta <code>fotos</code> — cada polaroid espera uma memória.
+        </p>
+        <div class="polaroides" id="polaroides"></div>
+      </section>
 
-     <footer class="footer">
-      <div class="footer-content">
-          <p>© 2024 Di Algodão</p>
-          <ul class="footer-links">
-              <li><a href="#">Termos de serviço</a></li>
-              <li><a href="#">Política de privacidade</a></li>
-              <li><a href="#">Contato</a></li>
-          </ul>
-      </div>
-  </footer>
-  
-     <script src="movi.js"></script>
-</body>
+      <section class="secao" id="promessas">
+        <p class="secao-olho revelar">o que eu te prometo</p>
+        <h2 class="secao-titulo revelar">Para os dias que ainda vamos viver</h2>
+        <ul class="lista-promessas" id="listaPromessas"></ul>
+      </section>
+
+      <section class="final" id="final">
+        <div class="coracao-grande" aria-hidden="true">♥</div>
+        <h2 class="final-frase" data-campo="fraseFinal">Eu te amo.</h2>
+        <p class="final-nome">
+          <span data-campo="seuNome">Gabriel</span>
+          &nbsp;♥&nbsp;
+          <span data-campo="nomeDela">você</span>
+        </p>
+        <button type="button" class="btn-coracoes" id="btnCoracoes">Encher a tela de amor</button>
+      </section>
+
+      <footer class="rodape">
+        <p>Feito com o coração, só para você.</p>
+      </footer>
+    </main>
+
+    <audio id="audio" loop preload="none"></audio>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
