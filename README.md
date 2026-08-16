@@ -1,21 +1,17 @@
-# Site surpresa — uma homenagem para ela
+# Site surpresa — para Amanda
 
-Um site romântico para presentear sua namorada. Ela abre um envelope, lê a sua carta, vê a história de vocês e um álbum de memórias.
+Uma homenagem de Gabriel para Amanda: ela abre um envelope, lê a carta, vê a história de vocês e ouve **Duas Metades**, do Jorge & Mateus.
 
-## Como personalizar
+## O que já está no site
 
-Abra o arquivo **`config.js`**. É o único lugar que você precisa editar:
+- Nome: **Amanda**
+- Vocês se conheceram em **22 de outubro de 2022**
+- Namoro desde **23 de agosto de 2023** (três anos)
+- Música: clipe oficial de **Duas Metades** no YouTube (canal Jorge & Mateus)
 
-1. **`nomeDela`** — o nome dela
-2. **`seuNome`** — o seu nome (já está Gabriel)
-3. **`dataInicio`** — o dia em que começaram a namorar, no formato `AAAA-MM-DD` (exemplo: `2024-02-14`)
-4. **`carta`** — o texto da carta de amor
-5. **`motivos`**, **`historia`**, **`promessas`** — os textos das seções
-6. **`fotos`** — legendas e nomes dos arquivos
+## Fotos (ainda faltam)
 
-## Fotos
-
-Coloque as imagens na pasta `fotos/` com estes nomes (ou mude os nomes no `config.js`):
+Quando as fotos chegarem, coloque na pasta `fotos/`:
 
 - `fotos/1.jpg`
 - `fotos/2.jpg`
@@ -24,16 +20,10 @@ Coloque as imagens na pasta `fotos/` com estes nomes (ou mude os nomes no `confi
 - `fotos/5.jpg`
 - `fotos/6.jpg`
 
-Se uma foto ainda não existir, o site mostra um coração no lugar — nada quebra.
-
-## Música (opcional)
-
-Coloque um arquivo chamado **`musica.mp3`** na mesma pasta do `index.html`. Um botão “nossa música” aparece no topo. Se o arquivo não existir, o botão some sozinho.
+Até lá, cada polaroid mostra um coração. Nada quebra.
 
 ## Como ela vai ver
 
 1. Abra o `index.html` no navegador para testar.
-2. Para enviar para ela, publique o site no [GitHub Pages](https://pages.github.com/) (Settings → Pages → Deploy from branch `main`) ou envie a pasta inteira.
-3. Mande o link com uma mensagem simples: *“abre isso quando estiver sozinha”*.
-
-Feito com carinho para ser o seu primeiro presente em forma de site.
+2. Publique no [GitHub Pages](https://pages.github.com/) (Settings → Pages) ou envie a pasta.
+3. Mande o link: *“abre isso quando estiver sozinha”*.

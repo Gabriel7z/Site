@@ -86,13 +86,33 @@
     });
   }
 
-  function iniciarContador() {
-    const inicio = new Date(CONFIG.dataInicio + "T00:00:00");
-    if (Number.isNaN(inicio.getTime())) return;
+  function montarContador(id, prefixo) {
+    const caixa = $(id);
+    const unidades = [
+      ["dias", prefixo + "-dias"],
+      ["horas", prefixo + "-horas"],
+      ["min", prefixo + "-min"],
+      ["seg", prefixo + "-seg"],
+    ];
+    unidades.forEach(([nome, elId]) => {
+      const bloco = document.createElement("div");
+      bloco.className = "contador-bloco";
+      bloco.innerHTML = "<strong id=\"" + elId + "\">0</strong><span></span>";
+      bloco.querySelector("span").textContent = nome;
+      caixa.appendChild(bloco);
+    });
+  }
 
-    function tick() {
-      const agora = new Date();
-      let diff = Math.max(0, agora - inicio);
+  function iniciarContadores() {
+    montarContador("#contadorConheceu", "conheceu");
+    montarContador("#contadorNamoro", "namoro");
+
+    const conheceu = new Date(CONFIG.dataConheceu + "T00:00:00");
+    const namoro = new Date(CONFIG.dataNamoro + "T00:00:00");
+
+    function preencher(prefixo, inicio) {
+      if (Number.isNaN(inicio.getTime())) return;
+      let diff = Math.max(0, Date.now() - inicio.getTime());
       const dias = Math.floor(diff / 86400000);
       diff -= dias * 86400000;
       const horas = Math.floor(diff / 3600000);
@@ -100,10 +120,15 @@
       const min = Math.floor(diff / 60000);
       diff -= min * 60000;
       const seg = Math.floor(diff / 1000);
-      $("#c-dias").textContent = dias;
-      $("#c-horas").textContent = String(horas).padStart(2, "0");
-      $("#c-min").textContent = String(min).padStart(2, "0");
-      $("#c-seg").textContent = String(seg).padStart(2, "0");
+      $("#" + prefixo + "-dias").textContent = dias;
+      $("#" + prefixo + "-horas").textContent = String(horas).padStart(2, "0");
+      $("#" + prefixo + "-min").textContent = String(min).padStart(2, "0");
+      $("#" + prefixo + "-seg").textContent = String(seg).padStart(2, "0");
+    }
+
+    function tick() {
+      preencher("conheceu", conheceu);
+      preencher("namoro", namoro);
     }
 
     tick();
@@ -210,31 +235,90 @@
   }
 
   function musica() {
-    const audio = $("#audio");
     const btn = $("#btnMusica");
-    if (!CONFIG.musica) return;
+    if (!CONFIG.youtubeId) {
+      btn.hidden = true;
+      return;
+    }
 
-    audio.src = CONFIG.musica;
-    btn.hidden = false;
+    let player = null;
+    let pronto = false;
+    let querTocar = false;
+    let pedidoDePlayer = false;
 
-    const tentarTocar = () => {
-      audio.play().then(() => btn.classList.add("tocando")).catch(() => {});
+    function estadoTocando() {
+      if (!player || typeof YT === "undefined" || !YT.PlayerState) return false;
+      const estado = player.getPlayerState();
+      return estado === YT.PlayerState.PLAYING || estado === YT.PlayerState.BUFFERING;
+    }
+
+    function atualizarBotao() {
+      btn.classList.toggle("tocando", estadoTocando());
+    }
+
+    const criarPlayer = function () {
+      if (player || !document.getElementById("ytplayer")) return;
+      player = new YT.Player("ytplayer", {
+        width: "100%",
+        height: "100%",
+        videoId: CONFIG.youtubeId,
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          loop: 1,
+          playlist: CONFIG.youtubeId,
+        },
+        events: {
+          onReady: function () {
+            pronto = true;
+            if (querTocar) player.playVideo();
+            atualizarBotao();
+          },
+          onStateChange: atualizarBotao,
+          onError: function () {
+            btn.hidden = true;
+          },
+        },
+      });
     };
 
-    btn.addEventListener("click", () => {
-      if (audio.paused) {
-        tentarTocar();
-      } else {
-        audio.pause();
-        btn.classList.remove("tocando");
+    function garantirPlayer() {
+      pedidoDePlayer = true;
+      if (window.YT && YT.Player) criarPlayer();
+    }
+
+    window.onYouTubeIframeAPIReady = function () {
+      if (pedidoDePlayer) criarPlayer();
+    };
+
+    if (!(window.YT && YT.Player)) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+
+    function tocar() {
+      querTocar = true;
+      garantirPlayer();
+      if (pronto && player) {
+        player.playVideo();
+        atualizarBotao();
       }
+    }
+
+    function pausar() {
+      querTocar = false;
+      if (pronto && player) player.pauseVideo();
+      atualizarBotao();
+    }
+
+    btn.addEventListener("click", () => {
+      if (estadoTocando()) pausar();
+      else tocar();
     });
 
-    audio.addEventListener("error", () => {
-      btn.hidden = true;
-    });
-
-    return tentarTocar;
+    return tocar;
   }
 
   function abrirCarta() {
@@ -270,13 +354,13 @@
   montarHistoria();
   montarFotos();
   montarPromessas();
-  iniciarContador();
+  iniciarContadores();
   petalas();
   abrirCarta();
 
   $("#btnCoracoes").addEventListener("click", chuvaDeCoracoes);
   document.addEventListener("click", (e) => {
-    if (e.target.closest(".capa, .btn-musica, a, button")) return;
+    if (e.target.closest(".capa, .btn-musica, a, button, .player-moldura")) return;
     soltarCoracao(e.clientX, e.clientY);
   });
 })();

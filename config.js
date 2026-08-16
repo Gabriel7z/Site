@@ -1,38 +1,33 @@
 /* ============================================================
-   PERSONALIZE AQUI — este é o único arquivo que você precisa editar
-   para deixar o site com a cara de vocês dois.
+   PERSONALIZE AQUI
    ============================================================ */
 
 const CONFIG = {
-  // Nome dela (aparece na capa, na carta e no final)
-  nomeDela: "Meu Amor",
-
-  // Seu nome (assinatura da carta)
+  nomeDela: "Amanda",
   seuNome: "Gabriel",
+  apelido: "Amanda",
 
-  // Data em que vocês começaram a namorar (ano-mês-dia)
-  // O contador no site usa essa data.
-  dataInicio: "2024-02-14",
+  // 22/10/2022 — o dia em que vocês se conheceram
+  dataConheceu: "2022-10-22",
 
-  // Apelido carinhoso que aparece no envelope
-  apelido: "princesa",
+  // 23/08/2023 — o dia em que começaram a namorar
+  dataNamoro: "2023-08-23",
 
-  // Frase da capa, antes de abrir a carta
-  fraseCapa: "Uma carta que eu escrevi só para você",
+  fraseCapa: "Para Amanda",
+  tituloHero: "Você é a minha outra metade",
 
-  // Título grande depois que ela abre
-  tituloHero: "Você é o meu lugar favorito no mundo",
+  carta: `Amanda,
 
-  // A carta de amor (use \n\n para pular um parágrafo)
-  carta: `Se você está lendo isso, é porque eu quis encontrar um jeito diferente de te dizer o que o coração já grita todos os dias.
+Se você está lendo isso, é porque eu quis encontrar um jeito diferente de te dizer o que o coração já sabe desde o dia em que a gente se viu.
+
+22 de outubro de 2022. Eu ainda não imaginava, mas a minha vida tinha acabado de ganhar o seu nome. E no 23 de agosto de 2023 a gente deu um nome para isso: namoro. Três anos depois, eu te escolheria de novo. No mesmo dia, na mesma certeza.
 
 Você transformou os meus dias comuns em algo que vale a pena lembrar. O seu sorriso é o lugar para onde eu quero voltar. A sua voz acalma o que eu nem sabia que estava barulhento.
 
-Obrigado por ser exatamente quem você é — intensa, doce, corajosa, e o meu lar.
+Obrigado por ser exatamente quem você é — intensa, doce, corajosa, e o meu lar. A melhor metade da minha história.
 
 Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever juntos.`,
 
-  // Motivos / homenagens (aparecem em cartões)
   motivos: [
     {
       titulo: "O seu sorriso",
@@ -55,37 +50,34 @@ Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever junt
       texto: "Eu quero estar ao seu lado quando eles acontecerem — e ajudar a construir cada um.",
     },
     {
-      titulo: "Ser simplesmente você",
-      texto: "Não é uma versão, não é um dia especial. É você, do jeito que é, que eu escolho de novo.",
+      titulo: "Ser a Amanda",
+      texto: "Não é uma versão, não é um dia especial. É você, do jeito que é, que eu escolho de novo. Sempre.",
     },
   ],
 
-  // Linha do tempo da história de vocês
   historia: [
     {
-      data: "O começo",
+      data: "22 de outubro de 2022",
       titulo: "O dia em que te conheci",
-      texto: "Eu ainda não sabia, mas a minha vida tinha acabado de mudar de cor.",
+      texto: "A data em que a minha vida mudou de cor. Eu ainda não sabia, mas já era você.",
     },
     {
-      data: "O clique",
+      data: "Os dias seguintes",
       titulo: "Quando eu soube",
-      texto: "Não foi um raio. Foi um silêncio gostoso: “é ela”.",
+      texto: "Não foi um raio. Foi um silêncio gostoso: “é ela”. Amanda.",
     },
     {
-      data: "Nós",
-      titulo: "Cada dia do lado dela",
-      texto: "Brigas pequenas, café, mensagens bobas, planos enormes. Tudo isso é a gente.",
+      data: "23 de agosto de 2023",
+      titulo: "O dia em que viramos namoro",
+      texto: "O nosso “sim”. Três anos de um nós que eu cuidaria outra vez, do zero, se precisasse.",
     },
     {
       data: "Hoje",
-      titulo: "Este site, este “eu te amo”",
+      titulo: "Este site, este eu te amo",
       texto: "Uma homenagem pequena para um sentimento enorme. Você merece o mundo — e o meu.",
     },
   ],
 
-  // Fotos da galeria. Coloque as imagens na pasta /fotos
-  // Se o arquivo não existir, o site mostra um coração no lugar.
   fotos: [
     { src: "fotos/1.jpg", legenda: "A gente" },
     { src: "fotos/2.jpg", legenda: "O seu sorriso" },
@@ -95,7 +87,6 @@ Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever junt
     { src: "fotos/6.jpg", legenda: "Para sempre" },
   ],
 
-  // Promessas no final
   promessas: [
     "Te escolher mesmo nos dias cansados",
     "Ouvir de verdade, não só esperar a minha vez de falar",
@@ -104,10 +95,10 @@ Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever junt
     "Te amar de um jeito calmo, constante e sincero",
   ],
 
-  // Frase final
-  fraseFinal: "Eu te amo. E vou continuar te amando.",
+  fraseFinal: "Eu te amo, Amanda. E vou continuar te amando.",
 
-  // Música (opcional). Coloque um arquivo musica.mp3 na pasta do site.
-  // Deixe vazio "" se não quiser música.
-  musica: "musica.mp3",
+  // Clipe oficial no canal da dupla (YouTube). Não hospedamos o áudio.
+  youtubeId: "HR4ZxjGQGYY",
+  musicaTitulo: "Duas Metades",
+  musicaArtista: "Jorge & Mateus",
 };
