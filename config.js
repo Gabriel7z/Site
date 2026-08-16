@@ -22,7 +22,9 @@ Se você está lendo isso, é porque eu quis encontrar um jeito diferente de te 
 
 22 de outubro de 2022. Eu ainda não imaginava, mas a minha vida tinha acabado de ganhar o seu nome. E no 23 de agosto de 2023 a gente deu um nome para isso: namoro. Três anos depois, eu te escolheria de novo. No mesmo dia, na mesma certeza.
 
-Você transformou os meus dias comuns em algo que vale a pena lembrar. O seu sorriso é o lugar para onde eu quero voltar. A sua voz acalma o que eu nem sabia que estava barulhento.
+Eu te vejo no vestido vermelho, no chapéu no pôr do sol, na igreja com o livro na mão, e até de jaleco — e em todas essas Amandas eu encontro a mesma certeza: é você.
+
+Você transformou os meus dias comuns em algo que vale a pena lembrar. O seu sorriso é o lugar para onde eu quero voltar. A sua fé me ensina. O seu sonho na odontologia me enche de orgulho. A sua voz acalma o que eu nem sabia que estava barulhento.
 
 Obrigado por ser exatamente quem você é — intensa, doce, corajosa, e o meu lar. A melhor metade da minha história.
 
@@ -34,20 +36,20 @@ Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever junt
       texto: "É o primeiro lugar em que eu penso quando o dia pesa. Um sorriso seu e o mundo inteiro fica mais leve.",
     },
     {
-      titulo: "A sua força",
-      texto: "Você enfrenta a vida com uma coragem linda. Eu te admiro em silêncio, e em voz alta, todos os dias.",
+      titulo: "A sua fé",
+      texto: "Eu te vejo com o coração aberto e as mãos levantadas — e admiro a mulher que você é também nisso.",
     },
     {
-      titulo: "O jeito que você cuida",
-      texto: "Nos detalhes, no tom de voz, no abraço. Você faz qualquer lugar virar casa.",
+      titulo: "A futura dentista",
+      texto: "Eu tenho orgulho da profissional que você está se tornando. Cada passo seu eu celebro como se fosse meu.",
     },
     {
-      titulo: "A sua risada",
-      texto: "É a trilha sonora favorita da minha vida. Eu coleciono cada uma delas.",
+      titulo: "O jeito que a gente se abraça",
+      texto: "Cabeça com cabeça, o mundo inteiro some. É nesse silêncio que eu sei que encontrei a minha metade.",
     },
     {
-      titulo: "Os seus sonhos",
-      texto: "Eu quero estar ao seu lado quando eles acontecerem — e ajudar a construir cada um.",
+      titulo: "Os nossos pôr do sol",
+      texto: "Chapéu, campo, céu laranja. A gente cabe num sertanejo — e cabe um no outro.",
     },
     {
       titulo: "Ser a Amanda",
@@ -79,12 +81,15 @@ Eu te amo. Hoje, amanhã, e em todos os dias que a gente ainda vai escrever junt
   ],
 
   fotos: [
-    { src: "fotos/1.jpg", legenda: "A gente" },
-    { src: "fotos/2.jpg", legenda: "O seu sorriso" },
-    { src: "fotos/3.jpg", legenda: "Um dia especial" },
-    { src: "fotos/4.jpg", legenda: "Nós dois" },
-    { src: "fotos/5.jpg", legenda: "Memória favorita" },
-    { src: "fotos/6.jpg", legenda: "Para sempre" },
+    { src: "fotos/1.jpg", legenda: "Até no silêncio, você" },
+    { src: "fotos/2.jpg", legenda: "A gente" },
+    { src: "fotos/3.jpg", legenda: "O nosso beijo" },
+    { src: "fotos/4.jpg", legenda: "Duas metades" },
+    { src: "fotos/5.jpg", legenda: "Um dia nosso" },
+    { src: "fotos/6.jpg", legenda: "A sua fé" },
+    { src: "fotos/7.jpg", legenda: "Eu tenho orgulho de você" },
+    { src: "fotos/8.jpg", legenda: "Pôr do sol, nós dois" },
+    { src: "fotos/9.jpg", legenda: "Meu lugar favorito" },
   ],
 
   promessas: [
