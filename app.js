@@ -229,7 +229,7 @@
   function closeCart() {
     $("#cart-drawer").classList.remove("is-open");
     $("#cart-drawer").setAttribute("aria-hidden", "true");
-    if ($("#product-modal").hidden) $("#overlay").hidden = true;
+    $("#overlay").hidden = true;
   }
 
   function maskPhone(value) {
@@ -367,6 +367,9 @@
       closeModal();
     });
     $("#modal-close").addEventListener("click", closeModal);
+    $("#product-modal").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeCart();

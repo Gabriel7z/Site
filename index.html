@@ -255,13 +255,11 @@
   </aside>
 
   <div class="modal" id="product-modal" hidden>
-    <div class="modal-panel" tabindex="-1">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-name" tabindex="-1">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Fechar">×</button>
       <img id="modal-img" alt="">
       <div class="modal-copy">
-        <div class="modal-head" style="border:0;padding:0 0 8px">
-          <span class="pill" id="modal-tag"></span>
-          <button class="icon-btn" id="modal-close" type="button" aria-label="Fechar">×</button>
-        </div>
+        <span class="pill" id="modal-tag"></span>
         <h2 id="modal-name"></h2>
         <p class="price" id="modal-price"></p>
         <p id="modal-desc"></p>
