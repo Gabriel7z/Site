@@ -51,6 +51,21 @@
     });
   }
 
+  function candidatosFoto(src) {
+    const m = String(src).match(/^(.*)\.([a-z0-9]+)$/i);
+    if (!m) return [src];
+    const base = m[1];
+    return [
+      src,
+      base + ".jpeg",
+      base + ".png",
+      base + ".webp",
+      base + ".JPG",
+      base + ".JPEG",
+      base + ".PNG",
+    ];
+  }
+
   function montarFotos() {
     const grade = $("#polaroides");
     CONFIG.fotos.forEach((foto) => {
@@ -61,14 +76,22 @@
       quadro.textContent = "♥";
       const img = document.createElement("img");
       img.alt = foto.legenda;
+      const tentativas = candidatosFoto(foto.src);
+      let i = 0;
+      const tentar = () => {
+        if (i >= tentativas.length) {
+          img.remove();
+          return;
+        }
+        img.src = tentativas[i];
+        i += 1;
+      };
       img.addEventListener("load", () => {
         quadro.textContent = "";
         quadro.appendChild(img);
       });
-      img.addEventListener("error", () => {
-        img.remove();
-      });
-      img.src = foto.src;
+      img.addEventListener("error", tentar);
+      tentar();
       const cap = document.createElement("figcaption");
       cap.textContent = foto.legenda;
       fig.append(quadro, cap);

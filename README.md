@@ -1,29 +1,50 @@
 # Site surpresa — para Amanda
 
-Uma homenagem de Gabriel para Amanda: ela abre um envelope, lê a carta, vê a história de vocês e ouve **Duas Metades**, do Jorge & Mateus.
+Homenagem de Gabriel para Amanda: envelope, carta, a história de vocês e **Duas Metades**, do Jorge & Mateus.
+
+## No seu PC (fotos + Git)
+
+Este agente na nuvem **não abre** a pasta `C:\Users\GGABR\Downloads\fotos`. Por isso o próximo passo é no Windows.
+
+### 1. Baixar o projeto
+
+Abra o **PowerShell** e cole:
+
+```powershell
+cd C:\Users\GGABR
+git clone -b cursor/site-local-fotos-4781 https://github.com/Gabriel7z/Site.git Site-Amanda
+cd Site-Amanda
+```
+
+Se o `Site` já estiver no PC:
+
+```powershell
+cd CAMINHO\DO\Site
+git fetch origin
+git checkout cursor/site-local-fotos-4781
+git pull
+```
+
+### 2. Copiar as fotos
+
+Deixe as fotos em `C:\Users\GGABR\Downloads\fotos`.  
+Na pasta `Site-Amanda`, dê dois cliques em **`copiar-fotos.bat`**.
+
+Elas vão para `fotos\1.jpg`, `fotos\2.jpg`, …
+
+### 3. Ver no navegador
+
+Abra o arquivo **`index.html`**.
+
+### 4. Subir para o GitHub
+
+Dois cliques em **`subir-git.bat`**.
 
 ## O que já está no site
 
 - Nome: **Amanda**
 - Vocês se conheceram em **22 de outubro de 2022**
-- Namoro desde **23 de agosto de 2023** (três anos)
-- Música: clipe oficial de **Duas Metades** no YouTube (canal Jorge & Mateus)
+- Namoro desde **23 de agosto de 2023**
+- Música: clipe oficial de **Duas Metades** (Jorge & Mateus)
 
-## Fotos (ainda faltam)
-
-Quando as fotos chegarem, coloque na pasta `fotos/`:
-
-- `fotos/1.jpg`
-- `fotos/2.jpg`
-- `fotos/3.jpg`
-- `fotos/4.jpg`
-- `fotos/5.jpg`
-- `fotos/6.jpg`
-
-Até lá, cada polaroid mostra um coração. Nada quebra.
-
-## Como ela vai ver
-
-1. Abra o `index.html` no navegador para testar.
-2. Publique no [GitHub Pages](https://pages.github.com/) (Settings → Pages) ou envie a pasta.
-3. Mande o link: *“abre isso quando estiver sozinha”*.
+Sem foto, o polaroid mostra um coração. Nada quebra.
