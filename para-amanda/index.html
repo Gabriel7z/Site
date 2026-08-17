@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b1020" />
+    <meta name="description" content="Uma homenagem de Gabriel para Amanda." />
+    <title>Para Amanda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="petalas" aria-hidden="true"></canvas>
+
+    <div id="capa" class="capa">
+      <div class="capa-ceu"></div>
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir a carta">
+        <div class="envelope-sombra"></div>
+        <div class="envelope-corpo">
+          <div class="envelope-carta">
+            <p class="envelope-mini" data-campo="fraseCapa">Para Amanda</p>
+          </div>
+          <div class="envelope-aba"></div>
+          <div class="lacre" id="lacre">
+            <span>♥</span>
+          </div>
+        </div>
+      </div>
+      <p class="capa-dica">Toque no lacre para abrir, <span data-campo="apelido">Amanda</span></p>
+    </div>
+
+    <main id="site" class="site" hidden>
+      <header class="topo">
+        <p class="topo-marca">para <span data-campo="nomeDela">Amanda</span></p>
+        <button type="button" class="btn-musica" id="btnMusica" aria-label="Tocar Duas Metades">
+          <span class="musica-icone" aria-hidden="true">♪</span>
+          <span class="musica-texto">Duas Metades</span>
+        </button>
+      </header>
+
+      <section class="hero" id="inicio">
+        <p class="hero-olho">uma homenagem para</p>
+        <h1 class="hero-nome" data-campo="nomeDela">Amanda</h1>
+        <p class="hero-titulo" data-campo="tituloHero">Você é a minha outra metade</p>
+        <div class="marcos">
+          <div class="marco">
+            <p class="marco-olho">a gente se conhece há</p>
+            <div class="contador" id="contadorConheceu" aria-live="polite"></div>
+            <p class="contador-legenda">desde 22 de outubro de 2022</p>
+          </div>
+          <div class="marco">
+            <p class="marco-olho">e namoramos há</p>
+            <div class="contador" id="contadorNamoro" aria-live="polite"></div>
+            <p class="contador-legenda">desde 23 de agosto de 2023</p>
+          </div>
+        </div>
+        <a class="btn-rolar" href="#carta">Ler a carta ↓</a>
+      </section>
+
+      <section class="secao carta-secao" id="carta">
+        <div class="papel revelar">
+          <p class="papel-topo">minha carta</p>
+          <h2>Para <span data-campo="nomeDela">Amanda</span>,</h2>
+          <div class="papel-corpo" id="textoCarta"></div>
+          <p class="papel-assinatura">
+            Com todo o meu coração,<br />
+            <span data-campo="seuNome">Gabriel</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="secao" id="motivos">
+        <p class="secao-olho revelar">uma homenagem em pedaços</p>
+        <h2 class="secao-titulo revelar">O que eu mais amo em você</h2>
+        <div class="grade-motivos" id="gradeMotivos"></div>
+      </section>
+
+      <section class="secao historia-secao" id="historia">
+        <p class="secao-olho revelar">a gente, em capítulos</p>
+        <h2 class="secao-titulo revelar">A nossa história</h2>
+        <ol class="linha" id="linhaTempo"></ol>
+      </section>
+
+      <section class="secao" id="galeria">
+        <p class="secao-olho revelar">memórias</p>
+        <h2 class="secao-titulo revelar">Um álbum só nosso</h2>
+        <p class="secao-sub revelar">Cada quadro espera uma memória nossa.</p>
+        <div class="caixa-fotos revelar">
+          <input type="file" id="inputFotos" accept="image/*" multiple hidden />
+          <button type="button" class="btn-fotos" id="btnFotos">Escolher fotos deste computador</button>
+          <p class="fotos-dica">Abra a pasta Downloads\fotos, selecione todas e clique em Abrir.</p>
+        </div>
+        <div class="polaroides" id="polaroides"></div>
+      </section>
+
+      <section class="secao musica-secao" id="musica">
+        <p class="secao-olho revelar">a nossa música</p>
+        <h2 class="secao-titulo revelar">
+          <span data-campo="musicaArtista">Jorge &amp; Mateus</span>
+          —
+          <span data-campo="musicaTitulo">Duas Metades</span>
+        </h2>
+        <p class="secao-sub revelar">Porque a gente se completa.</p>
+        <div class="player-moldura revelar">
+          <div id="ytplayer"></div>
+        </div>
+      </section>
+
+      <section class="secao" id="promessas">
+        <p class="secao-olho revelar">o que eu te prometo</p>
+        <h2 class="secao-titulo revelar">Para os dias que ainda vamos viver</h2>
+        <ul class="lista-promessas" id="listaPromessas"></ul>
+      </section>
+
+      <section class="final" id="final">
+        <div class="coracao-grande" aria-hidden="true">♥</div>
+        <h2 class="final-frase" data-campo="fraseFinal">Eu te amo.</h2>
+        <p class="final-nome">
+          <span data-campo="seuNome">Gabriel</span>
+          &nbsp;♥&nbsp;
+          <span data-campo="nomeDela">Amanda</span>
+        </p>
+        <button type="button" class="btn-coracoes" id="btnCoracoes">Encher a tela de amor</button>
+      </section>
+
+      <footer class="rodape">
+        <p>Feito com o coração, só para você.</p>
+      </footer>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
