@@ -34,6 +34,26 @@ body {
   line-height: 1.55;
   min-height: 100dvh;
   overflow-x: hidden;
+  cursor: url("assets/img/cursor-ceme-32.png") 16 16, auto;
+}
+
+a,
+button,
+.tile,
+.card,
+.book,
+.step,
+.quote,
+.filter-btn,
+.lang-btn,
+.cart-btn,
+.menu-toggle,
+input,
+textarea,
+select,
+label,
+.card-actions .btn {
+  cursor: url("assets/img/cursor-ceme-32.png") 16 16, pointer;
 }
 
 img {
@@ -60,7 +80,7 @@ select {
 }
 
 button {
-  cursor: pointer;
+  cursor: url("assets/img/cursor-ceme-32.png") 16 16, pointer;
   border: 0;
   background: none;
   touch-action: manipulation;
