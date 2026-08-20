@@ -360,7 +360,7 @@
 
   $("#btnCoracoes").addEventListener("click", chuvaDeCoracoes);
   document.addEventListener("click", (e) => {
-    if (e.target.closest(".capa, .btn-musica, a, button, .player-moldura")) return;
+    if (e.target.closest(".capa, .btn-musica, a, button, .player-moldura, .amor-secao")) return;
     soltarCoracao(e.clientX, e.clientY);
   });
 })();

@@ -8,6 +8,7 @@ Uma homenagem de Gabriel para Amanda: ela abre um envelope, lê a carta, vê a h
 - Vocês se conheceram em **22 de outubro de 2022**
 - Namoro desde **23 de agosto de 2023** (três anos)
 - Música: clipe oficial de **Duas Metades** no YouTube (canal Jorge & Mateus)
+- **Barra de amor:** você aperta o coração uma vez por dia. Apertou, fica 100%. Esqueceu um dia, cai 15%.
 
 ## Fotos (ainda faltam)
 
