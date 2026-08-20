@@ -421,8 +421,171 @@ code {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
+.hero-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+  margin-top: 0.4rem;
+}
+
+.btn-rolar-amor {
+  background: var(--ouro-claro);
+}
+
 .btn-rolar:hover {
   transform: translateY(-2px);
+}
+
+/* ---------- Barra de amor ---------- */
+
+.amor-secao {
+  scroll-margin-top: 5.5rem;
+  padding: 4.5rem 1.2rem 4rem;
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, #7a2744, var(--vinho) 72%);
+}
+
+.amor-olho {
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blush);
+}
+
+.amor-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  color: var(--creme);
+  margin: 0.5rem 0 1.4rem;
+}
+
+.amor-duo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 1.35rem;
+}
+
+.amor-avatar {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+}
+
+.amor-avatar-amanda {
+  position: relative;
+  z-index: 2;
+}
+
+.amor-avatar-gabriel {
+  margin-left: -22px;
+  position: relative;
+  z-index: 1;
+}
+
+.amor-duo-coracao {
+  position: relative;
+  z-index: 3;
+  margin: 0 -10px;
+  color: #ff7a94;
+  font-size: 1.45rem;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.amor-nomes {
+  margin: -0.4rem 0 1.3rem;
+  color: var(--blush);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+}
+
+.amor-caixa {
+  max-width: 34rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.amor-trilha {
+  width: 100%;
+  height: 26px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+.amor-nivel {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e8b4c4, #c45c74 70%, #ff5f7e);
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.amor-info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--creme);
+}
+
+.amor-pct {
+  font-family: var(--fonte-titulo);
+  font-size: 2rem;
+}
+
+.amor-frase {
+  font-size: 0.98rem;
+  opacity: 0.86;
+}
+
+.amor-btn {
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.9rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #5c1c33;
+  background: var(--ouro-claro);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.amor-btn:hover {
+  transform: translateY(-1px);
+}
+
+.amor-btn[disabled] {
+  cursor: default;
+  opacity: 0.75;
+  transform: none;
+}
+
+.amor-seq {
+  font-size: 0.88rem;
+  color: var(--blush);
+  min-height: 1.2em;
+}
+
+.amor-pulo {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99;
+  animation: amor-sobe 1.3s ease-out forwards;
+}
+
+@keyframes amor-sobe {
+  to {
+    transform: translateY(-120px) scale(1.5);
+    opacity: 0;
+  }
 }
 
 /* ---------- Motivo do dia ---------- */
