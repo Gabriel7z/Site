@@ -1,18 +1,100 @@
 (function () {
-  const money = (n) =>
-    n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-
-  const waLink = (text) =>
-    `https://wa.me/${WHATSAPP}/?text=${encodeURIComponent(text)}`;
-
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
   const state = {
     cart: JSON.parse(localStorage.getItem("ceme-cart") || "[]"),
-    filter: "Todos",
+    filter: "todos",
     currentAudio: null,
+    lang: localStorage.getItem("ceme-lang") || "pt",
   };
+
+  if (!I18N[state.lang]) state.lang = "pt";
+
+  function t(key) {
+    return (I18N[state.lang] && I18N[state.lang][key]) || I18N.pt[key] || key;
+  }
+
+  function money(n) {
+    const locales = { pt: "pt-BR", en: "en-US", de: "de-DE" };
+    return n.toLocaleString(locales[state.lang] || "pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+
+  function waLink(text) {
+    return `https://wa.me/${WHATSAPP}/?text=${encodeURIComponent(text)}`;
+  }
+
+  function localizedProduct(p) {
+    const copy = (p.i18n && (p.i18n[state.lang] || p.i18n.pt)) || {};
+    return {
+      ...p,
+      tagline: copy.tagline || "",
+      description: copy.description || "",
+      indications: copy.indications || [],
+      categoryLabel: t(`cat_${p.category}`),
+    };
+  }
+
+  function applyStaticI18n() {
+    const dict = I18N[state.lang] || I18N.pt;
+    document.documentElement.lang = dict.htmlLang || "pt-BR";
+
+    $$("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (!key || dict[key] == null) return;
+      if (el.tagName === "TITLE" || el.tagName === "META") {
+        if (el.tagName === "TITLE") el.textContent = dict[key];
+        else el.setAttribute("content", dict[key]);
+      } else {
+        el.textContent = dict[key];
+      }
+    });
+
+    $$("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (key && dict[key] != null) el.setAttribute("placeholder", dict[key]);
+    });
+
+    $$("[data-i18n-aria]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-aria");
+      if (key && dict[key] != null) el.setAttribute("aria-label", dict[key]);
+    });
+
+    $$("[data-i18n-alt]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-alt");
+      if (key && dict[key] != null) el.setAttribute("alt", dict[key]);
+    });
+
+    const evalText = encodeURIComponent(t("waEval"));
+    ["#cta-eval-hero", "#cta-eval-band"].forEach((sel) => {
+      const a = $(sel);
+      if (a) a.href = `https://wa.me/${WHATSAPP}/?text=${evalText}`;
+    });
+
+    $$(".lang-btn").forEach((btn) => {
+      const active = btn.dataset.lang === state.lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  function setLanguage(lang) {
+    if (!I18N[lang]) return;
+    state.lang = lang;
+    localStorage.setItem("ceme-lang", lang);
+    if (!CATEGORY_KEYS.includes(state.filter)) state.filter = "todos";
+    applyStaticI18n();
+    renderFilters();
+    renderProducts();
+    renderCart();
+    const modal = $("#product-modal");
+    if (modal && !modal.hidden && modal.dataset.openId) {
+      openModal(modal.dataset.openId);
+    }
+  }
 
   function saveCart() {
     localStorage.setItem("ceme-cart", JSON.stringify(state.cart));
@@ -56,19 +138,18 @@
       const p = PRODUCTS.find((x) => x.id === item.id);
       return `• ${p.name} (${p.volume}) x${item.qty} — ${money(p.price * item.qty)}`;
     });
-    const text = [
-      "Olá, Família CEME! Gostaria de comprar:",
-      "",
-      ...lines,
-      "",
-      `Total: ${money(cartTotal())}`,
-    ].join("\n");
+    const text = [t("waHelloBuy"), "", ...lines, "", `${t("waTotal")} ${money(cartTotal())}`].join(
+      "\n"
+    );
     window.open(waLink(text), "_blank", "noopener");
   }
 
   function buyNow(id) {
     const p = PRODUCTS.find((x) => x.id === id);
-    const text = `Olá, Família CEME! Gostaria de comprar o ${p.name} (${p.volume}) por ${money(p.price)}.`;
+    const text = t("waHelloBuyOne")
+      .replace("{name}", p.name)
+      .replace("{volume}", p.volume)
+      .replace("{price}", money(p.price));
     window.open(waLink(text), "_blank", "noopener");
   }
 
@@ -81,7 +162,7 @@
       b.classList.remove("is-playing");
       b.setAttribute("aria-pressed", "false");
       const label = b.querySelector(".audio-label");
-      if (label) label.textContent = "Ouvir áudio";
+      if (label) label.textContent = t("listenAudio");
     });
     state.currentAudio = null;
   }
@@ -96,7 +177,7 @@
       btn.classList.add("is-playing");
       btn.setAttribute("aria-pressed", "true");
       const label = btn.querySelector(".audio-label");
-      if (label) label.textContent = "Pausar áudio";
+      if (label) label.textContent = t("pauseAudio");
       state.currentAudio = audio;
       audio.onended = () => stopAudio();
     } else {
@@ -104,27 +185,28 @@
     }
   }
 
-  function productCard(p) {
+  function productCard(raw) {
+    const p = localizedProduct(raw);
     return `
       <article class="card" data-id="${p.id}" data-category="${p.category}">
-        <button class="card-media" type="button" data-open="${p.id}" aria-label="Ver detalhes de ${p.name}">
+        <button class="card-media" type="button" data-open="${p.id}" aria-label="${t("detailsOf")} ${p.name}">
           <img src="${p.image}" alt="${p.name} — ${p.tagline}" loading="lazy" width="900" height="1272">
         </button>
         <div class="card-body">
-          <span class="pill">${p.category} · ${p.volume}</span>
+          <span class="pill">${p.categoryLabel} · ${p.volume}</span>
           <h3>${p.name}</h3>
           <p class="tagline">${p.tagline}</p>
           <p class="price">${money(p.price)}</p>
           <div class="audio-row">
             <button class="audio-btn" type="button" data-audio="${p.audio}" aria-pressed="false">
               <span class="audio-icon" aria-hidden="true"></span>
-              <span class="audio-label">Ouvir áudio</span>
+              <span class="audio-label">${t("listenAudio")}</span>
             </button>
             <audio preload="none"></audio>
           </div>
           <div class="card-actions">
-            <button class="btn btn-ghost" type="button" data-add="${p.id}">Adicionar</button>
-            <button class="btn btn-gold" type="button" data-buy="${p.id}">Comprar</button>
+            <button class="btn btn-ghost" type="button" data-add="${p.id}">${t("add")}</button>
+            <button class="btn btn-gold" type="button" data-buy="${p.id}">${t("buy")}</button>
           </div>
         </div>
       </article>
@@ -135,7 +217,7 @@
     const grid = $("#product-grid");
     if (!grid) return;
     const list =
-      state.filter === "Todos"
+      state.filter === "todos"
         ? PRODUCTS
         : PRODUCTS.filter((p) => p.category === state.filter);
     grid.innerHTML = list.map(productCard).join("");
@@ -144,18 +226,22 @@
   function renderFilters() {
     const wrap = $("#product-filters");
     if (!wrap) return;
-    wrap.innerHTML = CATEGORIES.map(
+    wrap.innerHTML = CATEGORY_KEYS.map(
       (c) =>
-        `<button type="button" class="filter-btn ${c === state.filter ? "is-active" : ""}" data-filter="${c}">${c}</button>`
+        `<button type="button" class="filter-btn ${c === state.filter ? "is-active" : ""}" data-filter="${c}">${t(
+          `cat_${c}`
+        )}</button>`
     ).join("");
   }
 
   function openModal(id) {
-    const p = PRODUCTS.find((x) => x.id === id);
-    if (!p) return;
+    const raw = PRODUCTS.find((x) => x.id === id);
+    if (!raw) return;
+    const p = localizedProduct(raw);
     stopAudio();
     closeCart();
     const modal = $("#product-modal");
+    modal.dataset.openId = id;
     $("#modal-img").src = p.image;
     $("#modal-img").alt = p.name;
     $("#modal-name").textContent = p.name;
@@ -165,8 +251,12 @@
     $("#modal-indications").innerHTML = p.indications.map((i) => `<li>${i}</li>`).join("");
     $("#modal-add").dataset.add = p.id;
     $("#modal-buy").dataset.buy = p.id;
+    $("#modal-add").textContent = t("add");
+    $("#modal-buy").textContent = t("buy");
     const audioBtn = $("#modal-audio");
     audioBtn.dataset.audio = p.audio;
+    const label = audioBtn.querySelector(".audio-label");
+    if (label) label.textContent = t("listenAudio");
     modal.hidden = false;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
@@ -182,6 +272,7 @@
     modal.classList.remove("is-open");
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
+    delete modal.dataset.openId;
     document.body.classList.remove("modal-open");
     document.body.style.overflow = "";
   }
@@ -214,12 +305,12 @@
               <strong>${p.name}</strong>
               <span>${money(p.price)}</span>
               <div class="qty">
-                <button type="button" data-qty-minus="${p.id}" aria-label="Diminuir">−</button>
-                <input type="number" min="1" value="${item.qty}" data-qty="${p.id}" aria-label="Quantidade de ${p.name}">
-                <button type="button" data-qty-plus="${p.id}" aria-label="Aumentar">+</button>
+                <button type="button" data-qty-minus="${p.id}" aria-label="${t("decrease")}">−</button>
+                <input type="number" min="1" value="${item.qty}" data-qty="${p.id}" aria-label="${t("qtyOf")} ${p.name}">
+                <button type="button" data-qty-plus="${p.id}" aria-label="${t("increase")}">+</button>
               </div>
             </div>
-            <button type="button" class="icon-btn" data-remove="${p.id}" aria-label="Remover ${p.name}">×</button>
+            <button type="button" class="icon-btn" data-remove="${p.id}" aria-label="${t("remove")} ${p.name}">×</button>
           </li>
         `;
       })
@@ -257,27 +348,27 @@
   function validateForm(data) {
     let ok = true;
     if (data.nome.trim().length < 2) {
-      setError("nome", "Informe seu nome.");
+      setError("nome", t("errName"));
       ok = false;
     } else setError("nome");
     if (data.sobrenome.trim().length < 2) {
-      setError("sobrenome", "Informe seu sobrenome.");
+      setError("sobrenome", t("errSurname"));
       ok = false;
     } else setError("sobrenome");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      setError("email", "Informe um e-mail válido.");
+      setError("email", t("errEmail"));
       ok = false;
     } else setError("email");
     if (data.telefone.replace(/\D/g, "").length < 10) {
-      setError("telefone", "Informe um telefone com DDD.");
+      setError("telefone", t("errPhone"));
       ok = false;
     } else setError("telefone");
     if (data.apresentacao.trim().length < 10) {
-      setError("apresentacao", "Conte um pouco sobre você (mínimo 10 caracteres).");
+      setError("apresentacao", t("errAbout"));
       ok = false;
     } else setError("apresentacao");
     if (data.motivo.trim().length < 15) {
-      setError("motivo", "Explique sua motivação (mínimo 15 caracteres).");
+      setError("motivo", t("errWhy"));
       ok = false;
     } else setError("motivo");
     return ok;
@@ -293,15 +384,15 @@
       return;
     }
     const text = [
-      "Olá, Família CEME! Quero ser distribuidora/prescritora da Linha CEME.",
+      t("waFormHello"),
       "",
-      `Nome: ${data.nome} ${data.sobrenome}`,
-      `E-mail: ${data.email}`,
-      `Telefone: ${data.telefone}`,
+      `${t("waFormName")} ${data.nome} ${data.sobrenome}`,
+      `${t("waFormEmail")} ${data.email}`,
+      `${t("waFormPhone")} ${data.telefone}`,
       "",
-      `Apresentação: ${data.apresentacao}`,
+      `${t("waFormAbout")} ${data.apresentacao}`,
       "",
-      `Motivação: ${data.motivo}`,
+      `${t("waFormWhy")} ${data.motivo}`,
     ].join("\n");
     window.open(waLink(text), "_blank", "noopener");
     form.reset();
@@ -329,34 +420,43 @@
   }
 
   function onClick(e) {
-    const t = e.target.closest("[data-filter],[data-open],[data-add],[data-buy],[data-audio],[data-remove],[data-qty-minus],[data-qty-plus]");
-    if (!t) return;
-    if (t.dataset.filter) {
-      state.filter = t.dataset.filter;
+    const langBtn = e.target.closest("[data-lang]");
+    if (langBtn && langBtn.dataset.lang) {
+      setLanguage(langBtn.dataset.lang);
+      return;
+    }
+
+    const tEl = e.target.closest(
+      "[data-filter],[data-open],[data-add],[data-buy],[data-audio],[data-remove],[data-qty-minus],[data-qty-plus]"
+    );
+    if (!tEl) return;
+    if (tEl.dataset.filter) {
+      state.filter = tEl.dataset.filter;
       renderFilters();
       renderProducts();
-    } else if (t.dataset.open) {
-      openModal(t.dataset.open);
-    } else if (t.dataset.add) {
-      addToCart(t.dataset.add);
-    } else if (t.dataset.buy) {
-      buyNow(t.dataset.buy);
-    } else if (t.dataset.audio) {
-      toggleAudio(t, t.dataset.audio);
-    } else if (t.dataset.remove) {
-      removeFromCart(t.dataset.remove);
-    } else if (t.dataset.qtyMinus) {
-      const id = t.dataset.qtyMinus;
+    } else if (tEl.dataset.open) {
+      openModal(tEl.dataset.open);
+    } else if (tEl.dataset.add) {
+      addToCart(tEl.dataset.add);
+    } else if (tEl.dataset.buy) {
+      buyNow(tEl.dataset.buy);
+    } else if (tEl.dataset.audio) {
+      toggleAudio(tEl, tEl.dataset.audio);
+    } else if (tEl.dataset.remove) {
+      removeFromCart(tEl.dataset.remove);
+    } else if (tEl.dataset.qtyMinus) {
+      const id = tEl.dataset.qtyMinus;
       const item = state.cart.find((i) => i.id === id);
       if (item) setQty(id, item.qty - 1);
-    } else if (t.dataset.qtyPlus) {
-      const id = t.dataset.qtyPlus;
+    } else if (tEl.dataset.qtyPlus) {
+      const id = tEl.dataset.qtyPlus;
       const item = state.cart.find((i) => i.id === id);
       if (item) setQty(id, item.qty + 1);
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    applyStaticI18n();
     renderFilters();
     renderProducts();
     renderCart();

@@ -166,6 +166,34 @@ button {
   gap: 8px;
 }
 
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+}
+.lang-btn {
+  min-width: 36px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--burgundy);
+}
+.lang-btn.is-active {
+  background: var(--burgundy);
+  color: var(--paper);
+}
+.lang-btn:hover:not(.is-active),
+.lang-btn:focus-visible:not(.is-active) {
+  background: rgba(201, 161, 74, 0.16);
+}
+
 .icon-btn,
 .menu-toggle,
 .cart-btn {
@@ -852,5 +880,11 @@ section {
   }
   .card-actions {
     grid-template-columns: 1fr;
+  }
+  .lang-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    font-size: 0.7rem;
   }
 }
