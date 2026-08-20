@@ -1000,3 +1000,24 @@ section {
     font-size: 0.7rem;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .step,
+  .book,
+  .card,
+  .quote,
+  .book-cover img,
+  .card-media img {
+    transition: none;
+  }
+  .tile:hover,
+  .step:hover,
+  .book:hover,
+  .card:hover,
+  .quote:hover,
+  .book:hover .book-cover img,
+  .card:hover .card-media img {
+    transform: none;
+  }
+}
