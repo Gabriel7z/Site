@@ -7,7 +7,17 @@
     filter: "todos",
     currentAudio: null,
     lang: localStorage.getItem("ceme-lang") || "pt",
+    lightboxIndex: 0,
+    formTried: false,
   };
+
+  const GALLERY = [
+    { src: "assets/img/familia-completa.jpg", altKey: "familyAlt2" },
+    { src: "assets/img/familia-fundadores.jpg", altKey: "familyAlt1" },
+    { src: "assets/img/familia-luana.jpg", altKey: "familyAlt3" },
+    { src: "assets/img/familia-livros.jpg", altKey: "familyAlt4" },
+    { src: "assets/img/familia-momento-1.jpg", altKey: "familyAlt5" },
+  ];
 
   if (!I18N[state.lang]) state.lang = "pt";
 
@@ -79,6 +89,15 @@
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-pressed", String(active));
     });
+
+    $$("[data-lightbox]").forEach((btn) => {
+      btn.setAttribute("aria-label", t("openPhoto"));
+    });
+
+    const waFloat = $("#wa-float");
+    if (waFloat) {
+      waFloat.href = `https://wa.me/${WHATSAPP}/?text=${encodeURIComponent(t("waEval"))}`;
+    }
   }
 
   function setLanguage(lang) {
@@ -117,7 +136,66 @@
     if (found) found.qty += qty;
     else state.cart.push({ id, qty });
     saveCart();
+    showToast(t("toastAdded"));
     openCart();
+  }
+
+  function showToast(message) {
+    const el = $("#toast");
+    if (!el) return;
+    el.textContent = message;
+    el.hidden = false;
+    requestAnimationFrame(() => el.classList.add("is-on"));
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => {
+      el.classList.remove("is-on");
+      setTimeout(() => {
+        el.hidden = true;
+      }, 250);
+    }, 2200);
+  }
+
+  function openLightbox(index) {
+    state.lightboxIndex = (index + GALLERY.length) % GALLERY.length;
+    const item = GALLERY[state.lightboxIndex];
+    const box = $("#lightbox");
+    const img = $("#lightbox-img");
+    img.src = item.src;
+    img.alt = t(item.altKey);
+    box.hidden = false;
+    box.classList.add("is-open");
+    box.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    const box = $("#lightbox");
+    if (!box) return;
+    box.classList.remove("is-open");
+    box.hidden = true;
+    box.setAttribute("aria-hidden", "true");
+    if ($("#product-modal")?.hidden) document.body.style.overflow = "";
+  }
+
+  function setupReveal() {
+    const nodes = $$(".reveal");
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      nodes.forEach((n) => n.classList.add("is-in"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -40px 0px" }
+    );
+    nodes.forEach((n) => io.observe(n));
   }
 
   function setQty(id, qty) {
@@ -342,7 +420,16 @@
     const err = document.getElementById(`${id}-error`);
     if (!field || !err) return;
     field.setAttribute("aria-invalid", msg ? "true" : "false");
-    err.textContent = msg || "";
+    // sem lista vermelha embaixo de cada campo — só marca o input
+    err.textContent = "";
+  }
+
+  function clearFormFeedback() {
+    ["nome", "sobrenome", "email", "telefone", "apresentacao", "motivo"].forEach((id) =>
+      setError(id)
+    );
+    const hint = $("#form-hint");
+    if (hint) hint.hidden = true;
   }
 
   function validateForm(data) {
@@ -371,12 +458,15 @@
       setError("motivo", t("errWhy"));
       ok = false;
     } else setError("motivo");
+    const hint = $("#form-hint");
+    if (hint) hint.hidden = ok;
     return ok;
   }
 
   function handleForm(e) {
     e.preventDefault();
     const form = e.currentTarget;
+    state.formTried = true;
     const data = Object.fromEntries(new FormData(form).entries());
     if (!validateForm(data)) {
       const first = form.querySelector("[aria-invalid='true']");
@@ -396,6 +486,8 @@
     ].join("\n");
     window.open(waLink(text), "_blank", "noopener");
     form.reset();
+    state.formTried = false;
+    clearFormFeedback();
     $("#form-success").hidden = false;
     $("#form-success").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -423,6 +515,12 @@
     const langBtn = e.target.closest("[data-lang]");
     if (langBtn && langBtn.dataset.lang) {
       setLanguage(langBtn.dataset.lang);
+      return;
+    }
+
+    const shot = e.target.closest("[data-lightbox]");
+    if (shot && shot.dataset.lightbox != null) {
+      openLightbox(Number(shot.dataset.lightbox));
       return;
     }
 
@@ -461,6 +559,7 @@
     renderProducts();
     renderCart();
     setupNav();
+    setupReveal();
     document.addEventListener("click", onClick);
     document.addEventListener("change", (e) => {
       const input = e.target.closest("[data-qty]");
@@ -477,15 +576,38 @@
     $("#product-modal").addEventListener("click", (e) => {
       if (e.target === e.currentTarget) closeModal();
     });
+    $("#lightbox-close").addEventListener("click", closeLightbox);
+    $("#lightbox-prev").addEventListener("click", () => openLightbox(state.lightboxIndex - 1));
+    $("#lightbox-next").addEventListener("click", () => openLightbox(state.lightboxIndex + 1));
+    $("#lightbox").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeLightbox();
+    });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeCart();
         closeModal();
+        closeLightbox();
+      }
+      if (!$("#lightbox")?.hidden) {
+        if (e.key === "ArrowLeft") openLightbox(state.lightboxIndex - 1);
+        if (e.key === "ArrowRight") openLightbox(state.lightboxIndex + 1);
       }
     });
     const phone = $("#telefone");
     phone.addEventListener("input", () => {
       phone.value = maskPhone(phone.value);
+      if (state.formTried) {
+        const data = Object.fromEntries(new FormData($("#distribuidora-form")).entries());
+        validateForm(data);
+      }
+    });
+    ["nome", "sobrenome", "email", "apresentacao", "motivo"].forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener("input", () => {
+        if (!state.formTried) return;
+        const data = Object.fromEntries(new FormData($("#distribuidora-form")).entries());
+        validateForm(data);
+      });
     });
     $("#distribuidora-form").addEventListener("submit", handleForm);
     $$(".js-year").forEach((el) => (el.textContent = new Date().getFullYear()));
