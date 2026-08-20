@@ -1,23 +1,32 @@
-# Site surpresa — para Amanda
+# Família CEME
 
-Uma homenagem de Gabriel para Amanda: ela abre um envelope, lê a carta, vê a história de vocês e ouve **Duas Metades**, do Jorge & Mateus.
+Site da Linha CEME (Corpo, Emoção, Mente e Espírito), com a aba de produtos, áudios e formulário de prescritoras. Baseado no pedido do cliente em [familiaceme.com.br](https://www.familiaceme.com.br).
 
-## Barra de amor
+## O que tem neste site
 
-Você aperta o coração **uma vez por dia**:
+- Página inicial com fundadores, Método CEME, ferramentas, fitoalquímicos e depoimentos
+- Aba **Produtos** com os **15 biomoduladores** (60 ml), cada um com:
+  - imagem da ficha
+  - áudio em português
+  - valor (R$ 120,00)
+  - busca e filtro por categoria
+  - compra pelo WhatsApp
+- Carrinho simples com finalização no WhatsApp `(61) 99929-1377`
+- Layout responsivo (celular, tablet e desktop)
+- Formulário de distribuidora/prescritora que preenche e envia pelo WhatsApp
 
-- apertou hoje → a barra fica **100%**
-- esqueceu um dia → cai **15%**
+## Como abrir localmente
 
-O link **`?amor`** abre o envelope e desce até a barra. Exemplos:
+Abra o `index.html` no navegador ou, na pasta do projeto:
 
-- `https://gabriel7z.github.io/para-amanda/?amor`
-- `index.html?amor`
+```bash
+python3 -m http.server 8080
+```
 
-## O que já está no site
+Depois acesse `http://localhost:8080`.
 
-- Nome: **Amanda**
-- Vocês se conheceram em **22 de outubro de 2022**
-- Namoro desde **23 de agosto de 2023**
-- Música: clipe oficial de **Duas Metades**, do Jorge & Mateus
-- Barra de amor, que depende de você todo dia
+## Testes
+
+```bash
+node loja.test.js
+```
