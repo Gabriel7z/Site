@@ -1,0 +1,8 @@
+No seu PC:
+
+1. Deixe as fotos em C:\Users\GGABR\Downloads\fotos
+2. Volte para a pasta deste site e dê dois cliques em copiar-fotos.bat
+3. Abra o index.html no navegador
+4. Se estiver bom, dê dois cliques em subir-git.bat
+
+O script nomeia as fotos como 1.jpg, 2.jpg, 3.jpg...

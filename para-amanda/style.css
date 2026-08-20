@@ -590,6 +590,37 @@ code {
 
 /* ---------- Galeria ---------- */
 
+.caixa-fotos {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  margin: 0 0 1.6rem;
+}
+
+.btn-fotos {
+  border: 0;
+  cursor: pointer;
+  font-family: var(--fonte-texto);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--vinho);
+  background: var(--ouro-claro);
+  padding: 0.85rem 1.3rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(59, 16, 32, 0.16);
+}
+
+.btn-fotos:hover {
+  transform: translateY(-1px);
+}
+
+.fotos-dica {
+  color: var(--blush);
+  font-size: 0.88rem;
+  text-align: center;
+  max-width: 28rem;
+}
+
 .polaroides {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

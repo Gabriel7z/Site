@@ -1,0 +1,8 @@
+Pasta local do site da Amanda.
+
+1. Dois cliques em abrir.bat  (ou no index.html)
+2. Toque no envelope
+3. Na galeria, clique em "Escolher fotos deste computador"
+4. Abra C:\Users\GGABR\Downloads\fotos, selecione todas, Abrir
+
+Nao precisa de Git agora. Quando quiser subir, avise.
