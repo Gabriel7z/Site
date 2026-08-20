@@ -1,245 +1,352 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#3b1020" />
-    <meta name="description" content="Uma homenagem de Gabriel para Amanda." />
-    <title>Para Amanda</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4a1524">
+  <meta name="description" content="Família CEME — Método Corpo, Emoção, Mente e Espírito. 15 biomoduladores com áudio, valores e compra pelo WhatsApp. Brasília-DF.">
+  <title>Família CEME | Biomoduladores e Método CEME</title>
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Família CEME">
+  <meta property="og:title" content="Família CEME | Biomoduladores">
+  <meta property="og:description" content="Movimentando saúde na nova era, com acolhimento e transformação integral.">
+  <meta property="og:image" content="https://gabriel7z.github.io/Site/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
 
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Para Amanda" />
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:title" content="Para Amanda ♥" />
-    <meta property="og:description" content="Você é a minha outra metade. Com todo o meu coração, Gabriel." />
-    <meta property="og:url" content="https://gabriel7z.github.io/para-amanda/" />
-    <meta property="og:image" content="https://gabriel7z.github.io/para-amanda/og.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Amanda, com a frase: você é a minha outra metade." />
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Para Amanda" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Great+Vibes&family=Outfit:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <canvas id="petalas" aria-hidden="true"></canvas>
-
-    <div id="capa" class="capa">
-      <div class="capa-ceu"></div>
-      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir a carta">
-        <div class="envelope-sombra"></div>
-        <div class="envelope-corpo">
-          <div class="envelope-carta">
-            <p class="envelope-mini" data-campo="fraseCapa">Para Amanda</p>
-          </div>
-          <div class="envelope-aba"></div>
-          <div class="lacre" id="lacre">
-            <span>♥</span>
-          </div>
-        </div>
-      </div>
-      <p class="capa-dica">Toque no lacre para abrir, <span data-campo="apelido">Amanda</span></p>
-    </div>
-
-    <main id="site" class="site" hidden>
-      <header class="topo">
-        <p class="topo-marca">para <span data-campo="nomeDela">Amanda</span></p>
-        <button type="button" class="btn-musica" id="btnMusica" aria-label="Tocar Duas Metades">
-          <span class="musica-icone" aria-hidden="true">♪</span>
-          <span class="musica-texto">Duas Metades</span>
+  <header class="site-header" id="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#inicio">
+        <img src="assets/img/logo.png" alt="Logo Família CEME">
+        <span class="brand-text">
+          <strong>CEME</strong>
+          <span>Corpo, Emoção, Mente e Espírito</span>
+        </span>
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="Principal">
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#fundadores">Fundadores</a></li>
+          <li><a href="#metodo">O Método</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="#transformacoes">Transformações</a></li>
+          <li><a class="is-cta" href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="cart-btn" id="cart-open" type="button" aria-label="Abrir carrinho">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+          <span class="cart-count" id="cart-count" hidden>0</span>
         </button>
-      </header>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-      <section class="hero" id="inicio">
-        <p class="hero-olho">uma homenagem para</p>
-        <h1 class="hero-nome" data-campo="nomeDela">Amanda</h1>
-        <p class="hero-titulo" data-campo="tituloHero">Você é a minha outra metade</p>
-        <div id="capaPolaroid" class="capa-polaroid"></div>
-        <div class="marcos">
-          <div class="marco">
-            <p class="marco-olho">a gente se conhece há</p>
-            <div class="contador" id="contadorConheceu" aria-live="polite"></div>
-            <p class="contador-legenda">desde 22 de outubro de 2022</p>
+  <main id="conteudo">
+    <section class="hero" id="inicio">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="kicker">Lançamento exclusivo</span>
+          <h1>Biomoduladores CEME</h1>
+          <p>Movimentando saúde na nova era, com acolhimento e transformação integral. Quinze frequências da Linha CEME, cada uma com áudio explicativo e valor à vista.</p>
+          <div class="btn-row">
+            <a class="btn btn-gold" href="#produtos">Quero conhecer os bioestimuladores</a>
+            <a class="btn btn-ghost" href="https://wa.me/5561999291377/?text=Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o" target="_blank" rel="noopener">Agendar avaliação</a>
           </div>
-          <div class="marco">
-            <p class="marco-olho">e namoramos há</p>
-            <div class="contador" id="contadorNamoro" aria-live="polite"></div>
-            <p class="contador-legenda">desde 23 de agosto de 2023</p>
+        </div>
+        <div class="hero-card">
+          <img src="assets/img/moduladores-web.jpg" alt="Linha de biomoduladores CEME em frascos spray 60ml">
+        </div>
+      </div>
+    </section>
+
+    <section id="fundadores">
+      <div class="wrap founders revelar">
+        <img src="assets/img/foto1-web.jpg" alt="Luana Médri com os livros Protocolo da Nova Saúde e Amor Próprio">
+        <div>
+          <div class="section-head">
+            <span class="kicker kicker-dark">Os fundadores</span>
+            <h2>De uma história pessoal a uma missão transformadora</h2>
           </div>
+          <p class="lead">O Instituto CEME nasceu da vivência real de uma mãe atípica que transformou dor em inspiração. Hoje somos referência em saúde integrativa para famílias neurodivergentes, com o Método CEME — Corpo, Emoção, Mente e Espírito.</p>
+          <p class="lead">Acreditamos que curar é reunir o que nunca deveria ter sido separado. Nosso propósito é acolher, tratar e inspirar, criando novos caminhos para o autocuidado e a autocura.</p>
+          <p class="lead names"><strong>Luana Viana de Oliveira Médri</strong> e <strong>Rodrigo Viana de Oliveira Médri</strong></p>
         </div>
-        <a class="btn-rolar" href="#carta">Ler a carta ↓</a>
-      </section>
+      </div>
+    </section>
 
-      <section class="motivo-secao" id="motivoDoDia" hidden>
-        <div class="motivo-dia">
-          <p class="motivo-dia-olho">o motivo de hoje</p>
-          <p class="motivo-dia-texto" id="motivoDiaTexto"></p>
-          <p class="motivo-dia-nota">amanhã tem outro, e depois outro</p>
+    <section class="alt" id="metodo">
+      <div class="wrap">
+        <div class="section-head revelar">
+          <span class="kicker kicker-dark">O Método</span>
+          <h2>Mais do que um tratamento, uma nova forma de viver</h2>
+          <p>O Método CEME nasceu para romper o ciclo tradicional de adoecimento e medicalização da vida cada vez mais cedo. Atua nos quatro corpos fundamentais — físico, emocional, mental e espiritual — promovendo equilíbrio, vitalidade e propósito.</p>
         </div>
-      </section>
-
-      <section class="secao carta-secao" id="carta">
-        <div class="papel revelar">
-          <p class="papel-topo">minha carta</p>
-          <h2>Para <span data-campo="nomeDela">Amanda</span>,</h2>
-          <div class="papel-corpo" id="textoCarta"></div>
-          <p class="papel-assinatura">
-            Com todo o meu coração,<br />
-            <span data-campo="seuNome">Gabriel</span>
-          </p>
+        <div class="grid-4">
+          <article class="tile revelar"><h3>Corpo físico</h3><p>Movimento, vitalidade, desbloqueio de tensões e fortalecimento da energia vital.</p></article>
+          <article class="tile revelar"><h3>Emoções</h3><p>Acolhimento, liberação de traumas, regulação e ressignificação emocional.</p></article>
+          <article class="tile revelar"><h3>Mente</h3><p>Foco, clareza, presença no aqui e agora e estímulo à neuroplasticidade.</p></article>
+          <article class="tile revelar"><h3>Espírito</h3><p>Conexão, pertencimento, espiritualidade e expansão da consciência.</p></article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="secao" id="motivos">
-        <p class="secao-olho revelar">uma homenagem em pedaços</p>
-        <h2 class="secao-titulo revelar">O que eu mais amo em você</h2>
-        <div class="grade-motivos" id="gradeMotivos"></div>
-        <div class="roleta-bloco revelar">
-          <p class="secao-olho">gira e lê</p>
-          <h3 class="roleta-titulo">A roleta do eu te amo</h3>
-          <p class="secao-sub">Cada vez uma coisa que eu amo em você.</p>
-          <div class="roleta-cena">
-            <div class="roleta-ponteiro" aria-hidden="true"></div>
-            <div class="roleta-roda" id="roletaRoda"></div>
+    <section>
+      <div class="wrap">
+        <div class="section-head revelar">
+          <h2>Ferramentas exclusivas</h2>
+          <p>O Método combina ciência de vanguarda, tecnologia integrativa e sabedoria ancestral.</p>
+        </div>
+        <div class="tools">
+          <article class="tile revelar"><h3>Manta de Ametista</h3><p>Equilíbrio energético e profundo relaxamento.</p></article>
+          <article class="tile revelar"><h3>Hidrogênioterapia</h3><p>Regeneração celular e vitalidade.</p></article>
+          <article class="tile revelar"><h3>Mapa Holográfico</h3><p>Leitura vibracional e bioenergética para identificar bloqueios.</p></article>
+          <article class="tile revelar"><h3>Soul Epigenetic</h3><p>Exame epigenético que revela a saúde sistêmica atual e um mapa exclusivo do corpo.</p></article>
+          <article class="tile revelar"><h3>Avaliação ADS</h3><p>Mapeamento integral dos quatro corpos.</p></article>
+          <article class="tile revelar"><h3>Exercícios personalizados</h3><p>Práticas físicas, mentais, emocionais e espirituais adaptadas.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="wrap">
+        <div class="section-head revelar">
+          <h2>Os 5 passos terapêuticos do Método CEME</h2>
+          <p>Um caminho progressivo que guia cada pessoa em sua jornada de transformação.</p>
+        </div>
+        <div class="steps">
+          <article class="step revelar"><span class="step-num">1</span><div><strong>Detoxificar</strong><p>Eliminar toxinas físicas, energéticas e emocionais, preparando o organismo.</p></div></article>
+          <article class="step revelar"><span class="step-num">2</span><div><strong>Regular</strong><p>Restaurar a harmonia do eixo intestino-cérebro, equilíbrio metabólico e emocional.</p></div></article>
+          <article class="step revelar"><span class="step-num">3</span><div><strong>Despertar</strong><p>Ativar a energia vital, presença e consciência para novos aprendizados.</p></div></article>
+          <article class="step revelar"><span class="step-num">4</span><div><strong>Harmonizar</strong><p>Integrar corpo, emoções, mente e espírito em um fluxo de coerência e saúde.</p></div></article>
+          <article class="step revelar"><span class="step-num">5</span><div><strong>Apoiar</strong><p>Sustentar cuidadores e famílias, fortalecendo vínculos e garantindo continuidade.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="linha">
+      <div class="wrap linha-grid revelar">
+        <div>
+          <span class="kicker kicker-dark">Linha CEME</span>
+          <h2>Os fitoalquímicos</h2>
+          <p class="lead">Fitoalquimia é uma abordagem terapêutica que aplica princípios da alquimia às plantas medicinais para produzir preparados que integram componentes físicos, energéticos e informacionais da planta.</p>
+          <p class="lead">Cada fase — da purificação à expansão — é um caminho em que a pessoa atípica encontra novas formas de se expressar e a família descobre novas maneiras de amar.</p>
+          <a class="btn btn-gold" href="#produtos">Comprar a linha</a>
+        </div>
+        <div class="linha-copy">
+          <h3>Mapas holográficos</h3>
+          <p>Os Mapas Holográficos partem da ideia de que o ser humano é um holograma vivo: cada parte do corpo, da mente e do campo energético contém a informação do todo.</p>
+          <p>Nada está separado. Um sintoma pode revelar uma emoção, uma emoção pode revelar uma memória, e essa memória pode apontar um caminho de cura.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="produtos">
+      <div class="wrap">
+        <div class="section-head revelar">
+          <span class="kicker kicker-dark">Aba de produtos</span>
+          <h2>Linha CEME — 15 biomoduladores</h2>
+          <p>Cada produto tem o próprio áudio, o valor e o frasco spray de 60&nbsp;ml. Ouça a apresentação, adicione ao carrinho ou compre agora pelo WhatsApp.</p>
+        </div>
+        <div class="toolbar">
+          <label class="search">
+            <span class="visually-hidden">Buscar produto</span>
+            <input id="product-search" type="search" placeholder="Buscar por nome, foco ou categoria" autocomplete="off">
+          </label>
+          <p class="product-count" id="product-count">15 biomoduladores</p>
+        </div>
+        <div class="filters" id="product-filters" role="tablist" aria-label="Filtrar produtos"></div>
+        <div class="product-grid" id="product-grid"></div>
+        <p class="empty-products" id="product-empty" hidden>Nenhum biomodulador encontrado com essa busca.</p>
+        <p class="disclaimer">Os biomoduladores da Linha CEME são recursos de bem-estar e frequência. Não substituem avaliação, diagnóstico ou tratamento médico.</p>
+      </div>
+    </section>
+
+    <section class="alt" id="transformacoes">
+      <div class="wrap">
+        <div class="section-head revelar">
+          <h2>Vidas transformadas</h2>
+        </div>
+        <div class="quotes">
+          <blockquote class="quote revelar">
+            <p>“Antes de começar o tratamento, sentia desapego e dificuldade de terminar aquilo que começava. Hoje eu decido como tratar e cuidar.”</p>
+            <cite>SGOM</cite>
+          </blockquote>
+          <blockquote class="quote revelar">
+            <p>“O tratamento colaborou no aspecto físico e energético para superar minhas limitações e compreender minha força e protagonismo na vida.”</p>
+            <cite>MEV</cite>
+          </blockquote>
+          <blockquote class="quote revelar">
+            <p>“Me vejo como alguém que assumiu as rédeas do caminho da autocura. Aumentou a minha saúde mental e emocional.”</p>
+            <cite>RTD</cite>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section id="contato">
+      <div class="wrap">
+        <div class="cta-band revelar">
+          <div>
+            <h2>É hora de transformar sua saúde e sua vida</h2>
+            <p>No CEME, cada passo é acolhido com empatia e guiado pela ciência integrativa.</p>
           </div>
-          <button type="button" class="btn-cinema" id="btnRoleta">Girar</button>
-          <p class="roleta-resultado" id="roletaResultado" hidden></p>
+          <a class="btn btn-gold" href="https://wa.me/5561999291377/?text=Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o" target="_blank" rel="noopener">Agende sua avaliação</a>
         </div>
-      </section>
 
-      <section class="secao historia-secao" id="historia">
-        <p class="secao-olho revelar">a gente, em capítulos</p>
-        <h2 class="secao-titulo revelar">A nossa história</h2>
-        <ol class="linha" id="linhaTempo"></ol>
-      </section>
-
-      <section class="ceu-secao" id="ceu">
-        <p class="secao-olho revelar">22 de outubro de 2022, às oito da noite</p>
-        <h2 class="secao-titulo revelar">O céu do dia em que te conheci</h2>
-        <p class="secao-sub revelar">As mesmas estrelas que estavam no céu naquela hora, no Brasil.</p>
-        <div class="ceu-moldura revelar">
-          <canvas id="ceuCanvas" width="640" height="640" aria-label="O céu da noite em que a gente se conheceu"></canvas>
-          <span class="ceu-norte" aria-hidden="true">N</span>
+        <div class="section-head revelar">
+          <h2>Seja distribuidora ou prescritora da Linha CEME</h2>
+          <p>Preencha o formulário. Os campos são clicáveis, aceitam texto longo e o envio abre o WhatsApp com a sua mensagem pronta.</p>
         </div>
-        <p class="ceu-frase revelar" data-campo="ceuFrase"></p>
-      </section>
+        <form class="form-card revelar" id="distribuidora-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="nome">Nome</label>
+              <input id="nome" name="nome" type="text" autocomplete="given-name" required maxlength="80" placeholder="Seu nome">
+              <span class="error" id="nome-error"></span>
+            </div>
+            <div class="field">
+              <label for="sobrenome">Sobrenome</label>
+              <input id="sobrenome" name="sobrenome" type="text" autocomplete="family-name" required maxlength="80" placeholder="Seu sobrenome">
+              <span class="error" id="sobrenome-error"></span>
+            </div>
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" placeholder="voce@email.com">
+              <span class="error" id="email-error"></span>
+            </div>
+            <div class="field">
+              <label for="telefone">Telefone</label>
+              <input id="telefone" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="16" placeholder="(61) 99999-9999">
+              <span class="error" id="telefone-error"></span>
+            </div>
+            <div class="field full">
+              <label for="apresentacao">Apresente-se em poucas palavras</label>
+              <textarea id="apresentacao" name="apresentacao" required maxlength="600" placeholder="Quem você é, sua atuação e cidade"></textarea>
+              <span class="error" id="apresentacao-error"></span>
+            </div>
+            <div class="field full">
+              <label for="motivo">Por que gostaria de se tornar distribuidora ou prescritora da Linha CEME?</label>
+              <textarea id="motivo" name="motivo" required maxlength="1000" placeholder="Conte sua motivação com liberdade — o campo aceita texto longo"></textarea>
+              <span class="error" id="motivo-error"></span>
+            </div>
+          </div>
+          <button class="btn btn-gold" type="submit">Enviar pelo WhatsApp</button>
+          <p class="form-success" id="form-success" hidden>Recebemos seus dados. Se o WhatsApp não abriu, fale com a gente no (61) 99929-1377.</p>
+        </form>
+      </div>
+    </section>
 
-      <section class="secao" id="galeria">
-        <p class="secao-olho revelar">memórias</p>
-        <h2 class="secao-titulo revelar">Um álbum só nosso</h2>
-        <p class="secao-sub revelar">Cada quadro espera uma memória nossa.</p>
-        <div class="galeria-acao revelar">
-          <button type="button" class="btn-cinema" id="btnCinema">
-            <span class="btn-cinema-play" aria-hidden="true">▶</span>
-            Assistir a nossa história
+    <section class="alt" id="faq">
+      <div class="wrap">
+        <div class="section-head revelar">
+          <h2>Perguntas frequentes</h2>
+        </div>
+        <div class="faq">
+          <article class="faq-item">
+            <h3><button type="button" aria-expanded="false">Os biomoduladores substituem tratamento médico?</button></h3>
+            <div class="faq-panel"><p>Não. São recursos de bem-estar e frequência da Linha CEME. Quem tem diagnóstico, acompanhamento ou medicação continua com a equipe de saúde de referência.</p></div>
+          </article>
+          <article class="faq-item">
+            <h3><button type="button" aria-expanded="false">Como compro?</button></h3>
+            <div class="faq-panel"><p>Escolha o produto, ouça o áudio se quiser, e use Comprar ou o carrinho. O pedido fecha no WhatsApp (61) 99929-1377, em Brasília-DF.</p></div>
+          </article>
+          <article class="faq-item">
+            <h3><button type="button" aria-expanded="false">Qual o valor de cada frasco?</button></h3>
+            <div class="faq-panel"><p>Cada biomodulador de 60 ml está a R$ 120,00, no mesmo valor de referência da linha de moduladores biofísicos. Se o valor oficial mudar, ajustamos aqui.</p></div>
+          </article>
+          <article class="faq-item">
+            <h3><button type="button" aria-expanded="false">Como usar?</button></h3>
+            <div class="faq-panel"><p>Sugestão de uso: na fase crítica, 4 borrifadas 2 a 3 vezes ao dia. Na manutenção, 2 borrifadas 2 vezes ao dia. A prescritora pode orientar o protocolo.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div>
+        <strong>CEME</strong>
+        <p>Corpo, Emoção, Mente e Espírito</p>
+        <small>CLN 211, Bloco D, Sala 211 — Asa Norte — Brasília — DF<br>CEP 70863-540</small>
+      </div>
+      <div>
+        <strong>Fale conosco</strong>
+        <p><a href="https://wa.me/5561999291377" target="_blank" rel="noopener">(61) 99929-1377</a></p>
+        <p><a href="https://www.instagram.com/luana_medri" target="_blank" rel="noopener">Instagram @luana_medri</a></p>
+        <p><a href="https://youtube.com/@familiaceme" target="_blank" rel="noopener">YouTube Família CEME</a></p>
+      </div>
+      <div>
+        <strong>Site</strong>
+        <p><a href="#produtos">Produtos</a></p>
+        <p><a href="#contato">Seja prescritora</a></p>
+        <p><a href="https://www.familiaceme.com.br" target="_blank" rel="noopener">familiaceme.com.br</a></p>
+      </div>
+    </div>
+    <div class="wrap"><small>© <span class="js-year">2026</span> Família CEME. Todos os direitos reservados.</small></div>
+  </footer>
+
+  <a class="wa-fab" href="https://wa.me/5561999291377/?text=Ol%C3%A1%2C%20Fam%C3%ADlia%20CEME!" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M20 11.5A8.5 8.5 0 0 1 7.3 18.4L4 19.5l1.2-3.1A8.5 8.5 0 1 1 20 11.5zm-8.5 6.7c1.5 0 2.9-.4 4.1-1.2l.3-.2 2.4.8-.8-2.3.2-.3a6.7 6.7 0 1 0-6.2 3.2zm3.7-5c-.2-.1-1.2-.6-1.4-.7s-.3-.1-.5.1-.5.7-.7.8-.3.1-.5 0a5.5 5.5 0 0 1-1.6-1 6 6 0 0 1-1.1-1.4c-.1-.2 0-.3.1-.5l.3-.4.1-.2a.4.4 0 0 0 0-.4l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4a.8.8 0 0 0-.6.3 2.5 2.5 0 0 0-.8 1.9 4.4 4.4 0 0 0 .9 2.3 10 10 0 0 0 3.8 3.4 4.3 4.3 0 0 0 2.6.8 2.2 2.2 0 0 0 1.5-.7 1.8 1.8 0 0 0 .4-1.3c0-.1 0-.2-.2-.3z"/></svg>
+  </a>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="cart-drawer" id="cart-drawer" aria-hidden="true" aria-label="Carrinho">
+    <div class="cart-head">
+      <strong>Seu pedido</strong>
+      <button class="icon-btn" id="cart-close" type="button" aria-label="Fechar carrinho">×</button>
+    </div>
+    <p class="empty" id="cart-empty">Seu carrinho está vazio. Escolha um biomodulador na aba Produtos.</p>
+    <ul class="cart-list" id="cart-list"></ul>
+    <div class="cart-footer" id="cart-footer" hidden>
+      <p>Total: <strong id="cart-total">R$ 0,00</strong></p>
+      <button class="btn btn-gold" id="cart-checkout" type="button">Finalizar no WhatsApp</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="product-modal" hidden aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-name" tabindex="-1">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Fechar">×</button>
+      <img id="modal-img" alt="">
+      <div class="modal-copy">
+        <span class="pill" id="modal-tag"></span>
+        <h2 id="modal-name"></h2>
+        <p class="price" id="modal-price"></p>
+        <p id="modal-desc"></p>
+        <ul id="modal-indications"></ul>
+        <p class="lead">Sugestão de uso: fase crítica, 4 borrifadas 2 a 3x ao dia. Manutenção, 2 borrifadas 2x ao dia.</p>
+        <div class="audio-row">
+          <button class="audio-btn" id="modal-audio" type="button" data-audio="" aria-pressed="false">
+            <span class="audio-icon" aria-hidden="true"></span>
+            <span class="audio-label">Ouvir áudio</span>
           </button>
-          <p class="galeria-nota">as nossas fotos em tela cheia, com a nossa música</p>
+          <audio preload="none"></audio>
         </div>
-        <div class="polaroides" id="polaroides"></div>
-      </section>
-
-      <section class="secao musica-secao" id="musica">
-        <p class="secao-olho revelar">a nossa música</p>
-        <h2 class="secao-titulo revelar">
-          <span data-campo="musicaArtista">Jorge &amp; Mateus</span>
-          —
-          <span data-campo="musicaTitulo">Duas Metades</span>
-        </h2>
-        <p class="secao-sub revelar">Porque a gente se completa.</p>
-        <div class="player-moldura revelar" id="playerMoldura">
-          <div id="ytplayer"></div>
-        </div>
-      </section>
-
-      <section class="secao" id="promessas">
-        <p class="secao-olho revelar">o que eu te prometo</p>
-        <h2 class="secao-titulo revelar">Para os dias que ainda vamos viver</h2>
-        <ul class="lista-promessas" id="listaPromessas"></ul>
-      </section>
-
-      <section class="secao bilhetes-secao" id="bilhetes" hidden>
-        <p class="secao-olho revelar">para guardar</p>
-        <h2 class="secao-titulo revelar">Bilhetes lacrados</h2>
-        <p class="secao-sub revelar">
-          Escrevi cada um pensando num dia seu. Abra no dia certo — eles esperam
-          por você.
-        </p>
-        <div class="grade-bilhetes" id="gradeBilhetes"></div>
-      </section>
-
-      <section class="final" id="final">
-        <div class="coracao-grande" aria-hidden="true">♥</div>
-        <h2 class="final-frase" data-campo="fraseFinal">Eu te amo.</h2>
-        <p class="final-nome">
-          <span data-campo="seuNome">Gabriel</span>
-          &nbsp;♥&nbsp;
-          <span data-campo="nomeDela">Amanda</span>
-        </p>
-        <button type="button" class="btn-coracoes" id="btnCoracoes">Encher a tela de amor</button>
-      </section>
-
-      <footer class="rodape">
-        <p>Feito com o coração, só para você.</p>
-      </footer>
-    </main>
-
-    <div id="lightbox" class="lightbox" hidden>
-      <button type="button" class="lightbox-fechar" id="lightboxFechar" aria-label="Fechar">×</button>
-      <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">‹</button>
-      <figure>
-        <img id="lightboxImg" alt="" />
-        <figcaption id="lightboxLegenda"></figcaption>
-      </figure>
-      <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próxima">›</button>
-    </div>
-
-    <div id="cinema" class="cinema" hidden>
-      <div class="cinema-palco">
-        <div class="cinema-quadro" id="cinemaA">
-          <div class="cinema-fundo"></div>
-          <img alt="" />
-        </div>
-        <div class="cinema-quadro" id="cinemaB">
-          <div class="cinema-fundo"></div>
-          <img alt="" />
+        <div class="card-actions">
+          <button class="btn btn-ghost" id="modal-add" type="button" data-add="">Adicionar</button>
+          <button class="btn btn-gold" id="modal-buy" type="button" data-buy="">Comprar</button>
         </div>
       </div>
-      <p class="cinema-legenda" id="cinemaLegenda"></p>
-      <div class="cinema-fim" id="cinemaFim" hidden>
-        <p class="cinema-fim-frase" id="cinemaFimFrase"></p>
-        <button type="button" class="btn-cinema" id="cinemaRepetir">Ver de novo</button>
-      </div>
-      <div class="cinema-barra" aria-hidden="true"><span id="cinemaProgresso"></span></div>
-      <button type="button" class="cinema-btn cinema-pausa" id="cinemaPausa" aria-label="Pausar">❚❚</button>
-      <button type="button" class="cinema-btn cinema-fechar" id="cinemaFechar" aria-label="Fechar">×</button>
     </div>
+  </div>
 
-    <div id="bilheteModal" class="bilhete-modal" hidden>
-      <button type="button" class="bilhete-fechar" id="bilheteFechar" aria-label="Fechar">×</button>
-      <article class="bilhete-papel">
-        <p class="bilhete-modal-quando" id="bilheteQuando"></p>
-        <div class="bilhete-modal-texto" id="bilheteTexto"></div>
-        <p class="bilhete-modal-assinatura">
-          <span data-campo="seuNome">Gabriel</span>
-        </p>
-      </article>
-    </div>
-
-    <script src="config.js"></script>
-    <script src="script.js"></script>
-    <script src="barra-amor.js"></script>
-  </body>
+  <script src="produtos.js"></script>
+  <script src="loja.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
