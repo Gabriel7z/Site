@@ -2,7 +2,7 @@ const I18N = {
   pt: {
     htmlLang: "pt-BR",
     metaDescription:
-      "Família CEME — Método Corpo, Emoção, Mente e Espírito. Linha de biomoduladores com 15 produtos, áudios e valores. Brasília-DF.",
+      "Família CEME — Método Corpo, Emoção, Mente e Espírito. Linha de biomoduladores com 12 produtos, áudios e valores. Brasília-DF.",
     title: "Família CEME | Biomoduladores e Método CEME",
     skip: "Ir para o conteúdo",
     brandTag: "Corpo, Emoção, Mente e Espírito",
@@ -152,7 +152,7 @@ waEval: "Gostaria de agendar uma avaliação",
   en: {
     htmlLang: "en",
     metaDescription:
-      "Família CEME — Body, Emotion, Mind and Spirit Method. Biomodulator line with 15 products, audio and prices. Brasília, Brazil.",
+      "Família CEME — Body, Emotion, Mind and Spirit Method. Biomodulator line with 12 products, audio and prices. Brasília, Brazil.",
     title: "Família CEME | Biomodulators and CEME Method",
     skip: "Skip to content",
     brandTag: "Body, Emotion, Mind and Spirit",
@@ -302,7 +302,7 @@ waEval: "I would like to book an assessment",
   de: {
     htmlLang: "de",
     metaDescription:
-      "Família CEME — Methode Körper, Emotion, Geist und Seele. Biomodulator-Linie mit 15 Produkten, Audios und Preisen. Brasília, Brasilien.",
+      "Família CEME — Methode Körper, Emotion, Geist und Seele. Biomodulator-Linie mit 12 Produkten, Audios und Preisen. Brasília, Brasilien.",
     title: "Família CEME | Biomodulatoren und CEME-Methode",
     skip: "Zum Inhalt springen",
     brandTag: "Körper, Emotion, Geist und Seele",
