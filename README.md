@@ -20,4 +20,5 @@ O link **`?amor`** abre o envelope e desce até a barra. Exemplos:
 - Vocês se conheceram em **22 de outubro de 2022**
 - Namoro desde **23 de agosto de 2023**
 - Música: clipe oficial de **Duas Metades**, do Jorge & Mateus
-- Barra de amor, que depende de você todo dia
+- Barra de amor, com os avatares da Amanda e do Gabriel. Aperta o coração uma vez por dia.
+- A capa do link (WhatsApp, etc.) continua com a foto dela em `og.jpg`.
