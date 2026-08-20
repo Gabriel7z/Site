@@ -252,7 +252,7 @@ const PRODUCTS = [
   "i18n": {
     "pt": {
       "tagline": "Equilíbrio do sono e descanso profundo restaurador",
-      "description": "Desenvolvido para promover o equilíbrio natural do sono, o descanso profundo e o relaxamento físico e mental, ajudando a reduzir a agitação e favorecer noites mais reparadoras.",
+      "description": "O Sono de Luz foi desenvolvido para promover o equilíbrio natural do sono, favorecendo um descanso profundo e verdadeiramente restaurador. Sua frequência atua no relaxamento físico e mental, ajudando a reduzir agitação e favorecer noites de sono reparadoras.",
       "indications": [
         "Regula o ciclo natural do sono",
         "Favorece o relaxamento profundo",
@@ -262,7 +262,7 @@ const PRODUCTS = [
     },
     "en": {
       "tagline": "Sleep balance and deep restorative rest",
-      "description": "Developed to promote natural sleep balance, deep rest and physical/mental relaxation, helping reduce agitation and favor more restorative nights.",
+      "description": "Sono de Luz was developed to promote natural sleep balance, favoring deep and truly restorative rest. Its frequency acts on physical and mental relaxation, helping reduce agitation and favor restorative nights of sleep.",
       "indications": [
         "Regulates the natural sleep cycle",
         "Favors deep relaxation",
@@ -272,12 +272,53 @@ const PRODUCTS = [
     },
     "de": {
       "tagline": "Schlafbalance und tiefe regenerative Ruhe",
-      "description": "Entwickelt zur Förderung natürlicher Schlafbalance, tiefer Erholung sowie körperlicher und mentaler Entspannung – hilft, Unruhe zu reduzieren und erholsamere Nächte zu begünstigen.",
+      "description": "Sono de Luz wurde entwickelt, um das natürliche Schlafgleichgewicht zu fördern und tiefe, wirklich regenerative Ruhe zu begünstigen. Die Frequenz wirkt auf körperliche und mentale Entspannung, hilft Unruhe zu reduzieren und erholsame Nächte zu fördern.",
       "indications": [
         "Reguliert den natürlichen Schlafzyklus",
         "Fördert tiefe Entspannung",
         "Verbessert die Erholungsqualität und bringt mehr Energie beim Aufwachen",
         "Unterstützt körperliche und mentale Regenerationsprozesse"
+      ]
+    }
+  }
+},
+{
+  "id": "mente-serena",
+  "name": "Mente Serena",
+  "category": "sensorial",
+  "volume": "60ml",
+  "price": 120,
+  "image": "assets/img/prod-mente-serena.jpg",
+  "audio": "assets/audio/mente-serena.mp3",
+  "i18n": {
+    "pt": {
+      "tagline": "Redução de hiperatividade, bruxismo e estresse",
+      "description": "O Mente Serena foi desenvolvido para harmonizar a mente e o corpo, ajudando a reduzir a hiperatividade, aliviar sintomas de estresse e equilibrar tensões que se manifestam em forma de bruxismo. Sua frequência promove serenidade e bem-estar mental.",
+      "indications": [
+        "Reduz a hiperatividade mental e física",
+        "Auxilia no controle do bruxismo",
+        "Promove equilíbrio diante do estresse e da ansiedade",
+        "Estimula sensação de calma e tranquilidade interior"
+      ]
+    },
+    "en": {
+      "tagline": "Reduction of hyperactivity, bruxism and stress",
+      "description": "Mente Serena was developed to harmonize mind and body, helping reduce hyperactivity, relieve stress symptoms and balance tensions that manifest as bruxism. Its frequency promotes serenity and mental wellbeing.",
+      "indications": [
+        "Reduces mental and physical hyperactivity",
+        "Assists in controlling bruxism",
+        "Promotes balance in the face of stress and anxiety",
+        "Stimulates a feeling of calm and inner tranquility"
+      ]
+    },
+    "de": {
+      "tagline": "Reduktion von Hyperaktivität, Bruxismus und Stress",
+      "description": "Mente Serena wurde entwickelt, um Geist und Körper zu harmonisieren, Hyperaktivität zu reduzieren, Stresssymptome zu lindern und Spannungen auszugleichen, die sich als Bruxismus zeigen. Die Frequenz fördert Gelassenheit und mentales Wohlbefinden.",
+      "indications": [
+        "Reduziert mentale und physische Hyperaktivität",
+        "Unterstützt die Kontrolle von Bruxismus",
+        "Fördert Balance angesichts von Stress und Angst",
+        "Anregt ein Gefühl von Ruhe und innerer Gelassenheit"
       ]
     }
   }
@@ -416,17 +457,17 @@ const PRODUCTS = [
   "i18n": {
     "pt": {
       "tagline": "Presença Materna | Vínculo Afetivo | Amor-Próprio",
-      "description": "O Amor Frequencial foi desenvolvido para fortalecer vínculos afetivos e trazer consciência de acolhimento, proteção e amor. Estimula o reforço da presença materna interna, aprofunda vínculos e desperta o amor-próprio como base para relações saudáveis.",
+      "description": "O Amor Frequencial foi desenvolvido para fortalecer laços afetivos e trazer à consciência a sensação de acolhimento, proteção e amor. Sua frequência estimula o reforço da presença materna interiorizada, aprofunda vínculos e desperta o amor-próprio como base para relações saudáveis.",
       "indications": [
-        "Reforça o sentimento de acolhimento e cuidado materno",
-        "Estimula um vínculo afetivo saudável",
-        "Auxilia no desenvolvimento do amor-próprio e da autoestima",
+        "Reforça a sensação de acolhimento e cuidado materno",
+        "Estimula o vínculo afetivo saudável",
+        "Auxilia no desenvolvimento do amor-próprio e da autovalorização",
         "Promove equilíbrio emocional e sensação de segurança interior"
       ]
     },
     "en": {
       "tagline": "Maternal presence | Affective bond | Self-love",
-      "description": "Amor Frequencial was developed to strengthen affective bonds and bring awareness of welcome, protection and love. It stimulates reinforcement of internal maternal presence, deepens bonds and awakens self-love as a basis for healthy relationships.",
+      "description": "Amor Frequencial was developed to strengthen affective bonds and bring awareness of welcome, protection and love. Its frequency stimulates reinforcement of internalized maternal presence, deepens bonds and awakens self-love as a basis for healthy relationships.",
       "indications": [
         "Reinforces the feeling of welcome and maternal care",
         "Stimulates a healthy affective bond",
@@ -436,7 +477,7 @@ const PRODUCTS = [
     },
     "de": {
       "tagline": "Mütterliche Präsenz | Affektive Bindung | Selbstliebe",
-      "description": "Amor Frequencial wurde entwickelt, um affektive Bindungen zu stärken und Bewusstsein für Annahme, Schutz und Liebe zu wecken. Es fördert die innere mütterliche Präsenz, vertieft Bindungen und weckt Selbstliebe als Basis gesunder Beziehungen.",
+      "description": "Amor Frequencial wurde entwickelt, um affektive Bindungen zu stärken und Bewusstsein für Annahme, Schutz und Liebe zu wecken. Die Frequenz fördert die verinnerlichte mütterliche Präsenz, vertieft Bindungen und weckt Selbstliebe als Basis gesunder Beziehungen.",
       "indications": [
         "Verstärkt das Gefühl von Annahme und mütterlicher Fürsorge",
         "Fördert eine gesunde affektive Bindung",
@@ -486,6 +527,88 @@ const PRODUCTS = [
         "Beugt Ablenkung und Zerstreuung vor",
         "Anregt volle Präsenz im Hier und Jetzt",
         "Unterstützt die Entfaltung individuellen Potenzials"
+      ]
+    }
+  }
+},
+{
+  "id": "bioluz",
+  "name": "BioLuz",
+  "category": "mente",
+  "volume": "60ml",
+  "price": 120,
+  "image": "assets/img/prod-bioluz.jpg",
+  "audio": "assets/audio/bioluz.mp3",
+  "i18n": {
+    "pt": {
+      "tagline": "Coerência | Alinhamento Interior | Iluminação Vibracional",
+      "description": "O BioLuz foi desenvolvido para gerar harmonia entre pensamento, sentimento, ação e palavras, promovendo coerência interior e autenticidade no viver. Sua frequência atua como um campo de iluminação vibracional, fortalecendo a aura e expandindo a consciência a níveis mais elevados de equilíbrio e clareza.",
+      "indications": [
+        "Favorece coerência entre mente, coração e atitude",
+        "Estimula clareza e autenticidade nas escolhas e relações",
+        "Ilumina o campo áurico, ampliando a proteção energética",
+        "Promove equilíbrio entre o ser interior e o mundo exterior"
+      ]
+    },
+    "en": {
+      "tagline": "Coherence | Inner alignment | Vibrational illumination",
+      "description": "BioLuz was developed to create harmony between thought, feeling, action and words, promoting inner coherence and authenticity in living. Its frequency acts as a field of vibrational illumination, strengthening the aura and expanding consciousness to higher levels of balance and clarity.",
+      "indications": [
+        "Favors coherence between mind, heart and attitude",
+        "Stimulates clarity and authenticity in choices and relationships",
+        "Illuminates the auric field, expanding energetic protection",
+        "Promotes balance between the inner self and the outer world"
+      ]
+    },
+    "de": {
+      "tagline": "Kohärenz | Innere Ausrichtung | Vibrationale Erleuchtung",
+      "description": "BioLuz wurde entwickelt, um Harmonie zwischen Denken, Fühlen, Handeln und Worten zu erzeugen und innere Kohärenz sowie Authentizität im Leben zu fördern. Die Frequenz wirkt als Feld vibrationaler Erleuchtung, stärkt die Aura und erweitert das Bewusstsein zu höheren Ebenen von Balance und Klarheit.",
+      "indications": [
+        "Fördert Kohärenz zwischen Geist, Herz und Haltung",
+        "Anregt Klarheit und Authentizität in Entscheidungen und Beziehungen",
+        "Erhellt das aurische Feld und erweitert energetischen Schutz",
+        "Fördert Balance zwischen dem inneren Sein und der äußeren Welt"
+      ]
+    }
+  }
+},
+{
+  "id": "pertencimento",
+  "name": "Pertencimento",
+  "category": "emocao",
+  "volume": "60ml",
+  "price": 120,
+  "image": "assets/img/prod-pertencimento.jpg",
+  "audio": "assets/audio/pertencimento.mp3",
+  "i18n": {
+    "pt": {
+      "tagline": "Conexão | Integração | Vínculo com o Todo",
+      "description": "O Pertencimento foi desenvolvido para despertar a sensação profunda de união, conexão e integração com tudo e todos. Sua frequência vibra no princípio do “Somos Um”, fortalecendo vínculos, ampliando a empatia e promovendo uma vivência de unidade no campo físico, emocional, mental e espiritual.",
+      "indications": [
+        "Estimula a sensação de conexão e acolhimento",
+        "Promove integração e vínculos saudáveis",
+        "Reduz sentimentos de isolamento e separação",
+        "Amplia a consciência de unidade e coletividade"
+      ]
+    },
+    "en": {
+      "tagline": "Connection | Integration | Bond with the Whole",
+      "description": "Pertencimento was developed to awaken a deep sense of union, connection and integration with everything and everyone. Its frequency vibrates with the principle “We Are One”, strengthening bonds, expanding empathy and promoting a lived sense of unity across physical, emotional, mental and spiritual fields.",
+      "indications": [
+        "Stimulates a sense of connection and welcome",
+        "Promotes integration and healthy bonds",
+        "Reduces feelings of isolation and separation",
+        "Expands awareness of unity and collectivity"
+      ]
+    },
+    "de": {
+      "tagline": "Verbindung | Integration | Bindung an das Ganze",
+      "description": "Pertencimento wurde entwickelt, um ein tiefes Gefühl von Einheit, Verbindung und Integration mit allem und allen zu wecken. Die Frequenz schwingt mit dem Prinzip „Wir sind Eins“, stärkt Bindungen, erweitert Empathie und fördert gelebte Einheit in physischen, emotionalen, mentalen und spirituellen Feldern.",
+      "indications": [
+        "Fördert das Gefühl von Verbindung und Annahme",
+        "Unterstützt Integration und gesunde Bindungen",
+        "Reduziert Gefühle von Isolation und Trennung",
+        "Erweitert das Bewusstsein für Einheit und Gemeinschaft"
       ]
     }
   }
