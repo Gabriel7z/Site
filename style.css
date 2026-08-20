@@ -390,6 +390,25 @@ section {
   box-shadow: var(--shadow);
 }
 
+.video-frame {
+  position: relative;
+  width: min(920px, 100%);
+  margin: 0 auto;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #1c1412;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  aspect-ratio: 16 / 9;
+}
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .grid-4,
 .grid-5,
 .tools,

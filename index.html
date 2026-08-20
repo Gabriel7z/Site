@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -27,6 +27,7 @@
         <ul>
           <li><a href="#inicio" data-i18n="navHome">Início</a></li>
           <li><a href="#fundadores" data-i18n="navFounders">Fundadores</a></li>
+          <li><a href="#documentario" data-i18n="navDoc">Documentário</a></li>
           <li><a href="#metodo" data-i18n="navMethod">O Método</a></li>
           <li><a href="#produtos" data-i18n="navProducts">Produtos</a></li>
           <li><a href="#livros" data-i18n="navBooks">Livros</a></li>
@@ -88,7 +89,31 @@
       </div>
     </section>
 
-    <section class="alt" id="metodo">
+    <section class="alt" id="documentario">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker" style="color:#6b1e33" data-i18n="docKicker">Documentário</span>
+          <h2 data-i18n="docTitle">Documentário sobre o Método CEME</h2>
+          <p data-i18n="docText">Conheça a história, o propósito e a vivência da Família CEME neste documentário oficial.</p>
+        </div>
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube.com/embed/hutVywYhPV4"
+            title="Documentário sobre o Método CEME"
+            data-i18n-title="docIframeTitle"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="btn-row" style="justify-content:center;margin-top:20px">
+          <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=hutVywYhPV4" target="_blank" rel="noopener noreferrer" data-i18n="docWatchYoutube">Assistir no YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodo">
       <div class="wrap">
         <div class="section-head">
           <span class="kicker" style="color:#6b1e33" data-i18n="methodKicker">O Método</span>
@@ -277,6 +302,7 @@
         <strong data-i18n="footerSite">Site</strong>
         <p><a href="#produtos" data-i18n="footerProducts">Produtos</a></p>
         <p><a href="#livros" data-i18n="footerBooks">Livros</a></p>
+        <p><a href="#documentario" data-i18n="footerDoc">Documentário</a></p>
         <p><a href="#contato" data-i18n="footerPrescriber">Seja prescritora</a></p>
         <p><a href="https://www.familiaceme.com.br" target="_blank" rel="noopener">familiaceme.com.br</a></p>
       </div>
@@ -325,8 +351,8 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=13"></script>
-  <script src="produtos.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="i18n.js?v=14"></script>
+  <script src="produtos.js?v=14"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

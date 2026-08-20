@@ -68,6 +68,11 @@
       if (key && dict[key] != null) el.setAttribute("alt", dict[key]);
     });
 
+    $$("[data-i18n-title]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-title");
+      if (key && dict[key] != null) el.setAttribute("title", dict[key]);
+    });
+
     const evalText = encodeURIComponent(t("waEval"));
     ["#cta-eval-hero", "#cta-eval-band"].forEach((sel) => {
       const a = $(sel);
