@@ -13,6 +13,7 @@
 
   const GALLERY = [
     { src: "assets/img/familia-completa.jpg", altKey: "familyAlt2" },
+    { src: "assets/img/familia-completa-wide.jpg", altKey: "familyAlt6" },
     { src: "assets/img/familia-fundadores.jpg", altKey: "familyAlt1" },
     { src: "assets/img/familia-luana.jpg", altKey: "familyAlt3" },
     { src: "assets/img/familia-livros.jpg", altKey: "familyAlt4" },
