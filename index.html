@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -27,7 +27,6 @@
         <ul>
           <li><a href="#inicio" data-i18n="navHome">Início</a></li>
           <li><a href="#fundadores" data-i18n="navFounders">Fundadores</a></li>
-          <li><a href="#familia" data-i18n="navFamily">A Família</a></li>
           <li><a href="#metodo" data-i18n="navMethod">O Método</a></li>
           <li><a href="#produtos" data-i18n="navProducts">Produtos</a></li>
           <li><a href="#transformacoes" data-i18n="navStories">Transformações</a></li>
@@ -53,27 +52,25 @@
 
   <main id="conteudo">
     <section class="hero" id="inicio">
-      <div class="hero-media" aria-hidden="true">
-        <img src="assets/img/familia-completa.jpg" alt="" data-i18n-alt="familyAlt2">
-      </div>
-      <div class="wrap hero-copy reveal">
-        <p class="brand-hero">Família <span>CEME</span></p>
-        <span class="kicker" data-i18n="heroKicker">Lançamento exclusivo</span>
-        <h1 data-i18n="heroTitle">Biomoduladores CEME</h1>
-        <p data-i18n="heroText">Movimentando saúde na nova era, com acolhimento e transformação integral. Quinze frequências da Linha CEME, cada uma com áudio explicativo e valor à vista.</p>
-        <div class="btn-row">
-          <a class="btn btn-gold" href="#produtos" data-i18n="heroCtaProducts">Quero conhecer os bioestimuladores</a>
-          <a class="btn btn-ghost" id="cta-eval-hero" href="https://wa.me/5561999291377/?text=Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o" target="_blank" rel="noopener" data-i18n="heroCtaEval">Agendar avaliação</a>
+      <div class="wrap hero-grid">
+        <div>
+          <span class="kicker" data-i18n="heroKicker">Lançamento exclusivo</span>
+          <h1 data-i18n="heroTitle">Biomoduladores CEME</h1>
+          <p data-i18n="heroText">Movimentando saúde na nova era, com acolhimento e transformação integral. Quinze frequências da Linha CEME, cada uma com áudio explicativo e valor à vista.</p>
+          <div class="btn-row">
+            <a class="btn btn-gold" href="#produtos" data-i18n="heroCtaProducts">Quero conhecer os bioestimuladores</a>
+            <a class="btn btn-ghost" id="cta-eval-hero" href="https://wa.me/5561999291377/?text=Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o" target="_blank" rel="noopener" data-i18n="heroCtaEval">Agendar avaliação</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="assets/img/moduladores-web.jpg" alt="Linha de biomoduladores CEME em frascos spray 60ml" data-i18n-alt="heroImgAlt">
         </div>
       </div>
     </section>
 
     <section id="fundadores">
-      <div class="wrap founders reveal">
-        <div class="founders-visual">
-          <img src="assets/img/familia-completa.jpg" alt="Família CEME completa" data-i18n-alt="familyAlt2">
-          <img class="founders-secondary" src="assets/img/familia-fundadores.jpg" alt="Luana e Rodrigo Médri" data-i18n-alt="familyAlt1">
-        </div>
+      <div class="wrap founders">
+        <img src="assets/img/foto1-web.jpg" alt="Luana Médri com os livros Protocolo da Nova Saúde e Amor Próprio" data-i18n-alt="foundersPhotoAlt">
         <div>
           <div class="section-head">
             <span class="kicker" style="color:#6b1e33" data-i18n="foundersKicker">Os fundadores</span>
@@ -81,51 +78,12 @@
           </div>
           <p class="lead" data-i18n="foundersP1">O Instituto CEME nasceu da vivência real de uma mãe atípica que transformou dor em inspiração. Hoje somos referência em saúde integrativa para famílias neurodivergentes, com o Método CEME — Corpo, Emoção, Mente e Espírito.</p>
           <p class="lead" style="margin-top:14px" data-i18n="foundersP2">Acreditamos que curar é reunir o que nunca deveria ter sido separado. Nosso propósito é acolher, tratar e inspirar, criando novos caminhos para o autocuidado e a autocura.</p>
-          <p class="lead" style="margin-top:14px"><strong>Luana Viana de Oliveira Médri</strong> · <strong>Rodrigo Viana de Oliveira Médri</strong></p>
+          <p class="lead" style="margin-top:14px"><strong>Luana Viana de Oliveira Médri</strong> e <strong>Rodrigo Viana de Oliveira Médri</strong></p>
         </div>
       </div>
-    </section>
-
-    <section class="family-spotlight" id="familia-completa">
-      <div class="wrap family-spotlight-grid reveal">
-        <div>
-          <span class="kicker" style="color:#6b1e33" data-i18n="familyFullKicker">Família completa</span>
-          <h2 data-i18n="familyFullTitle">O coração do Instituto CEME</h2>
-          <p data-i18n="familyFullText">Luana, Rodrigo e os filhos — a vivência real que inspira o Método CEME. A família completa também está na galeria, para o cliente ver de perto quem vive essa missão.</p>
-        </div>
-        <button type="button" class="family-spotlight-photo" data-lightbox="0" aria-label="Ampliar foto">
-          <img src="assets/img/familia-completa-wide.jpg" alt="" data-i18n-alt="familyAlt2" loading="lazy">
-        </button>
-      </div>
-    </section>
-
-    <section class="alt" id="familia">
-      <div class="wrap">
-        <div class="section-head reveal">
-          <span class="kicker" style="color:#6b1e33" data-i18n="familyKicker">A Família CEME</span>
-          <h2 data-i18n="familyTitle">Quem vive o Método por dentro</h2>
-          <p data-i18n="familyText">Fotos reais da Família CEME — o cuidado que começa em casa e se transforma em missão.</p>
-        </div>
-        <div class="family-gallery reveal" id="family-gallery">
-          <button type="button" class="family-shot is-wide" data-lightbox="0" aria-label="Ampliar foto">
-            <img src="assets/img/familia-completa.jpg" alt="" data-i18n-alt="familyAlt2" loading="lazy">
-          </button>
-          <button type="button" class="family-shot" data-lightbox="1" aria-label="Ampliar foto">
-            <img src="assets/img/familia-completa-wide.jpg" alt="" data-i18n-alt="familyAlt6" loading="lazy">
-          </button>
-          <button type="button" class="family-shot" data-lightbox="2" aria-label="Ampliar foto">
-            <img src="assets/img/familia-fundadores.jpg" alt="" data-i18n-alt="familyAlt1" loading="lazy">
-          </button>
-          <button type="button" class="family-shot" data-lightbox="3" aria-label="Ampliar foto">
-            <img src="assets/img/familia-luana.jpg" alt="" data-i18n-alt="familyAlt3" loading="lazy">
-          </button>
-          <button type="button" class="family-shot" data-lightbox="4" aria-label="Ampliar foto">
-            <img src="assets/img/familia-livros.jpg" alt="" data-i18n-alt="familyAlt4" loading="lazy">
-          </button>
-          <button type="button" class="family-shot" data-lightbox="5" aria-label="Ampliar foto">
-            <img src="assets/img/familia-momento-1.jpg" alt="" data-i18n-alt="familyAlt5" loading="lazy">
-          </button>
-        </div>
+      <div class="wrap family-two">
+        <img src="assets/img/familia-completa.jpg" alt="Família CEME completa" data-i18n-alt="familyAlt2" loading="lazy">
+        <img src="assets/img/familia-fundadores.jpg" alt="Luana e Rodrigo Médri" data-i18n-alt="familyAlt1" loading="lazy">
       </div>
     </section>
 
@@ -227,60 +185,42 @@
           <p data-i18n="formText">Preencha o formulário. Os campos são livres para digitação e o envio abre uma conversa no WhatsApp da CEME com os seus dados.</p>
         </div>
 
-        <form class="form-card reveal" id="distribuidora-form" novalidate>
-          <p class="form-hint" id="form-hint" hidden data-i18n="formHint">Preencha os campos destacados para continuar.</p>
+        <form class="form-card" id="distribuidora-form" novalidate>
           <div class="form-grid">
             <div class="field">
               <label for="nome" data-i18n="labelName">Nome</label>
               <input id="nome" name="nome" type="text" autocomplete="given-name" required maxlength="80" placeholder="Seu nome" data-i18n-placeholder="phName">
-              <span class="error" id="nome-error" aria-live="polite"></span>
+              <span class="error" id="nome-error"></span>
             </div>
             <div class="field">
               <label for="sobrenome" data-i18n="labelSurname">Sobrenome</label>
               <input id="sobrenome" name="sobrenome" type="text" autocomplete="family-name" required maxlength="80" placeholder="Seu sobrenome" data-i18n-placeholder="phSurname">
-              <span class="error" id="sobrenome-error" aria-live="polite"></span>
+              <span class="error" id="sobrenome-error"></span>
             </div>
             <div class="field">
               <label for="email" data-i18n="labelEmail">E-mail</label>
               <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" placeholder="voce@email.com" data-i18n-placeholder="phEmail">
-              <span class="error" id="email-error" aria-live="polite"></span>
+              <span class="error" id="email-error"></span>
             </div>
             <div class="field">
               <label for="telefone" data-i18n="labelPhone">Telefone</label>
               <input id="telefone" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="16" placeholder="(61) 99999-9999" data-i18n-placeholder="phPhone">
-              <span class="error" id="telefone-error" aria-live="polite"></span>
+              <span class="error" id="telefone-error"></span>
             </div>
             <div class="field full">
               <label for="apresentacao" data-i18n="labelAbout">Apresente-se em poucas palavras</label>
               <textarea id="apresentacao" name="apresentacao" required maxlength="600" placeholder="Quem você é, sua atuação e cidade" data-i18n-placeholder="phAbout"></textarea>
-              <span class="error" id="apresentacao-error" aria-live="polite"></span>
+              <span class="error" id="apresentacao-error"></span>
             </div>
             <div class="field full">
               <label for="motivo" data-i18n="labelWhy">Por que gostaria de se tornar distribuidora ou prescritora da Linha CEME?</label>
               <textarea id="motivo" name="motivo" required maxlength="1000" placeholder="Conte sua motivação com liberdade — o campo aceita texto longo" data-i18n-placeholder="phWhy"></textarea>
-              <span class="error" id="motivo-error" aria-live="polite"></span>
+              <span class="error" id="motivo-error"></span>
             </div>
           </div>
           <button class="btn btn-gold" type="submit" style="margin-top:18px" data-i18n="formSubmit">Enviar</button>
           <p class="form-success" id="form-success" hidden data-i18n="formSuccess">Recebemos seus dados. Se o WhatsApp não abriu, fale com a gente no (61) 99929-1377.</p>
         </form>
-      </div>
-    </section>
-
-    <section class="alt" id="parceiros">
-      <div class="wrap">
-        <div class="section-head reveal">
-          <h2 data-i18n="partnersTitle">Quem transforma o mundo com a gente</h2>
-          <p data-i18n="partnersText">Rede de profissionais e marcas que caminham junto com a Linha CEME.</p>
-        </div>
-        <div class="partners-row reveal">
-          <img src="assets/img/parceiro-1.png" alt="Parceiro CEME" loading="lazy">
-          <img src="assets/img/parceiro-2.png" alt="Parceiro CEME" loading="lazy">
-          <img src="assets/img/parceiro-patricia.jpg" alt="Patricia Sobanski" loading="lazy">
-          <img src="assets/img/parceiro-renata.jpg" alt="Renata Barreto" loading="lazy">
-          <img src="assets/img/parceiro-flor.jpg" alt="Flor de Skye" loading="lazy">
-          <img src="assets/img/parceiro-fabiane.jpg" alt="Dra Fabiane Botega" loading="lazy">
-        </div>
       </div>
     </section>
   </main>
@@ -349,21 +289,8 @@
     </div>
   </div>
 
-  <div class="lightbox" id="lightbox" hidden aria-hidden="true">
-    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Fechar foto" data-i18n-aria="closeLightbox">×</button>
-    <button class="lightbox-nav is-prev" id="lightbox-prev" type="button" aria-label="Foto anterior" data-i18n-aria="prevPhoto">‹</button>
-    <img id="lightbox-img" alt="">
-    <button class="lightbox-nav is-next" id="lightbox-next" type="button" aria-label="Próxima foto" data-i18n-aria="nextPhoto">›</button>
-  </div>
-
-  <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
-
-  <a class="wa-float" id="wa-float" href="https://wa.me/5561999291377" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" data-i18n-aria="waFloat">
-    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M19.11 17.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.5s1.08 2.9 1.23 3.1c.15.2 2.12 3.24 5.14 4.54.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/><path fill="currentColor" d="M16.04 3C9.4 3 4 8.37 4 14.97c0 2.12.56 4.18 1.62 6L4 29l8.2-2.14a12.1 12.1 0 0 0 3.84.62c6.64 0 12.04-5.37 12.04-11.97C28.08 8.37 22.68 3 16.04 3zm0 21.8c-1.25 0-2.48-.33-3.56-.95l-.26-.15-4.87 1.27 1.3-4.73-.17-.28a9.8 9.8 0 0 1-1.5-5.23c0-5.4 4.42-9.78 9.86-9.78s9.86 4.38 9.86 9.78-4.42 9.78-9.86 9.78z"/></svg>
-  </a>
-
-  <script src="i18n.js?v=6"></script>
-  <script src="produtos.js?v=6"></script>
-  <script src="app.js?v=6"></script>
+  <script src="i18n.js?v=7"></script>
+  <script src="produtos.js?v=7"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
