@@ -13,6 +13,7 @@ Site da Linha CEME (Corpo, Emoção, Mente e Espírito), com a aba de produtos, 
 - Carrinho simples com finalização no WhatsApp `(61) 99929-1377`
 - Layout responsivo (celular, tablet e desktop)
 - Formulário de distribuidora/prescritora que preenche e envia pelo WhatsApp
+- Seletor de idiomas: **Português / English / Deutsch** (PT · EN · DE)
 
 ## Como abrir localmente
 
