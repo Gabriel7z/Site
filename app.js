@@ -16,7 +16,7 @@
   }
 
   function money(n) {
-    const locales = { pt: "pt-BR", en: "en-US", de: "de-DE" };
+    const locales = { pt: "pt-BR", en: "en-US", es: "es-ES", de: "de-DE" };
     return n.toLocaleString(locales[state.lang] || "pt-BR", {
       style: "currency",
       currency: "BRL",

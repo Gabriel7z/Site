@@ -39,6 +39,16 @@ const PRODUCTS = [
         "Verbessert Aufmerksamkeit und Fokus bei wichtigen Aufgaben",
         "Unterstützt mentale Klarheit und Produktivität"
       ]
+    },
+    "es": {
+      "tagline": "Conexión entre neuronas para cognición y enfoque",
+      "description": "Desarrollado para potenciar las conexiones neurales, estimular procesos cognitivos y promover mayor claridad mental. Su frecuencia ayuda a organizar pensamientos, concentración y el enfoque en el día a día.",
+      "indications": [
+        "Estimula la conexión neural y la plasticidad cerebral",
+        "Favorece la memoria y la cognición",
+        "Mejora la atención y el enfoque en tareas importantes",
+        "Apoya estados de claridad mental y productividad"
+      ]
     }
   }
 },
@@ -79,6 +89,16 @@ const PRODUCTS = [
         "Erleichtert den verbalen Ausdruck in verschiedenen Kontexten",
         "Hilft, emotionale Blockaden beim Sprechen zu lösen",
         "Stärkt Sicherheit und Vertrauen beim Ausdrücken"
+      ]
+    },
+    "es": {
+      "tagline": "Frecuencia del Hablar | Claridad de comunicación",
+      "description": "Estimula la expresión verbal y desbloquea la comunicación, aportando claridad y fluidez al hablar. Actúa en la verbalización, ayudando a transformar pensamientos en palabras con naturalidad y confianza.",
+      "indications": [
+        "Estimula la claridad de comunicación",
+        "Facilita la expresión verbal en diferentes contextos",
+        "Ayuda a desbloquear bloqueos emocionales relacionados con el hablar",
+        "Promueve seguridad y confianza al expresarse"
       ]
     }
   }
@@ -121,6 +141,16 @@ const PRODUCTS = [
         "Verbessert die Erholungsqualität beim Aufwachen",
         "Unterstützt körperliche und mentale Regeneration"
       ]
+    },
+    "es": {
+      "tagline": "Equilibrio del sueño y descanso profundo restaurador",
+      "description": "Promueve el equilibrio natural del sueño, favoreciendo un descanso profundo y restaurador. Su frecuencia actúa en la relajación física y mental, reduciendo la agitación y favoreciendo noches reparadoras.",
+      "indications": [
+        "Regula el ciclo natural del sueño",
+        "Favorece la relajación profunda",
+        "Mejora la calidad del descanso al despertar",
+        "Apoya la restauración física y mental"
+      ]
     }
   }
 },
@@ -161,6 +191,16 @@ const PRODUCTS = [
         "Hilft, physische, emotionale, mentale und spirituelle Starrheit zu vermeiden",
         "Erhöht die Frustrationstoleranz und innere Beweglichkeit",
         "Fördert leichtes soziales Miteinander"
+      ]
+    },
+    "es": {
+      "tagline": "Integración social | Flexibilidad | Bienestar integral",
+      "description": "Fórmula exclusiva que actúa en los cuatro cuerpos — físico, mental, emocional y energético — para estimular la flexibilidad y la integración social, con más ligereza en la convivencia.",
+      "indications": [
+        "Mantiene la salud física, mental, emocional y energética",
+        "Previene la rigidez física, emocional, mental y espiritual",
+        "Aumenta el umbral de frustración y la movilidad interna",
+        "Favorece la convivencia social con ligereza"
       ]
     }
   }
@@ -203,6 +243,16 @@ const PRODUCTS = [
         "Fördert Zustände von Ruhe und Geborgenheit",
         "Unterstützt Wohlbefinden bei sensorischer Überlastung"
       ]
+    },
+    "es": {
+      "tagline": "Suavización de la sensibilidad al sonido, la luz y el tacto",
+      "description": "Creado para ayudar a quienes presentan sensibilidad extrema a estímulos externos, como sonidos intensos, luces fuertes y el tacto físico. Promueve calma, confort y adaptación al entorno.",
+      "indications": [
+        "Suaviza la hipersensibilidad sensorial",
+        "Equilibra la respuesta al sonido, la luz y el tacto",
+        "Favorece estados de calma y acogida",
+        "Apoya el bienestar en sobrecarga sensorial"
+      ]
     }
   }
 },
@@ -237,6 +287,14 @@ const PRODUCTS = [
       "indications": [
         "Parasitäre Reinigung der physischen, emotionalen, mentalen und ätherischen Körper",
         "Unterstützt Reinigung und Balance des biologischen Terrains"
+      ]
+    },
+    "es": {
+      "tagline": "Limpieza frecuencial contra parásitos energéticos y físicos",
+      "description": "Promueve información biofísica celular para la neutralización y expulsión de parásitos. Fórmula exclusiva con frecuencias de orégano, clavo y otros activos de desparasitación física y energética.",
+      "indications": [
+        "Limpieza parasitaria de los cuerpos físico, emocional, mental y etérico",
+        "Actúa en la limpieza y el equilibrio del terreno biológico"
       ]
     }
   }
@@ -279,6 +337,16 @@ const PRODUCTS = [
         "Hilft, Selbstliebe und Selbstwert zu entwickeln",
         "Fördert emotionales Gleichgewicht und innere Sicherheit"
       ]
+    },
+    "es": {
+      "tagline": "Presencia materna | Vínculo afectivo | Amor propio",
+      "description": "Fortalece vínculos afectivos y aporta conciencia de acogida, protección y amor. Estimula la presencia materna para relaciones más saludables y seguridad interior.",
+      "indications": [
+        "Refuerza el sentimiento de acogida y cuidado materno",
+        "Estimula un vínculo afectivo saludable",
+        "Ayuda a desarrollar amor propio y autoestima",
+        "Promueve equilibrio emocional y seguridad interna"
+      ]
     }
   }
 },
@@ -319,6 +387,16 @@ const PRODUCTS = [
         "Anregt Klarheit und Authentizität in Entscheidungen",
         "Erhellt das aurische Feld und erweitert energetischen Schutz",
         "Balanceiert das innere Sein und die äußere Welt"
+      ]
+    },
+    "es": {
+      "tagline": "Coherencia | Alineación interior | Iluminación vibracional",
+      "description": "Genera armonía entre pensamiento, sentimiento, acción y palabras. Actúa como un campo de iluminación vibracional para fortalecer el aura y expandir la conciencia.",
+      "indications": [
+        "Favorece la coherencia entre mente, corazón y actitud",
+        "Estimula claridad y autenticidad en las elecciones",
+        "Ilumina el campo áurico y amplía la protección energética",
+        "Equilibra el ser interior y el mundo exterior"
       ]
     }
   }
@@ -364,6 +442,17 @@ const PRODUCTS = [
         "Reguliert den Darmtransit",
         "Hilft, entzündliche Prozesse im Verdauungstrakt zu reduzieren"
       ]
+    },
+    "es": {
+      "tagline": "Reprogramación del eje intestino-cerebro",
+      "description": "Promueve la salud completa del sistema gastrointestinal. Armoniza, regenera y optimiza el tracto digestivo, desde la digestión hasta la absorción de nutrientes.",
+      "indications": [
+        "Mejora la función digestiva y reduce molestias",
+        "Restaura la mucosa intestinal y el equilibrio de la microbiota",
+        "Auxilia la absorción de vitaminas y minerales",
+        "Regula el tránsito intestinal",
+        "Reduce procesos inflamatorios del tracto digestivo"
+      ]
     }
   }
 },
@@ -404,6 +493,16 @@ const PRODUCTS = [
         "Unterstützt die Regulation von Angst, Wut und emotionalen Krisen",
         "Begünstigt Stabilität in Stresssituationen",
         "Anregt inneren Frieden und Klarheit"
+      ]
+    },
+    "es": {
+      "tagline": "Armonía emocional | Serenidad | Estabilidad interior",
+      "description": "Aporta armonía a las emociones, favoreciendo el equilibrio interior y la estabilidad. Ayuda a regular respuestas intensas como miedo, ira y llanto emocional, con más serenidad en lo cotidiano.",
+      "indications": [
+        "Promueve equilibrio emocional ante los desafíos",
+        "Ayuda en la regulación del miedo, la ira y las crisis emocionales",
+        "Favorece la estabilidad en situaciones de estrés",
+        "Estimula paz y claridad interior"
       ]
     }
   }
@@ -449,6 +548,17 @@ const PRODUCTS = [
         "Anregt volle Präsenz im Hier und Jetzt",
         "Unterstützt die Entfaltung individuellen Potenzials"
       ]
+    },
+    "es": {
+      "tagline": "Presencia | Aquí y ahora | Neuroplasticidad",
+      "description": "Desarrollado para apoyar mentes atípicas y la presencia en el aquí y ahora. Optimiza la absorción de nutrientes y energía en los cuatro cuerpos, favoreciendo la neuroplasticidad y el potencial individual.",
+      "indications": [
+        "Mantiene la salud física, mental, emocional y energética",
+        "Fortalece la inmunidad",
+        "Previene distracciones y dispersiones",
+        "Estimula la presencia plena en el aquí y ahora",
+        "Apoya el desarrollo del potencial individual"
+      ]
     }
   }
 },
@@ -489,6 +599,16 @@ const PRODUCTS = [
         "Unterstützt Integration und gesunde Bindungen",
         "Reduziert das Gefühl von Isolation und Trennung",
         "Erweitert das Bewusstsein für Einheit und Gemeinschaft"
+      ]
+    },
+    "es": {
+      "tagline": "Unión | Conexión | Sentido de pertenencia",
+      "description": "Despierta un sentimiento profundo de unión, conexión e integración. Su frecuencia vibra en el principio “somos uno”, fortaleciendo vínculos y empatía en los campos físico, emocional, mental y espiritual.",
+      "indications": [
+        "Fortalece el sentido de pertenencia",
+        "Estimula empatía y conexión con el otro",
+        "Favorece la integración en grupos y vínculos",
+        "Apoya la unión en los cuatro cuerpos"
       ]
     }
   }
@@ -531,6 +651,16 @@ const PRODUCTS = [
         "Unterstützt Protokolle bei viszeralem Fett",
         "Unterstützt Protokolle bei systemischer Entzündung"
       ]
+    },
+    "es": {
+      "tagline": "Desintoxicación de metales pesados | Limpieza hepática",
+      "description": "Promueve información biofísica al organismo, potenciando la eliminación homeostática de metales pesados. Contiene frecuencias de desintoxicación hepática fases 1 y 2 y fitoterápicos de limpieza hepática y biliar.",
+      "indications": [
+        "Ayuda en la quelación de metales pesados",
+        "Equilibra los procesos naturales de limpieza del organismo",
+        "Ayuda en el tratamiento de grasa visceral",
+        "Apoya tratamientos de inflamación sistémica"
+      ]
     }
   }
 },
@@ -568,6 +698,15 @@ const PRODUCTS = [
         "Reinigung des biologischen Terrains",
         "Aktivierung der organischen Lymphdrainage",
         "Unterstützung ästhetischer Protokolle zu Gewicht, Cellulite und Entzündung"
+      ]
+    },
+    "es": {
+      "tagline": "Flujo linfático | Liberación de homotoxinas",
+      "description": "Potencia la liberación homeostática de homotoxinas y la función de todo el sistema linfático, por corrección biofísica celular. Fórmula con frecuencias de fitoterápicos chinos, brasileños y homotoxicología alemana.",
+      "indications": [
+        "Limpieza del terreno biológico",
+        "Activación del drenaje linfático orgánico",
+        "Apoyo en tratamientos estéticos de peso, celulitis e inflamación"
       ]
     }
   }
@@ -609,6 +748,16 @@ const PRODUCTS = [
         "Unterstützt die Kontrolle von Bruxismus",
         "Balanceiert Stress und Angst",
         "Anregt Ruhe und inneren Frieden"
+      ]
+    },
+    "es": {
+      "tagline": "Calma mental | Alivio del estrés | Bruxismo",
+      "description": "Armoniza mente y cuerpo, aliviando síntomas de estrés y tensiones relacionadas con el bruxismo. Favorece calma, presencia y paz interior en el ritmo del día a día.",
+      "indications": [
+        "Reduce la hiperactividad mental y física",
+        "Ayuda en el control del bruxismo",
+        "Equilibra el estrés y la ansiedad",
+        "Estimula calma y paz interior"
       ]
     }
   }

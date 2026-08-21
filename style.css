@@ -205,13 +205,13 @@ button {
   background: var(--paper);
 }
 .lang-btn {
-  min-width: 36px;
-  height: 34px;
-  padding: 0 8px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: var(--burgundy);
 }
 .lang-btn.is-active {
@@ -1133,10 +1133,10 @@ section {
     padding: 2px;
   }
   .lang-btn {
-    min-width: 28px;
+    min-width: 26px;
     height: 28px;
     padding: 0 4px;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
   .card-actions {
     grid-template-columns: 1fr;
