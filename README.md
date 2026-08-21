@@ -13,7 +13,18 @@ Site da Linha CEME (Corpo, Emoção, Mente e Espírito), com a aba de produtos, 
 - Carrinho simples com finalização no WhatsApp `(61) 99929-1377`
 - Layout responsivo (celular, tablet e desktop)
 - Formulário de distribuidora/prescritora que preenche e envia pelo WhatsApp
-- Seletor de idiomas: **Português / English / Deutsch** (PT · EN · DE)
+- Seletor de idiomas: **Português / English / Español / Deutsch** (PT · EN · ES · DE)
+
+## Publicar (GitHub Pages)
+
+O site é estático e pode ficar online em:
+
+`https://gabriel7z.github.io/Site/`
+
+**Passos (uma vez):**
+1. No GitHub: **Settings → General → Danger Zone** — deixe o repositório **público** (necessário no plano Free).
+2. **Settings → Pages → Build and deployment → Source**: escolha **GitHub Actions**.
+3. Faça push em `main` (ou rode o workflow **Deploy GitHub Pages** manualmente).
 
 ## Como abrir localmente
 
