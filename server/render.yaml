@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ceme-checkout
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DEMO_PAYMENTS
+        value: "false"
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_PUBLIC_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
