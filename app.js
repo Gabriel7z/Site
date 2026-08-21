@@ -95,6 +95,7 @@
     renderFilters();
     renderProducts();
     renderCart();
+    if (window.CEMECheckout) window.CEMECheckout.refresh();
     const modal = $("#product-modal");
     if (modal && !modal.hidden && modal.dataset.openId) {
       openModal(modal.dataset.openId);
@@ -117,12 +118,12 @@
     }, 0);
   }
 
-  function addToCart(id, qty = 1) {
+  function addToCart(id, qty = 1, { open = true } = {}) {
     const found = state.cart.find((i) => i.id === id);
     if (found) found.qty += qty;
     else state.cart.push({ id, qty });
     saveCart();
-    openCart();
+    if (open) openCart();
   }
 
   function setQty(id, qty) {
@@ -150,12 +151,10 @@
   }
 
   function buyNow(id) {
-    const p = PRODUCTS.find((x) => x.id === id);
-    const text = t("waHelloBuyOne")
-      .replace("{name}", p.name)
-      .replace("{volume}", p.volume)
-      .replace("{price}", money(p.price));
-    window.open(waLink(text), "_blank", "noopener");
+    addToCart(id, 1, { open: false });
+    closeModal();
+    closeCart();
+    if (window.CEMECheckout) window.CEMECheckout.open();
   }
 
   function stopAudio() {
@@ -473,7 +472,11 @@
     });
     $("#cart-open").addEventListener("click", openCart);
     $("#cart-close").addEventListener("click", closeCart);
-    $("#cart-checkout").addEventListener("click", checkoutWhatsApp);
+    $("#cart-checkout").addEventListener("click", () => {
+      closeCart();
+      if (window.CEMECheckout) window.CEMECheckout.open();
+    });
+    $("#cart-checkout-wa").addEventListener("click", checkoutWhatsApp);
     $("#overlay").addEventListener("click", () => {
       closeCart();
       closeModal();
@@ -495,4 +498,19 @@
     $("#distribuidora-form").addEventListener("submit", handleForm);
     $$(".js-year").forEach((el) => (el.textContent = new Date().getFullYear()));
   });
+
+  window.CEMEShop = {
+    t,
+    money,
+    getCart: () => state.cart.map((item) => ({ ...item })),
+    cartTotal,
+    addToCart,
+    clearCart() {
+      state.cart = [];
+      saveCart();
+    },
+    closeCart,
+    closeModal,
+    getLang: () => state.lang,
+  };
 })();
