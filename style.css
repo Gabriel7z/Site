@@ -1216,12 +1216,13 @@ section {
   }
   .lang-switch {
     padding: 2px;
+    gap: 1px;
   }
   .lang-btn {
-    min-width: 26px;
+    min-width: 24px;
     height: 28px;
-    padding: 0 4px;
-    font-size: 0.62rem;
+    padding: 0 3px;
+    font-size: 0.58rem;
   }
   .card-actions {
     grid-template-columns: 1fr;
