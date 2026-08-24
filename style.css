@@ -532,6 +532,66 @@ section {
   justify-content: start;
 }
 
+.album-card {
+  display: grid;
+  grid-template-columns: minmax(160px, 240px) 1fr;
+  gap: 28px;
+  align-items: start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 10px 24px rgba(28, 20, 18, 0.04);
+}
+.album-cover {
+  background: #efe6d8;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.album-cover img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.album-note,
+.album-hotmart-hint {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-bottom: 12px;
+}
+.album-price {
+  margin-bottom: 14px;
+}
+.album-tracks {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+.album-tracks .audio-btn {
+  width: 100%;
+  justify-content: flex-start;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--burgundy);
+  font-weight: 600;
+}
+.album-tracks .audio-btn.is-playing {
+  background: var(--burgundy);
+  color: var(--paper);
+  border-color: var(--burgundy);
+}
+.album-body .btn {
+  display: inline-flex;
+}
+.album-hotmart-hint {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
 .books-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1033,6 +1093,10 @@ section {
   .book {
     grid-template-columns: 1fr;
   }
+  .album-card {
+    grid-template-columns: 1fr;
+  }
+  .album-cover,
   .book-cover {
     max-width: 220px;
     margin-inline: auto;

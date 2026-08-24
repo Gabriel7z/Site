@@ -202,6 +202,16 @@
             <audio preload="none"></audio>
           </div>`
       : "";
+    const actions =
+      p.kind === "musica"
+        ? `<div class="card-actions">
+            <a class="btn btn-ghost" href="#album">${t("albumListen")}</a>
+            <a class="btn btn-gold" href="https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C" target="_blank" rel="noopener noreferrer">${t("albumBuyHotmart")}</a>
+          </div>`
+        : `<div class="card-actions">
+            <button class="btn btn-ghost" type="button" data-add="${p.id}">${t("add")}</button>
+            <button class="btn btn-gold" type="button" data-buy="${p.id}">${t("buy")}</button>
+          </div>`;
     return `
       <article class="card" data-id="${p.id}" data-category="${p.category}">
         <button class="card-media" type="button" data-open="${p.id}" aria-label="${t("detailsOf")} ${p.name}">
@@ -213,10 +223,7 @@
           <p class="tagline">${p.tagline}</p>
           <p class="price">${money(p.price)}</p>
           ${audioBlock}
-          <div class="card-actions">
-            <button class="btn btn-ghost" type="button" data-add="${p.id}">${t("add")}</button>
-            <button class="btn btn-gold" type="button" data-buy="${p.id}">${t("buy")}</button>
-          </div>
+          ${actions}
         </div>
       </article>
     `;
@@ -287,6 +294,26 @@
       delete audioBtn.dataset.audio;
       audioBtn.hidden = true;
       if (audioRow) audioRow.hidden = true;
+    }
+    const extraBuy = $("#modal-extra-buy");
+    if (extraBuy) extraBuy.remove();
+    if (p.kind === "musica") {
+      const actions = modal.querySelector(".card-actions");
+      if (actions) {
+        const link = document.createElement("a");
+        link.id = "modal-extra-buy";
+        link.className = "btn btn-gold";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.href = "https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C";
+        link.textContent = t("albumBuyHotmart");
+        actions.appendChild(link);
+        $("#modal-buy").hidden = true;
+        $("#modal-add").hidden = true;
+      }
+    } else {
+      $("#modal-buy").hidden = false;
+      $("#modal-add").hidden = false;
     }
     const usage = $("#modal-usage");
     if (usage) {

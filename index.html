@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -31,6 +31,7 @@
           <li><a href="#metodo" data-i18n="navMethod">O Método</a></li>
           <li><a href="#produtos" data-i18n="navProducts">Produtos</a></li>
           <li><a href="#frequenciais" data-i18n="navFrequenciais">Frequenciais</a></li>
+          <li><a href="#album" data-i18n="navAlbum">Álbum</a></li>
           <li><a href="#livros" data-i18n="navBooks">Livros</a></li>
           <li><a href="#transformacoes" data-i18n="navStories">Transformações</a></li>
           <li><a class="is-cta" href="#contato" data-i18n="navContact">Contato</a></li>
@@ -187,6 +188,50 @@
       </div>
     </section>
 
+    <section class="alt" id="album">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker" style="color:#6b1e33" data-i18n="albumKicker">Amostra</span>
+          <h2 data-i18n="albumTitle">Álbum Músicas NeuroConectivas</h2>
+          <p data-i18n="albumText">Ouça as prévias no site. A compra completa acontece na Hotmart — pagamento e download automáticos, sem e-commerce no site CEME.</p>
+        </div>
+        <article class="album-card">
+          <div class="album-cover">
+            <img src="assets/img/musicas-neuroconectivas.jpg" alt="Capa do álbum Músicas NeuroConectivas" data-i18n-alt="albumCoverAlt">
+          </div>
+          <div class="album-body">
+            <p class="album-note" data-i18n="albumSampleNote">Amostra para o cliente: as prévias são ilustrativas. No produto real entram as faixas da Família CEME.</p>
+            <p class="price album-price">R$ 8,00</p>
+            <ol class="album-tracks" id="album-tracks">
+              <li>
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-1.mp3" aria-pressed="false">
+                  <span class="audio-icon" aria-hidden="true"></span>
+                  <span class="audio-label">1. Presença — prévia</span>
+                </button>
+                <audio preload="none"></audio>
+              </li>
+              <li>
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-2.mp3" aria-pressed="false">
+                  <span class="audio-icon" aria-hidden="true"></span>
+                  <span class="audio-label">2. Clareza — prévia</span>
+                </button>
+                <audio preload="none"></audio>
+              </li>
+              <li>
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-3.mp3" aria-pressed="false">
+                  <span class="audio-icon" aria-hidden="true"></span>
+                  <span class="audio-label">3. Harmonia — prévia</span>
+                </button>
+                <audio preload="none"></audio>
+              </li>
+            </ol>
+            <a class="btn btn-gold" href="https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C" target="_blank" rel="noopener noreferrer" data-i18n="albumBuyHotmart">Comprar na Hotmart</a>
+            <p class="album-hotmart-hint" data-i18n="albumHotmartHint">O botão abre uma página real da Hotmart só para mostrar o fluxo. Depois trocamos pelo link do álbum CEME.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section id="livros">
       <div class="wrap">
         <div class="section-head">
@@ -315,6 +360,7 @@
         <strong data-i18n="footerSite">Site</strong>
         <p><a href="#produtos" data-i18n="footerProducts">Produtos</a></p>
         <p><a href="#frequenciais" data-i18n="footerFrequenciais">Frequenciais</a></p>
+        <p><a href="#album" data-i18n="footerAlbum">Álbum</a></p>
         <p><a href="#livros" data-i18n="footerBooks">Livros</a></p>
         <p><a href="#documentario" data-i18n="footerDoc">Documentário</a></p>
         <p><a href="#contato" data-i18n="footerPrescriber">Seja prescritora</a></p>
@@ -365,8 +411,8 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=20"></script>
-  <script src="produtos.js?v=20"></script>
-  <script src="app.js?v=20"></script>
+  <script src="i18n.js?v=21"></script>
+  <script src="produtos.js?v=21"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>
