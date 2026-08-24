@@ -526,8 +526,9 @@ section {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.garrafadas-grid {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 340px));
+.garrafadas-grid,
+.frequenciais-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
   justify-content: start;
 }
 

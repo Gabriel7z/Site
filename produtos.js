@@ -765,7 +765,7 @@ const PRODUCTS = [
 {
   "id": "garrafadas-capsula",
   "name": "Garrafadas em Cápsula",
-  "category": "fito",
+  "category": "frequencial",
   "volume": "cápsulas",
   "price": 88,
   "image": "assets/img/garrafadas-capsula.jpg",
@@ -810,6 +810,110 @@ const PRODUCTS = [
         "Inspiradas en la tradición de las garrafadas",
         "Línea de fitoalquimia de Família CEME",
         "Complemento al cuidado con el Método CEME"
+      ]
+    }
+  }
+},
+{
+  "id": "mapa-holografico",
+  "name": "Mapa Holográfico",
+  "category": "frequencial",
+  "volume": "avaliação",
+  "price": 149.99,
+  "image": "assets/img/mapa-holografico.jpg",
+  "audio": null,
+  "kind": "mapa",
+  "i18n": {
+    "pt": {
+      "tagline": "Leitura vibracional e bioenergética",
+      "description": "O Mapa Holográfico é uma leitura vibracional e bioenergética para identificar bloqueios e orientar o cuidado nos quatro corpos — físico, emocional, mental e espiritual.",
+      "indications": [
+        "Leitura vibracional e bioenergética",
+        "Ajuda a identificar bloqueios",
+        "Orienta o cuidado no Método CEME",
+        "Atuação nos quatro corpos"
+      ]
+    },
+    "en": {
+      "tagline": "Vibrational and bioenergetic reading",
+      "description": "The Holographic Map is a vibrational and bioenergetic reading to identify blocks and guide care across the four bodies — physical, emotional, mental and spiritual.",
+      "indications": [
+        "Vibrational and bioenergetic reading",
+        "Helps identify blocks",
+        "Guides care within the CEME Method",
+        "Works across the four bodies"
+      ]
+    },
+    "de": {
+      "tagline": "Vibrationale und bioenergetische Lesung",
+      "description": "Die holografische Karte ist eine vibrationale und bioenergetische Lesung zur Erkennung von Blockaden und zur Orientierung der Pflege in den vier Körpern — physisch, emotional, mental und spirituell.",
+      "indications": [
+        "Vibrationale und bioenergetische Lesung",
+        "Hilft, Blockaden zu erkennen",
+        "Orientiert die Pflege in der CEME-Methode",
+        "Wirkt auf die vier Körper"
+      ]
+    },
+    "es": {
+      "tagline": "Lectura vibracional y bioenergética",
+      "description": "El Mapa Holográfico es una lectura vibracional y bioenergética para identificar bloqueos y orientar el cuidado en los cuatro cuerpos — físico, emocional, mental y espiritual.",
+      "indications": [
+        "Lectura vibracional y bioenergética",
+        "Ayuda a identificar bloqueos",
+        "Orienta el cuidado en el Método CEME",
+        "Actúa en los cuatro cuerpos"
+      ]
+    }
+  }
+},
+{
+  "id": "musicas-neuroconectivas",
+  "name": "Músicas NeuroConectivas",
+  "category": "frequencial",
+  "volume": "digital",
+  "price": 8,
+  "image": "assets/img/musicas-neuroconectivas.jpg",
+  "audio": null,
+  "kind": "musica",
+  "i18n": {
+    "pt": {
+      "tagline": "Frequências sonoras para conexão neural",
+      "description": "As Músicas NeuroConectivas trazem frequências sonoras para apoiar conexão, foco e estados de presença no dia a dia, em sintonia com o Método CEME.",
+      "indications": [
+        "Frequências sonoras de apoio",
+        "Favoráveis à conexão e à presença",
+        "Uso prático no cotidiano",
+        "Complemento ao Método CEME"
+      ]
+    },
+    "en": {
+      "tagline": "Sound frequencies for neural connection",
+      "description": "NeuroConnective Music brings sound frequencies to support connection, focus and presence in daily life, aligned with the CEME Method.",
+      "indications": [
+        "Supportive sound frequencies",
+        "Favors connection and presence",
+        "Practical for everyday use",
+        "Complements the CEME Method"
+      ]
+    },
+    "de": {
+      "tagline": "Klangfrequenzen für neuronale Verbindung",
+      "description": "NeuroConnective Musik bringt Klangfrequenzen, die Verbindung, Fokus und Präsenz im Alltag unterstützen – im Einklang mit der CEME-Methode.",
+      "indications": [
+        "Unterstützende Klangfrequenzen",
+        "Fördert Verbindung und Präsenz",
+        "Praktisch für den Alltag",
+        "Ergänzt die CEME-Methode"
+      ]
+    },
+    "es": {
+      "tagline": "Frecuencias sonoras para conexión neural",
+      "description": "Las Músicas NeuroConectivas aportan frecuencias sonoras para apoyar conexión, enfoque y presencia en el día a día, en sintonía con el Método CEME.",
+      "indications": [
+        "Frecuencias sonoras de apoyo",
+        "Favorecen la conexión y la presencia",
+        "Uso práctico en lo cotidiano",
+        "Complemento al Método CEME"
       ]
     }
   }

@@ -94,7 +94,7 @@
     applyStaticI18n();
     renderFilters();
     renderProducts();
-    renderGarrafadas();
+    renderExtras();
     renderCart();
     const modal = $("#product-modal");
     if (modal && !modal.hidden && modal.dataset.openId) {
@@ -223,11 +223,11 @@
   }
 
   function sprayProducts() {
-    return PRODUCTS.filter((p) => p.kind !== "garrafada" && p.category !== "fito");
+    return PRODUCTS.filter((p) => !p.kind || p.kind === "spray");
   }
 
-  function garrafadaProducts() {
-    return PRODUCTS.filter((p) => p.kind === "garrafada" || p.category === "fito");
+  function extraProducts() {
+    return PRODUCTS.filter((p) => p.kind && p.kind !== "spray");
   }
 
   function renderProducts() {
@@ -239,10 +239,10 @@
     grid.innerHTML = list.map(productCard).join("");
   }
 
-  function renderGarrafadas() {
-    const grid = $("#garrafadas-grid");
+  function renderExtras() {
+    const grid = $("#frequenciais-grid") || $("#garrafadas-grid");
     if (!grid) return;
-    grid.innerHTML = garrafadaProducts().map(productCard).join("");
+    grid.innerHTML = extraProducts().map(productCard).join("");
   }
 
   function renderFilters() {
@@ -290,7 +290,10 @@
     }
     const usage = $("#modal-usage");
     if (usage) {
-      usage.textContent = p.kind === "garrafada" || p.category === "fito" ? t("garrafadaUsage") : t("usageHint");
+      if (p.kind === "garrafada") usage.textContent = t("garrafadaUsage");
+      else if (p.kind === "mapa") usage.textContent = t("mapaUsage");
+      else if (p.kind === "musica") usage.textContent = t("musicaUsage");
+      else usage.textContent = t("usageHint");
     }
     modal.hidden = false;
     modal.classList.add("is-open");
@@ -494,7 +497,7 @@
     applyStaticI18n();
     renderFilters();
     renderProducts();
-    renderGarrafadas();
+    renderExtras();
     renderCart();
     setupNav();
     document.addEventListener("click", onClick);
