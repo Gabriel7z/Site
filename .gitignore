@@ -3,3 +3,5 @@ Thumbs.db
 *.log
 .idea/
 .vscode/
+server/.env
+server/node_modules/

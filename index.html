@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -63,7 +63,7 @@
         <div>
           <span class="kicker" data-i18n="heroKicker">Lançamento exclusivo</span>
           <h1 data-i18n="heroTitle">Moduladores Biofísicos CEME</h1>
-          <p data-i18n="heroText">Movimentando saúde na nova era, com acolhimento e transformação integral. Quinze frequências da Linha CEME, cada uma com áudio explicativo e valor à vista.</p>
+          <p data-i18n="heroText">Movimentando saúde na nova era, com acolhimento e transformação integral. Quinze frequências da Linha CEME, cada uma com áudio explicativo. Compre no site com Pix ou cartão.</p>
           <div class="btn-row">
             <a class="btn btn-gold" href="#produtos" data-i18n="heroCtaProducts">Quero conhecer os moduladores biofísicos</a>
             <a class="btn btn-ghost" id="cta-eval-hero" href="https://wa.me/5561999291377/?text=Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o" target="_blank" rel="noopener" data-i18n="heroCtaEval">Agendar avaliação</a>
@@ -172,11 +172,11 @@
         <div class="section-head">
           <span class="kicker" style="color:#6b1e33" data-i18n="productsKicker">Aba de produtos</span>
           <h2 data-i18n="productsTitle">Linha CEME — 15 moduladores biofísicos</h2>
-          <p data-i18n="productsText">Cada produto tem o próprio áudio, o valor e o frasco spray de 60&nbsp;ml. Ouça a apresentação, adicione ao carrinho ou compre agora pelo WhatsApp.</p>
+          <p data-i18n="productsText">Cada produto tem o próprio áudio, o valor e o frasco spray de 60&nbsp;ml. Ouça a apresentação, adicione ao carrinho e finalize no site com Pix ou cartão.</p>
         </div>
         <div class="filters" id="product-filters" role="tablist" aria-label="Filtrar produtos" data-i18n-aria="filterAria"></div>
         <div class="product-grid" id="product-grid"></div>
-        <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$) pelo WhatsApp.</p>
+        <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$).</p>
       </div>
     </section>
 
@@ -196,7 +196,7 @@
         <div class="section-head">
           <span class="kicker" style="color:#6b1e33" data-i18n="garrafadasKicker">Fitoalquímicos</span>
           <h2 data-i18n="garrafadasTitle">Garrafadas em Cápsula</h2>
-          <p data-i18n="garrafadasText">A tradição das garrafadas em formato prático de cápsulas. Adicione ao carrinho ou compre agora pelo WhatsApp.</p>
+          <p data-i18n="garrafadasText">A tradição das garrafadas em formato prático de cápsulas. Adicione ao carrinho e finalize a compra no site.</p>
         </div>
         <div class="product-grid solo-grid" id="garrafadas-grid"></div>
       </div>
@@ -207,7 +207,7 @@
         <div class="section-head">
           <span class="kicker" style="color:#6b1e33" data-i18n="albumKicker">Álbum digital</span>
           <h2 data-i18n="albumTitle">Álbum Músicas NeuroConectivas</h2>
-          <p data-i18n="albumText">Ouça as prévias no site. A compra completa acontece na Hotmart — pagamento e download automáticos, sem e-commerce no site CEME.</p>
+          <p data-i18n="albumText">Ouça as prévias e compre o álbum digital no checkout da CEME, sem frete. A Hotmart continua como opção alternativa.</p>
         </div>
         <article class="album-card">
           <div class="album-cover">
@@ -239,7 +239,11 @@
                 <audio preload="none"></audio>
               </li>
             </ol>
-            <a class="btn btn-gold" href="https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C" target="_blank" rel="noopener noreferrer" data-i18n="albumBuyHotmart">Comprar na Hotmart</a>
+            <div class="card-actions album-actions">
+              <button class="btn btn-ghost" type="button" data-add="musicas-neuroconectivas" data-i18n="add">Adicionar</button>
+              <button class="btn btn-gold" type="button" data-buy="musicas-neuroconectivas" data-i18n="buy">Comprar</button>
+            </div>
+            <a class="btn btn-ghost album-hotmart" href="https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C" target="_blank" rel="noopener noreferrer" data-i18n="albumBuyHotmart">Comprar na Hotmart</a>
             <p class="album-hotmart-hint" data-i18n="albumHotmartHint">O botão abre uma página real da Hotmart só para mostrar o fluxo. Depois trocamos pelo link do álbum CEME.</p>
           </div>
         </article>
@@ -396,8 +400,9 @@
     <ul class="cart-list" id="cart-list"></ul>
     <div class="cart-footer" id="cart-footer" hidden>
       <p><span data-i18n="cartTotal">Total:</span> <strong id="cart-total">R$ 0,00</strong></p>
-      <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$) pelo WhatsApp.</p>
-      <button class="btn btn-gold" id="cart-checkout" type="button" data-i18n="cartCheckout">Finalizar no WhatsApp</button>
+      <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$).</p>
+      <button class="btn btn-gold" id="cart-checkout" type="button" data-i18n="cartCheckout">Finalizar compra</button>
+      <button class="btn btn-ghost" id="cart-checkout-wa" type="button" data-i18n="cartCheckoutWa">Pedir pelo WhatsApp</button>
     </div>
   </aside>
 
@@ -427,8 +432,204 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=27"></script>
-  <script src="produtos.js?v=27"></script>
-  <script src="app.js?v=27"></script>
+  <div class="modal checkout-modal" id="checkout-modal" hidden aria-hidden="true">
+    <div class="checkout-panel" role="dialog" aria-modal="true" aria-labelledby="checkout-title" tabindex="-1">
+      <button class="modal-close" id="checkout-close" type="button" aria-label="Fechar" data-i18n-aria="modalClose">×</button>
+      <header class="checkout-head">
+        <p class="kicker" style="color:#6b1e33" data-i18n="checkoutKicker">Compra segura</p>
+        <h2 id="checkout-title" data-i18n="checkoutTitle">Finalizar compra</h2>
+        <div class="checkout-progress" aria-hidden="true">
+          <span data-step="data" class="is-active" data-i18n="checkoutStepData">Entrega</span>
+          <span data-step="pay" data-i18n="checkoutStepPay">Pagamento</span>
+          <span data-step="done" data-i18n="checkoutStepDone">Confirmado</span>
+        </div>
+      </header>
+      <p class="checkout-banner" id="checkout-demo-banner" hidden data-i18n="checkoutDemoBanner">Modo demonstração: nenhum valor é cobrado. No cartão use 4111 1111 1111 1111, validade futura e CVV 123. No Pix, gere o código e confirme.</p>
+
+      <div class="checkout-grid">
+        <aside class="checkout-summary">
+          <h3 data-i18n="checkoutSummary">Seu pedido</h3>
+          <ul class="checkout-items" id="checkout-items"></ul>
+          <dl class="checkout-totals">
+            <div><dt data-i18n="checkoutSubtotal">Subtotal</dt><dd id="checkout-subtotal">R$ 0,00</dd></div>
+            <div><dt data-i18n="checkoutShipping">Entrega</dt><dd id="checkout-shipping">—</dd></div>
+            <div class="is-total"><dt data-i18n="cartTotal">Total:</dt><dd id="checkout-total">R$ 0,00</dd></div>
+          </dl>
+          <p class="checkout-secure" id="checkout-free-hint" hidden></p>
+          <p class="checkout-secure" data-i18n="checkoutSecure">Pagamento seguro. Os dados do cartão não ficam armazenados no site.</p>
+        </aside>
+
+        <div class="checkout-main">
+          <section class="checkout-step" data-step="data">
+            <h3 data-i18n="checkoutDataTitle">Dados e entrega</h3>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="pay-name" data-i18n="labelFullName">Nome completo</label>
+                <input id="pay-name" type="text" autocomplete="name" required maxlength="80" placeholder="Nome e sobrenome" data-i18n-placeholder="phFullName">
+                <span class="error" id="pay-name-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-email" data-i18n="labelEmail">E-mail</label>
+                <input id="pay-email" type="email" autocomplete="email" required maxlength="120" placeholder="voce@email.com" data-i18n-placeholder="phEmail">
+                <span class="error" id="pay-email-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-phone" data-i18n="labelPhone">Telefone</label>
+                <input id="pay-phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="16" placeholder="(61) 99999-9999" data-i18n-placeholder="phPhone">
+                <span class="error" id="pay-phone-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-cpf" data-i18n="labelCpf">CPF</label>
+                <input id="pay-cpf" type="text" inputmode="numeric" autocomplete="off" required maxlength="14" placeholder="000.000.000-00" data-i18n-placeholder="phCpf">
+                <span class="error" id="pay-cpf-error"></span>
+              </div>
+            </div>
+
+            <p class="checkout-digital-note" id="checkout-digital-note" hidden data-i18n="checkoutDigitalNote">Seu pedido é digital ou de serviço — sem frete e sem endereço de entrega.</p>
+
+            <fieldset class="ship-methods" id="ship-methods">
+              <legend data-i18n="checkoutShippingMethod">Como prefere receber?</legend>
+              <label class="ship-option">
+                <input type="radio" name="ship-method" value="delivery" checked>
+                <span>
+                  <strong data-i18n="checkoutShippingDelivery">Entrega pelos Correios</strong>
+                  <small data-i18n="checkoutShippingDeliveryHint">O valor do frete sai pelo CEP. Frete grátis a partir de R$ 360.</small>
+                </span>
+              </label>
+              <label class="ship-option">
+                <input type="radio" name="ship-method" value="pickup">
+                <span>
+                  <strong data-i18n="checkoutShippingPickup">Retirada em Brasília</strong>
+                  <small data-i18n="checkoutPickupHint">CLN 211, Bloco D, Sala 211 — Asa Norte — Brasília-DF. Frete grátis.</small>
+                </span>
+              </label>
+            </fieldset>
+
+            <div class="form-grid" id="checkout-address">
+              <div class="field">
+                <label for="pay-cep" data-i18n="labelCep">CEP</label>
+                <input id="pay-cep" type="text" inputmode="numeric" autocomplete="postal-code" required maxlength="9" placeholder="00000-000" data-i18n-placeholder="phCep">
+                <span class="error" id="pay-cep-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-state" data-i18n="labelState">UF</label>
+                <input id="pay-state" type="text" autocomplete="address-level1" required maxlength="2" placeholder="DF" data-i18n-placeholder="phState">
+                <span class="error" id="pay-state-error"></span>
+              </div>
+              <div class="field full">
+                <label for="pay-street" data-i18n="labelStreet">Endereço</label>
+                <input id="pay-street" type="text" autocomplete="address-line1" required maxlength="120" placeholder="Rua, avenida ou quadra" data-i18n-placeholder="phStreet">
+                <span class="error" id="pay-street-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-number" data-i18n="labelNumber">Número</label>
+                <input id="pay-number" type="text" autocomplete="address-line2" required maxlength="16" placeholder="211" data-i18n-placeholder="phNumber">
+                <span class="error" id="pay-number-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-complement" data-i18n="labelComplement">Complemento</label>
+                <input id="pay-complement" type="text" maxlength="80" placeholder="Sala, apartamento" data-i18n-placeholder="phComplement">
+                <span class="error" id="pay-complement-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-neighborhood" data-i18n="labelNeighborhood">Bairro</label>
+                <input id="pay-neighborhood" type="text" required maxlength="80" placeholder="Asa Norte" data-i18n-placeholder="phNeighborhood">
+                <span class="error" id="pay-neighborhood-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-city" data-i18n="labelCity">Cidade</label>
+                <input id="pay-city" type="text" autocomplete="address-level2" required maxlength="80" placeholder="Brasília" data-i18n-placeholder="phCity">
+                <span class="error" id="pay-city-error"></span>
+              </div>
+            </div>
+            <button class="btn btn-gold" id="checkout-continue" type="button" style="margin-top:18px" data-i18n="checkoutContinue">Ir para o pagamento</button>
+          </section>
+
+          <section class="checkout-step" data-step="pay" hidden>
+            <h3 data-i18n="checkoutPayTitle">Pagamento</h3>
+            <div class="pay-methods" role="tablist" aria-label="Forma de pagamento">
+              <button type="button" class="pay-method is-active" data-pay-method="card" aria-pressed="true" data-i18n="checkoutPayCard">Cartão</button>
+              <button type="button" class="pay-method" data-pay-method="pix" aria-pressed="false" data-i18n="checkoutPayPix">Pix</button>
+            </div>
+
+            <div id="pay-pane-card">
+              <div class="pay-card" id="pay-card-visual">
+                <div class="pay-card-face pay-card-front">
+                  <div class="pay-card-top">
+                    <strong>CEME</strong>
+                    <span id="pay-card-preview-brand">Visa</span>
+                  </div>
+                  <div class="pay-card-chip" aria-hidden="true"></div>
+                  <p class="pay-card-number" id="pay-card-preview-number">•••• •••• •••• ••••</p>
+                  <div class="pay-card-bottom">
+                    <span id="pay-card-preview-name">NOME NO CARTÃO</span>
+                    <span id="pay-card-preview-expiry">MM/AA</span>
+                  </div>
+                </div>
+                <div class="pay-card-face pay-card-back">
+                  <div class="pay-card-stripe"></div>
+                  <p class="pay-card-cvv-preview" data-i18n="checkoutCvvHint">CVV no verso</p>
+                </div>
+              </div>
+              <div class="form-grid" style="margin-top:16px">
+                <div class="field full">
+                  <label for="pay-card-number" data-i18n="checkoutCardNumber">Número do cartão</label>
+                  <input id="pay-card-number" type="text" inputmode="numeric" autocomplete="cc-number" maxlength="19" placeholder="0000 0000 0000 0000" data-i18n-placeholder="phCardNumber">
+                  <span class="error" id="pay-card-number-error"></span>
+                </div>
+                <div class="field full">
+                  <label for="pay-card-name" data-i18n="checkoutCardName">Nome no cartão</label>
+                  <input id="pay-card-name" type="text" autocomplete="cc-name" maxlength="40" placeholder="Como está gravado no cartão" data-i18n-placeholder="phCardName">
+                  <span class="error" id="pay-card-name-error"></span>
+                </div>
+                <div class="field">
+                  <label for="pay-card-expiry" data-i18n="checkoutCardExpiry">Validade</label>
+                  <input id="pay-card-expiry" type="text" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="MM/AA" data-i18n-placeholder="phExpiry">
+                  <span class="error" id="pay-card-expiry-error"></span>
+                </div>
+                <div class="field">
+                  <label for="pay-card-cvv" data-i18n="checkoutCardCvv">CVV</label>
+                  <input id="pay-card-cvv" type="text" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="123" data-i18n-placeholder="phCvv">
+                  <span class="error" id="pay-card-cvv-error"></span>
+                </div>
+                <div class="field full">
+                  <label for="pay-installments" data-i18n="checkoutInstallments">Parcelas</label>
+                  <select id="pay-installments"></select>
+                </div>
+              </div>
+            </div>
+
+            <div id="pay-pane-pix" hidden>
+              <p class="checkout-pix-hint" data-i18n="checkoutPixHint">Copie o código Pix e pague no app do seu banco. Depois confirme o pagamento nesta tela.</p>
+              <div class="pix-result" id="pix-result" hidden>
+                <code class="pix-code" id="pix-code"></code>
+                <button class="btn btn-ghost" id="pix-copy" type="button" data-i18n="checkoutPixCopy">Copiar código Pix</button>
+              </div>
+            </div>
+
+            <p class="checkout-pay-message" id="checkout-pay-message" hidden></p>
+            <div class="checkout-pay-actions">
+              <button class="btn btn-ghost" id="checkout-back" type="button" data-i18n="checkoutBack">Voltar</button>
+              <button class="btn btn-gold" id="checkout-pay" type="button">Pagar</button>
+            </div>
+          </section>
+
+          <section class="checkout-step checkout-success" data-step="done" hidden>
+            <div class="checkout-check" aria-hidden="true">✓</div>
+            <h3 data-i18n="checkoutSuccessTitle">Pagamento aprovado</h3>
+            <p id="checkout-success-text"></p>
+            <p class="checkout-order"><span data-i18n="checkoutOrder">Pedido</span> <strong id="checkout-order-id"></strong></p>
+            <button class="btn btn-gold" id="checkout-success-close" type="button" data-i18n="checkoutSuccessClose">Continuar no site</button>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="checkout-config.js?v=28"></script>
+  <script src="i18n.js?v=28"></script>
+  <script src="produtos.js?v=28"></script>
+  <script src="app.js?v=28"></script>
+  <script src="checkout.js?v=28"></script>
 </body>
 </html>

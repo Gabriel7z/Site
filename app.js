@@ -112,6 +112,7 @@
     if (modal && !modal.hidden && modal.dataset.openId) {
       openModal(modal.dataset.openId);
     }
+    if (window.CEMECheckout) window.CEMECheckout.refresh();
   }
 
   function waLink(text) {
@@ -203,12 +204,13 @@
     }, 0);
   }
 
-  function addToCart(id, qty = 1) {
+  function addToCart(id, qty = 1, opts = {}) {
     const found = state.cart.find((i) => i.id === id);
     if (found) found.qty += qty;
     else state.cart.push({ id, qty });
     saveCart();
-    openCart();
+    if (opts.open !== false) openCart();
+    if (window.CEMECheckout) window.CEMECheckout.refresh();
   }
 
   function setQty(id, qty) {
@@ -241,12 +243,10 @@
   }
 
   function buyNow(id) {
-    const p = PRODUCTS.find((x) => x.id === id);
-    const text = t("waHelloBuyOne")
-      .replace("{name}", p.name)
-      .replace("{volume}", p.volume)
-      .replace("{price}", moneyForWhatsApp(p.price));
-    window.open(waLink(text), "_blank", "noopener");
+    addToCart(id, 1, { open: false });
+    closeModal();
+    closeCart();
+    if (window.CEMECheckout) window.CEMECheckout.open();
   }
 
   function stopAudio() {
@@ -292,13 +292,7 @@
             <audio preload="none"></audio>
           </div>`
       : "";
-    const actions =
-      p.kind === "musica"
-        ? `<div class="card-actions">
-            <a class="btn btn-ghost" href="#album">${t("albumListen")}</a>
-            <a class="btn btn-gold" href="https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C" target="_blank" rel="noopener noreferrer">${t("albumBuyHotmart")}</a>
-          </div>`
-        : `<div class="card-actions">
+    const actions = `<div class="card-actions">
             <button class="btn btn-ghost" type="button" data-add="${p.id}">${t("add")}</button>
             <button class="btn btn-gold" type="button" data-buy="${p.id}">${t("buy")}</button>
           </div>`;
@@ -390,26 +384,8 @@
       audioBtn.hidden = true;
       if (audioRow) audioRow.hidden = true;
     }
-    const extraBuy = $("#modal-extra-buy");
-    if (extraBuy) extraBuy.remove();
-    if (p.kind === "musica") {
-      const actions = modal.querySelector(".card-actions");
-      if (actions) {
-        const link = document.createElement("a");
-        link.id = "modal-extra-buy";
-        link.className = "btn btn-gold";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.href = "https://hotmart.com/pt-br/marketplace/produtos/album-refugio-em-ti/X105361997C";
-        link.textContent = t("albumBuyHotmart");
-        actions.appendChild(link);
-        $("#modal-buy").hidden = true;
-        $("#modal-add").hidden = true;
-      }
-    } else {
-      $("#modal-buy").hidden = false;
-      $("#modal-add").hidden = false;
-    }
+    $("#modal-buy").hidden = false;
+    $("#modal-add").hidden = false;
     const usage = $("#modal-usage");
     if (usage) {
       if (p.kind === "garrafada") usage.textContent = t("garrafadaUsage");
@@ -631,7 +607,11 @@
     });
     $("#cart-open").addEventListener("click", openCart);
     $("#cart-close").addEventListener("click", closeCart);
-    $("#cart-checkout").addEventListener("click", checkoutWhatsApp);
+    $("#cart-checkout").addEventListener("click", () => {
+      closeCart();
+      if (window.CEMECheckout) window.CEMECheckout.open();
+    });
+    $("#cart-checkout-wa")?.addEventListener("click", checkoutWhatsApp);
     $("#overlay").addEventListener("click", () => {
       closeCart();
       closeModal();
@@ -653,4 +633,19 @@
     $("#distribuidora-form").addEventListener("submit", handleForm);
     $$(".js-year").forEach((el) => (el.textContent = new Date().getFullYear()));
   });
+
+  window.CEMEShop = {
+    t,
+    money,
+    getCart: () => state.cart.map((item) => ({ ...item })),
+    cartTotal,
+    addToCart,
+    clearCart() {
+      state.cart = [];
+      saveCart();
+    },
+    closeCart,
+    closeModal,
+    getLang: () => state.lang,
+  };
 })();
