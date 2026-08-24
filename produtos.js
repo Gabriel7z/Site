@@ -49,6 +49,16 @@ const PRODUCTS = [
         "Mejora la atención y el enfoque en tareas importantes",
         "Apoya estados de claridad mental y productividad"
       ]
+    },
+    "fr": {
+      "tagline": "Connexion entre neurones pour la cognition et le focus",
+      "description": "Conçu pour renforcer les connexions neurales, stimuler les processus cognitifs et favoriser une plus grande clarté mentale. Sa fréquence aide à organiser les pensées, la concentration et le focus au quotidien.",
+      "indications": [
+        "Stimule la connexion neurale et la plasticité cérébrale",
+        "Favorise la mémoire et la cognition",
+        "Améliore l’attention et le focus sur les tâches importantes",
+        "Soutient la clarté mentale et la productivité"
+      ]
     }
   }
 },
@@ -99,6 +109,16 @@ const PRODUCTS = [
         "Facilita la expresión verbal en diferentes contextos",
         "Ayuda a desbloquear bloqueos emocionales relacionados con el hablar",
         "Promueve seguridad y confianza al expresarse"
+      ]
+    },
+    "fr": {
+      "tagline": "Fréquence de la parole | Clarté de communication",
+      "description": "Stimule l’expression verbale et débloque la communication, apportant clarté et fluidité à la parole. Agit sur la verbalisation, aidant à transformer les pensées en mots avec naturel et confiance.",
+      "indications": [
+        "Soutient une communication plus claire",
+        "Facilite l’expression verbale dans différents contextes",
+        "Aide à libérer les blocages émotionnels liés à la parole",
+        "Favorise la sécurité et la confiance en s’exprimant"
       ]
     }
   }
@@ -151,6 +171,16 @@ const PRODUCTS = [
         "Mejora la calidad del descanso al despertar",
         "Apoya la restauración física y mental"
       ]
+    },
+    "fr": {
+      "tagline": "Équilibre du sommeil et repos réparateur profond",
+      "description": "Favorise l’équilibre naturel du sommeil et un repos réparateur profond. Sa fréquence soutient la relaxation physique et mentale pour des nuits plus légères et restauratrices.",
+      "indications": [
+        "Favorise un sommeil plus réparateur",
+        "Soutient la relaxation physique et mentale",
+        "Aide à l’équilibre du rythme de sommeil",
+        "Complète le soin avec la Méthode CEME"
+      ]
     }
   }
 },
@@ -201,6 +231,16 @@ const PRODUCTS = [
         "Previene la rigidez física, emocional, mental y espiritual",
         "Aumenta el umbral de frustración y la movilidad interna",
         "Favorece la convivencia social con ligereza"
+      ]
+    },
+    "fr": {
+      "tagline": "Intégration sociale | Flexibilité | Bien-être intégral",
+      "description": "Formule exclusive qui agit sur les quatre corps — physique, mental, émotionnel et énergétique — pour stimuler l’intégration sociale, la flexibilité relationnelle et le bien-être au quotidien.",
+      "indications": [
+        "Favorise l’intégration sociale",
+        "Soutient la flexibilité dans les relations",
+        "Agit sur les quatre corps",
+        "Complète le bien-être intégral"
       ]
     }
   }
@@ -253,6 +293,16 @@ const PRODUCTS = [
         "Favorece estados de calma y acogida",
         "Apoya el bienestar en sobrecarga sensorial"
       ]
+    },
+    "fr": {
+      "tagline": "Adoucissement de la sensibilité au son, à la lumière et au toucher",
+      "description": "Créé pour soutenir les personnes très sensibles aux stimuli externes comme les sons intenses, les lumières fortes ou le toucher, en favorisant plus de confort et de paix sensorielle.",
+      "indications": [
+        "Adoucit la sensibilité sensorielle",
+        "Aide face aux stimuli sonores, lumineux et tactiles",
+        "Favorise le confort au quotidien",
+        "Soutient des états de plus grande paix intérieure"
+      ]
     }
   }
 },
@@ -295,6 +345,16 @@ const PRODUCTS = [
       "indications": [
         "Limpieza parasitaria de los cuerpos físico, emocional, mental y etérico",
         "Actúa en la limpieza y el equilibrio del terreno biológico"
+      ]
+    },
+    "fr": {
+      "tagline": "Nettoyage fréquentiel contre les parasites énergétiques et physiques",
+      "description": "Favorise une information biophysique cellulaire pour la neutralisation et l’expulsion des parasites. Exclusif à la ligne CEME pour un nettoyage fréquentiel du terrain.",
+      "indications": [
+        "Soutient le nettoyage fréquentiel",
+        "Favorise la neutralisation des parasites",
+        "Agit sur le terrain énergétique et physique",
+        "Complète les protocoles de la Méthode CEME"
       ]
     }
   }
@@ -347,6 +407,16 @@ const PRODUCTS = [
         "Ayuda a desarrollar amor propio y autoestima",
         "Promueve equilibrio emocional y seguridad interna"
       ]
+    },
+    "fr": {
+      "tagline": "Présence maternelle | Lien affectif | Amour de soi",
+      "description": "Renforce les liens affectifs et apporte conscience d’accueil, de protection et d’amour. Stimule la présence maternelle et l’amour de soi dans le parcours de soin.",
+      "indications": [
+        "Renforce les liens affectifs",
+        "Favorise l’accueil et la protection",
+        "Stimule l’amour de soi",
+        "Soutient la présence maternelle"
+      ]
     }
   }
 },
@@ -397,6 +467,16 @@ const PRODUCTS = [
         "Estimula claridad y autenticidad en las elecciones",
         "Ilumina el campo áurico y amplía la protección energética",
         "Equilibra el ser interior y el mundo exterior"
+      ]
+    },
+    "fr": {
+      "tagline": "Cohérence | Alignement intérieur | Illumination vibrationnelle",
+      "description": "Crée de l’harmonie entre pensée, sentiment, action et paroles. Agit comme un champ d’illumination vibrationnelle pour plus de cohérence et d’alignement intérieur.",
+      "indications": [
+        "Favorise la cohérence intérieure",
+        "Aide à aligner pensée, sentiment et action",
+        "Soutient l’illumination vibrationnelle",
+        "Complète le parcours CEME"
       ]
     }
   }
@@ -453,6 +533,16 @@ const PRODUCTS = [
         "Regula el tránsito intestinal",
         "Reduce procesos inflamatorios del tracto digestivo"
       ]
+    },
+    "fr": {
+      "tagline": "Reprogrammation de l’axe intestin-cerveau",
+      "description": "Favorise une santé gastro-intestinale complète. Harmonise, régénère et optimise le tube digestif, de la digestion à l’axe intestin-cerveau.",
+      "indications": [
+        "Soutient l’axe intestin-cerveau",
+        "Favorise l’harmonie digestive",
+        "Aide à la régénération du tractus digestif",
+        "Complète le soin intégratif"
+      ]
     }
   }
 },
@@ -503,6 +593,16 @@ const PRODUCTS = [
         "Ayuda en la regulación del miedo, la ira y las crisis emocionales",
         "Favorece la estabilidad en situaciones de estrés",
         "Estimula paz y claridad interior"
+      ]
+    },
+    "fr": {
+      "tagline": "Équilibre émotionnel | Peur, colère et pleurs",
+      "description": "Apporte de l’harmonie aux émotions, favorisant l’équilibre et la stabilité intérieurs. Aide à réguler des réponses intenses comme la peur, la colère et les pleurs.",
+      "indications": [
+        "Favorise l’équilibre émotionnel",
+        "Aide à réguler peur, colère et pleurs",
+        "Soutient la stabilité intérieure",
+        "Complète le travail émotionnel CEME"
       ]
     }
   }
@@ -559,6 +659,16 @@ const PRODUCTS = [
         "Estimula la presencia plena en el aquí y ahora",
         "Apoya el desarrollo del potencial individual"
       ]
+    },
+    "fr": {
+      "tagline": "Ici et maintenant | Neuroplasticité | Potentiel individuel",
+      "description": "Conçu pour soutenir les esprits atypiques et la présence ici et maintenant. Optimise l’absorption des nutriments informationnels et stimule la neuroplasticité.",
+      "indications": [
+        "Favorise la présence ici et maintenant",
+        "Soutient la neuroplasticité",
+        "Aide les esprits atypiques",
+        "Stimule le potentiel individuel"
+      ]
     }
   }
 },
@@ -609,6 +719,16 @@ const PRODUCTS = [
         "Estimula empatía y conexión con el otro",
         "Favorece la integración en grupos y vínculos",
         "Apoya la unión en los cuatro cuerpos"
+      ]
+    },
+    "fr": {
+      "tagline": "Connexion | Intégration | Lien avec le Tout",
+      "description": "Éveille un sentiment profond d’union, de connexion et d’intégration. Sa fréquence vibre avec le principe « nous faisons partie du Tout ».",
+      "indications": [
+        "Favorise le sentiment d’appartenance",
+        "Soutient la connexion et l’intégration",
+        "Renforce le lien avec le Tout",
+        "Complète la dimension spirituelle du soin"
       ]
     }
   }
@@ -661,6 +781,16 @@ const PRODUCTS = [
         "Ayuda en el tratamiento de grasa visceral",
         "Apoya tratamientos de inflamación sistémica"
       ]
+    },
+    "fr": {
+      "tagline": "Drainage vibrationnel des métaux lourds",
+      "description": "Favorise une information biophysique pour l’organisme, potentialisant l’élimination homéostatique des métaux lourds. Inclut un soutien hépatique dans le protocole fréquentiel.",
+      "indications": [
+        "Soutient le drainage des métaux lourds",
+        "Favorise l’élimination homéostatique",
+        "Aide le terrain hépatique",
+        "Complète les protocoles de détox CEME"
+      ]
     }
   }
 },
@@ -707,6 +837,16 @@ const PRODUCTS = [
         "Limpieza del terreno biológico",
         "Activación del drenaje linfático orgánico",
         "Apoyo en tratamientos estéticos de peso, celulitis e inflamación"
+      ]
+    },
+    "fr": {
+      "tagline": "Stimulus pour le drainage énergétique et émotionnel",
+      "description": "Potentialise la libération homéostatique des homotoxines et la fonction de tout le système lymphatique via une information cellulaire fréquentiellement organisée.",
+      "indications": [
+        "Soutient le drainage lymphatique",
+        "Favorise la libération énergétique et émotionnelle",
+        "Aide la fonction du système lymphatique",
+        "Complète les soins de flux et de détox"
       ]
     }
   }
@@ -758,6 +898,16 @@ const PRODUCTS = [
         "Ayuda en el control del bruxismo",
         "Equilibra el estrés y la ansiedad",
         "Estimula calma y paz interior"
+      ]
+    },
+    "fr": {
+      "tagline": "Réduction de l’hyperactivité, du bruxisme et du stress",
+      "description": "Harmonise l’esprit et le corps, apaisant les symptômes de stress et les tensions liées au bruxisme. Favorise le calme, la présence et des états de plus grande sérénité.",
+      "indications": [
+        "Favorise le calme mental",
+        "Aide face à l’hyperactivité et au stress",
+        "Soutient en cas de tensions liées au bruxisme",
+        "Complète le soin de régulation CEME"
       ]
     }
   }
@@ -811,6 +961,16 @@ const PRODUCTS = [
         "Línea de fitoalquimia de Família CEME",
         "Complemento al cuidado con el Método CEME"
       ]
+    },
+    "fr": {
+      "tagline": "Ligne de phytochimie | Sagesse des herbes en capsules",
+      "description": "Les Garrafadas en capsules réunissent la tradition des toniques médicinaux à base de plantes dans un format pratique et moderne. Elles font partie de la ligne de phytochimie de la Família CEME, pour un soin intégratif avec la force des plantes.",
+      "indications": [
+        "Format capsules, pratique au quotidien",
+        "Inspirées de la tradition des garrafadas",
+        "Ligne de phytochimie de la Família CEME",
+        "Complément au soin avec la Méthode CEME"
+      ]
     }
   }
 },
@@ -863,6 +1023,16 @@ const PRODUCTS = [
         "Orienta el cuidado en el Método CEME",
         "Actúa en los cuatro cuerpos"
       ]
+    },
+    "fr": {
+      "tagline": "Lecture vibrationnelle et bioénergétique",
+      "description": "La Carte holographique est une lecture vibrationnelle et bioénergétique pour identifier les blocages et orienter le soin des quatre corps — physique, émotionnel, mental et spirituel.",
+      "indications": [
+        "Lecture vibrationnelle et bioénergétique",
+        "Aide à identifier les blocages",
+        "Oriente le soin dans la Méthode CEME",
+        "Agit sur les quatre corps"
+      ]
     }
   }
 },
@@ -914,6 +1084,16 @@ const PRODUCTS = [
         "Favorecen la conexión y la presencia",
         "Uso práctico en lo cotidiano",
         "Complemento al Método CEME"
+      ]
+    },
+    "fr": {
+      "tagline": "Fréquences sonores pour la connexion neurale",
+      "description": "Les Musiques NeuroConnectives apportent des fréquences sonores pour soutenir la connexion, le focus et les états de présence au quotidien, en harmonie avec la Méthode CEME.",
+      "indications": [
+        "Fréquences sonores de soutien",
+        "Favorables à la connexion et à la présence",
+        "Usage pratique au quotidien",
+        "Complément à la Méthode CEME"
       ]
     }
   }
