@@ -526,8 +526,7 @@ section {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.solo-grid,
-.frequenciais-grid {
+.solo-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
   justify-content: start;
 }
