@@ -5,7 +5,7 @@ Site da Linha CEME (Corpo, Emoção, Mente e Espírito), com a aba de produtos, 
 ## O que tem neste site
 
 - Página inicial com fundadores, Método CEME, ferramentas e depoimentos
-- Aba **Produtos** com os **15 biomoduladores** (60 ml), cada um com:
+- Aba **Produtos** com os **15 moduladores biofísicos** (60 ml), cada um com:
   - imagem da ficha
   - áudio em português
   - valor (R$ 120,00)
