@@ -94,6 +94,7 @@
     applyStaticI18n();
     renderFilters();
     renderProducts();
+    renderGarrafadas();
     renderCart();
     const modal = $("#product-modal");
     if (modal && !modal.hidden && modal.dataset.openId) {
@@ -192,6 +193,15 @@
 
   function productCard(raw) {
     const p = localizedProduct(raw);
+    const audioBlock = p.audio
+      ? `<div class="audio-row">
+            <button class="audio-btn" type="button" data-audio="${p.audio}" aria-pressed="false">
+              <span class="audio-icon" aria-hidden="true"></span>
+              <span class="audio-label">${t("listenAudio")}</span>
+            </button>
+            <audio preload="none"></audio>
+          </div>`
+      : "";
     return `
       <article class="card" data-id="${p.id}" data-category="${p.category}">
         <button class="card-media" type="button" data-open="${p.id}" aria-label="${t("detailsOf")} ${p.name}">
@@ -202,13 +212,7 @@
           <h3>${p.name}</h3>
           <p class="tagline">${p.tagline}</p>
           <p class="price">${money(p.price)}</p>
-          <div class="audio-row">
-            <button class="audio-btn" type="button" data-audio="${p.audio}" aria-pressed="false">
-              <span class="audio-icon" aria-hidden="true"></span>
-              <span class="audio-label">${t("listenAudio")}</span>
-            </button>
-            <audio preload="none"></audio>
-          </div>
+          ${audioBlock}
           <div class="card-actions">
             <button class="btn btn-ghost" type="button" data-add="${p.id}">${t("add")}</button>
             <button class="btn btn-gold" type="button" data-buy="${p.id}">${t("buy")}</button>
@@ -218,14 +222,27 @@
     `;
   }
 
+  function sprayProducts() {
+    return PRODUCTS.filter((p) => p.kind !== "garrafada" && p.category !== "fito");
+  }
+
+  function garrafadaProducts() {
+    return PRODUCTS.filter((p) => p.kind === "garrafada" || p.category === "fito");
+  }
+
   function renderProducts() {
     const grid = $("#product-grid");
     if (!grid) return;
+    const sprays = sprayProducts();
     const list =
-      state.filter === "todos"
-        ? PRODUCTS
-        : PRODUCTS.filter((p) => p.category === state.filter);
+      state.filter === "todos" ? sprays : sprays.filter((p) => p.category === state.filter);
     grid.innerHTML = list.map(productCard).join("");
+  }
+
+  function renderGarrafadas() {
+    const grid = $("#garrafadas-grid");
+    if (!grid) return;
+    grid.innerHTML = garrafadaProducts().map(productCard).join("");
   }
 
   function renderFilters() {
@@ -259,9 +276,22 @@
     $("#modal-add").textContent = t("add");
     $("#modal-buy").textContent = t("buy");
     const audioBtn = $("#modal-audio");
-    audioBtn.dataset.audio = p.audio;
-    const label = audioBtn.querySelector(".audio-label");
-    if (label) label.textContent = t("listenAudio");
+    const audioRow = audioBtn && audioBtn.closest(".audio-row");
+    if (p.audio) {
+      if (audioRow) audioRow.hidden = false;
+      audioBtn.hidden = false;
+      audioBtn.dataset.audio = p.audio;
+      const label = audioBtn.querySelector(".audio-label");
+      if (label) label.textContent = t("listenAudio");
+    } else if (audioBtn) {
+      delete audioBtn.dataset.audio;
+      audioBtn.hidden = true;
+      if (audioRow) audioRow.hidden = true;
+    }
+    const usage = $("#modal-usage");
+    if (usage) {
+      usage.textContent = p.kind === "garrafada" || p.category === "fito" ? t("garrafadaUsage") : t("usageHint");
+    }
     modal.hidden = false;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
@@ -464,6 +494,7 @@
     applyStaticI18n();
     renderFilters();
     renderProducts();
+    renderGarrafadas();
     renderCart();
     setupNav();
     document.addEventListener("click", onClick);

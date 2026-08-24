@@ -761,5 +761,57 @@ const PRODUCTS = [
       ]
     }
   }
+},
+{
+  "id": "garrafadas-capsula",
+  "name": "Garrafadas em Cápsula",
+  "category": "fito",
+  "volume": "cápsulas",
+  "price": 88,
+  "image": "assets/img/garrafadas-capsula.jpg",
+  "audio": null,
+  "kind": "garrafada",
+  "i18n": {
+    "pt": {
+      "tagline": "Linha de fitoalquímicos | Sabedoria das ervas em cápsulas",
+      "description": "As Garrafadas em Cápsula reúnem a tradição das garrafadas medicinais em formato prático e moderno. Fazem parte da linha de fitoalquímicos da Família CEME, para quem busca o cuidado integrativo com a força das plantas.",
+      "indications": [
+        "Formato em cápsulas, prático no dia a dia",
+        "Inspiradas na tradição das garrafadas",
+        "Linha de fitoalquímicos da Família CEME",
+        "Complemento ao cuidado com o Método CEME"
+      ]
+    },
+    "en": {
+      "tagline": "Phytoalchemy line | Herbal wisdom in capsules",
+      "description": "Garrafadas in Capsules bring the tradition of medicinal herbal tonics into a practical, modern format. Part of Família CEME’s phytoalchemy line for integrative care with the power of plants.",
+      "indications": [
+        "Capsule format, practical for daily use",
+        "Inspired by traditional herbal tonics (garrafadas)",
+        "Part of Família CEME’s phytoalchemy line",
+        "Complements care with the CEME Method"
+      ]
+    },
+    "de": {
+      "tagline": "Phytoalchemie-Linie | Kräuterweisheit in Kapseln",
+      "description": "Garrafadas in Kapseln bringen die Tradition medizinischer Kräuterelixiere in ein praktisches, modernes Format. Teil der Phytoalchemie-Linie der Família CEME für integrative Pflege mit der Kraft der Pflanzen.",
+      "indications": [
+        "Kapselformat – praktisch für den Alltag",
+        "Inspiriert von traditionellen Kräuterelixieren (Garrafadas)",
+        "Teil der Phytoalchemie-Linie der Família CEME",
+        "Ergänzt die Pflege mit der CEME-Methode"
+      ]
+    },
+    "es": {
+      "tagline": "Línea de fitoalquimia | Sabiduría de las hierbas en cápsulas",
+      "description": "Las Garrafadas en Cápsula reúnen la tradición de las garrafadas medicinales en un formato práctico y moderno. Forman parte de la línea de fitoalquimia de Família CEME, para quien busca el cuidado integrativo con la fuerza de las plantas.",
+      "indications": [
+        "Formato en cápsulas, práctico en el día a día",
+        "Inspiradas en la tradición de las garrafadas",
+        "Línea de fitoalquimia de Família CEME",
+        "Complemento al cuidado con el Método CEME"
+      ]
+    }
+  }
 }
 ];
