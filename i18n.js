@@ -119,7 +119,7 @@ const I18N = {
     book2Text:
       "Coletânea sobre saúde integrativa: um convite a celebrar a vida e enxergar o ser humano de forma completa — corpo, mente e espírito.",
     book2ImgAlt: "Capa do livro Profissionais da Nova Saúde",
-    storiesTitle: "Vidas transformadas",
+    storiesTitle: "Vidas transformadas — Feedback",
     quote1:
       "“Antes de começar o tratamento, sentia desapego e dificuldade de terminar aquilo que começava… hoje eu decido como tratar e cuidar.”",
     quote2:
@@ -321,7 +321,7 @@ waEval: "Gostaria de agendar uma avaliação",
     book2Text:
       "A collective work on integrative health: an invitation to celebrate life and see the human being as a whole — body, mind and spirit.",
     book2ImgAlt: "Cover of the book Professionals of the New Health",
-    storiesTitle: "Lives transformed",
+    storiesTitle: "Lives transformed — Feedback",
     quote1:
       "“Before starting treatment, I felt detachment and struggled to finish what I started… today I decide how to treat and care.”",
     quote2:
@@ -523,7 +523,7 @@ waEval: "I would like to book an assessment",
     book2Text:
       "Eine Sammelwerk zur integrativen Gesundheit: eine Einladung, das Leben zu feiern und den Menschen ganzheitlich zu sehen — Körper, Geist und Seele.",
     book2ImgAlt: "Cover des Buches Fachkräfte der Neuen Gesundheit",
-    storiesTitle: "Verwandelte Leben",
+    storiesTitle: "Verwandelte Leben — Feedback",
     quote1:
       "„Bevor ich die Behandlung begann, fühlte ich Distanz und hatte Schwierigkeiten, Dinge zu Ende zu bringen… heute entscheide ich, wie ich behandle und sorge.“",
     quote2:
@@ -725,7 +725,7 @@ waEval: "Ich möchte eine Bewertung vereinbaren",
     book2Text:
       "Colección sobre salud integrativa: una invitación a celebrar la vida y ver al ser humano de forma completa — cuerpo, mente y espíritu.",
     book2ImgAlt: "Portada del libro Profesionales de la Nueva Salud",
-    storiesTitle: "Vidas transformadas",
+    storiesTitle: "Vidas transformadas — Feedback",
     quote1:
       "“Antes de comenzar el tratamiento, sentía desapego y dificultad para terminar lo que empezaba… hoy decido cómo tratar y cuidar.”",
     quote2:
@@ -915,7 +915,7 @@ waEval: "Ich möchte eine Bewertung vereinbaren",
     book2Authors: "Divers auteurs · Editora Perensin",
     book2Text: "Recueil sur la santé intégrative : une invitation à célébrer la vie et à voir l’être humain de façon complète — corps, mental et esprit.",
     book2ImgAlt: "Pochette du livre Profissionais da Nova Saúde",
-    storiesTitle: "Vies transformées",
+    storiesTitle: "Vies transformées — Feedback",
     quote1: "« Avant de commencer le traitement, je ressentais du détachement et de la difficulté à terminer ce que je commençais… aujourd’hui, je décide comment traiter et prendre soin. »",
     quote2: "« Le traitement a aidé sur le plan physique et énergétique à dépasser mes limites et à comprendre ma force et mon rôle dans la vie. »",
     quote3: "« Je me vois comme quelqu’un qui a pris en main le chemin de l’autoguérison. Ma santé mentale et émotionnelle s’est améliorée. »",
