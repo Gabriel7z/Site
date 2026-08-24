@@ -2,11 +2,19 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
+  const LOCALES = { pt: "pt-BR", en: "en-US", es: "es-ES", de: "de-DE", fr: "fr-FR" };
+  const CURRENCY_BY_LANG = { pt: "BRL", en: "USD", es: "EUR", de: "EUR", fr: "EUR" };
+  const FX_FALLBACK = { USD: 0.194, EUR: 0.166 };
+  const FX_CACHE_KEY = "ceme-fx-rates";
+  const ALBUM_PRICE_BRL = 8;
+
   const state = {
     cart: JSON.parse(localStorage.getItem("ceme-cart") || "[]"),
     filter: "todos",
     currentAudio: null,
     lang: localStorage.getItem("ceme-lang") || "pt",
+    fxRates: { BRL: 1, ...FX_FALLBACK },
+    fxDate: null,
   };
 
   if (!I18N[state.lang]) state.lang = "pt";
@@ -15,12 +23,95 @@
     return (I18N[state.lang] && I18N[state.lang][key]) || I18N.pt[key] || key;
   }
 
-  function money(n) {
-    const locales = { pt: "pt-BR", en: "en-US", es: "es-ES", de: "de-DE", fr: "fr-FR" };
-    return n.toLocaleString(locales[state.lang] || "pt-BR", {
+  function readFxCache() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(FX_CACHE_KEY) || "null");
+      if (!raw || !raw.rates || !raw.fetchedAt) return null;
+      if (Date.now() - raw.fetchedAt > 24 * 60 * 60 * 1000) return null;
+      return raw;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeFxCache(rates, date) {
+    localStorage.setItem(
+      FX_CACHE_KEY,
+      JSON.stringify({ rates, date, fetchedAt: Date.now() })
+    );
+  }
+
+  async function loadFxRates() {
+    const cached = readFxCache();
+    if (cached) {
+      state.fxRates = { BRL: 1, ...FX_FALLBACK, ...cached.rates };
+      state.fxDate = cached.date || null;
+      return;
+    }
+    try {
+      const res = await fetch(
+        "https://api.frankfurter.dev/v1/latest?from=BRL&to=USD,EUR"
+      );
+      if (!res.ok) throw new Error("fx");
+      const data = await res.json();
+      const rates = data.rates || {};
+      state.fxRates = { BRL: 1, ...FX_FALLBACK, ...rates };
+      state.fxDate = data.date || null;
+      writeFxCache(rates, state.fxDate);
+    } catch {
+      state.fxRates = { BRL: 1, ...FX_FALLBACK };
+      state.fxDate = null;
+    }
+  }
+
+  function activeCurrency() {
+    return CURRENCY_BY_LANG[state.lang] || "BRL";
+  }
+
+  function formatMoney(amount, currency, locale) {
+    return amount.toLocaleString(locale || LOCALES[state.lang] || "pt-BR", {
       style: "currency",
-      currency: "BRL",
+      currency,
     });
+  }
+
+  function convertFromBrl(amountBrl, currency) {
+    if (!currency || currency === "BRL") return amountBrl;
+    const rate = state.fxRates[currency];
+    if (!rate) return amountBrl;
+    return amountBrl * rate;
+  }
+
+  /** Display price in the language’s local currency (from BRL base). */
+  function money(amountBrl) {
+    const currency = activeCurrency();
+    const locale = LOCALES[state.lang] || "pt-BR";
+    return formatMoney(convertFromBrl(amountBrl, currency), currency, locale);
+  }
+
+  /** WhatsApp keeps official BRL and adds approx local when needed. */
+  function moneyForWhatsApp(amountBrl) {
+    const brl = formatMoney(amountBrl, "BRL", "pt-BR");
+    const currency = activeCurrency();
+    if (currency === "BRL") return brl;
+    return `${brl} (≈ ${money(amountBrl)})`;
+  }
+
+  function renderAlbumPrice() {
+    const el = $(".album-price");
+    if (!el) return;
+    el.textContent = money(ALBUM_PRICE_BRL);
+  }
+
+  function refreshPrices() {
+    renderProducts();
+    renderExtras();
+    renderCart();
+    renderAlbumPrice();
+    const modal = $("#product-modal");
+    if (modal && !modal.hidden && modal.dataset.openId) {
+      openModal(modal.dataset.openId);
+    }
   }
 
   function waLink(text) {
@@ -93,13 +184,7 @@
     if (!CATEGORY_KEYS.includes(state.filter)) state.filter = "todos";
     applyStaticI18n();
     renderFilters();
-    renderProducts();
-    renderExtras();
-    renderCart();
-    const modal = $("#product-modal");
-    if (modal && !modal.hidden && modal.dataset.openId) {
-      openModal(modal.dataset.openId);
-    }
+    refreshPrices();
   }
 
   function saveCart() {
@@ -142,11 +227,16 @@
     if (!state.cart.length) return;
     const lines = state.cart.map((item) => {
       const p = PRODUCTS.find((x) => x.id === item.id);
-      return `• ${p.name} (${p.volume}) x${item.qty} — ${money(p.price * item.qty)}`;
+      return `• ${p.name} (${p.volume}) x${item.qty} — ${moneyForWhatsApp(p.price * item.qty)}`;
     });
-    const text = [t("waHelloBuy"), "", ...lines, "", `${t("waTotal")} ${money(cartTotal())}`].join(
-      "\n"
-    );
+    const text = [
+      t("waHelloBuy"),
+      "",
+      ...lines,
+      "",
+      `${t("waTotal")} ${moneyForWhatsApp(cartTotal())}`,
+      t("currencyHint"),
+    ].join("\n");
     window.open(waLink(text), "_blank", "noopener");
   }
 
@@ -155,7 +245,7 @@
     const text = t("waHelloBuyOne")
       .replace("{name}", p.name)
       .replace("{volume}", p.volume)
-      .replace("{price}", money(p.price));
+      .replace("{price}", moneyForWhatsApp(p.price));
     window.open(waLink(text), "_blank", "noopener");
   }
 
@@ -531,6 +621,8 @@
     renderProducts();
     renderExtras();
     renderCart();
+    renderAlbumPrice();
+    loadFxRates().then(() => refreshPrices());
     setupNav();
     document.addEventListener("click", onClick);
     document.addEventListener("change", (e) => {

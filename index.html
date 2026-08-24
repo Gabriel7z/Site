@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -176,6 +176,7 @@
         </div>
         <div class="filters" id="product-filters" role="tablist" aria-label="Filtrar produtos" data-i18n-aria="filterAria"></div>
         <div class="product-grid" id="product-grid"></div>
+        <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$) pelo WhatsApp.</p>
       </div>
     </section>
 
@@ -214,7 +215,7 @@
           </div>
           <div class="album-body">
             <p class="album-note" data-i18n="albumSampleNote">Amostra para o cliente: as prévias são ilustrativas. No produto real entram as faixas da Família CEME.</p>
-            <p class="price album-price">R$ 8,00</p>
+            <p class="price album-price" data-price-brl="8">R$ 8,00</p>
             <ol class="album-tracks" id="album-tracks">
               <li>
                 <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-1.mp3" aria-pressed="false">
@@ -395,6 +396,7 @@
     <ul class="cart-list" id="cart-list"></ul>
     <div class="cart-footer" id="cart-footer" hidden>
       <p><span data-i18n="cartTotal">Total:</span> <strong id="cart-total">R$ 0,00</strong></p>
+      <p class="currency-hint" data-i18n="currencyHint">Valores aproximados pela cotação do dia. A cobrança oficial é em reais (R$) pelo WhatsApp.</p>
       <button class="btn btn-gold" id="cart-checkout" type="button" data-i18n="cartCheckout">Finalizar no WhatsApp</button>
     </div>
   </aside>
@@ -425,8 +427,8 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=24"></script>
-  <script src="produtos.js?v=24"></script>
-  <script src="app.js?v=24"></script>
+  <script src="i18n.js?v=25"></script>
+  <script src="produtos.js?v=25"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>
