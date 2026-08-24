@@ -233,8 +233,8 @@
     return PRODUCTS.filter((p) => !p.kind || p.kind === "spray");
   }
 
-  function extraProducts() {
-    return PRODUCTS.filter((p) => p.kind && p.kind !== "spray");
+  function productsByKind(kind) {
+    return PRODUCTS.filter((p) => p.kind === kind);
   }
 
   function renderProducts() {
@@ -246,10 +246,15 @@
     grid.innerHTML = list.map(productCard).join("");
   }
 
-  function renderExtras() {
-    const grid = $("#frequenciais-grid") || $("#garrafadas-grid");
+  function renderSoloSection(gridId, kind) {
+    const grid = $(gridId);
     if (!grid) return;
-    grid.innerHTML = extraProducts().map(productCard).join("");
+    grid.innerHTML = productsByKind(kind).map(productCard).join("");
+  }
+
+  function renderExtras() {
+    renderSoloSection("#mapa-grid", "mapa");
+    renderSoloSection("#garrafadas-grid", "garrafada");
   }
 
   function renderFilters() {
