@@ -194,6 +194,19 @@ button {
   gap: 8px;
   flex-shrink: 0;
 }
+.staff-entry {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--burgundy);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.staff-entry:hover,
+.staff-entry:focus-visible {
+  background: rgba(201, 161, 74, 0.16);
+}
 
 .lang-switch {
   display: inline-flex;

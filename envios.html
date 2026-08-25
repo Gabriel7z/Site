@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=38">
+  <link rel="stylesheet" href="style.css?v=39">
 </head>
 <body>
   <header class="site-header is-scrolled">
@@ -19,16 +19,22 @@
         <img src="assets/img/logo.png" alt="Logo CEME">
         <span class="brand-text">
           <strong>CEME</strong>
-          <span>Lista de envio — sem cadastro de membros</span>
+          <span>Área da loja — só quem posta</span>
         </span>
       </a>
+      <nav class="site-nav" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Voltar à vitrine</a></li>
+          <li><a href="pedidos.html">Página do cliente</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
   <main class="wrap fulfill-page">
-    <p class="kicker">Uso interno da loja</p>
-    <h1>Quem comprou e para onde mandar</h1>
-    <p class="lead">Só entram pedidos com pagamento aprovado no Mercado Pago. Marque o X quando postar: o cliente recebe “seu pedido acabou de ser enviado” no e-mail e no WhatsApp.</p>
+    <p class="kicker">Dono da loja · postagem</p>
+    <h1>Área da loja — envios</h1>
+    <p class="lead">Esta página é para quem separa e posta. O cliente não usa aqui: ele entra em <a href="pedidos.html">Acompanhar pedido</a> com o número CEME-… Só aparecem compras já aprovadas no Mercado Pago. Peça a senha da loja a quem configurou o site (campo ADMIN_KEY no Render).</p>
     <form class="track-form" id="admin-form">
       <label for="admin-key">Senha da loja (ADMIN_KEY)</label>
       <div class="track-row">
@@ -40,7 +46,7 @@
     <div id="admin-list"></div>
   </main>
 
-  <script src="checkout-config.js?v=38"></script>
-  <script src="envios.js?v=38"></script>
+  <script src="checkout-config.js?v=39"></script>
+  <script src="envios.js?v=39"></script>
 </body>
 </html>
