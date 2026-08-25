@@ -5,15 +5,15 @@ import { fileURLToPath } from "node:url";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { MercadoPagoConfig, Payment } from "mercadopago";
+import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
 import {
   FREE_SHIPPING_FROM,
-  demoPixPayload,
   hasForbiddenCardPayload,
-  installmentOptions,
+  isHttpsUrl,
   isOriginAllowed,
   makeOrderId,
   paymentMode,
+  preferenceItems,
   publicErrorCode,
   quoteCart,
   validatePayer,
@@ -53,7 +53,7 @@ app.use((req, res, next) => {
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https:; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' https://sdk.mercadopago.com; connect-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.mercadopago.com https://http2.mlstatic.com"
+    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https:; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self'; connect-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.mercadopago.com https://www.mercadopago.com.br https://http2.mlstatic.com"
   );
   if (req.secure || req.headers["x-forwarded-proto"] === "https") {
     res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
@@ -80,7 +80,7 @@ function rateLimit(req, res, next) {
   const ip = req.ip || "local";
   const now = Date.now();
   const windowMs = 60_000;
-  const max = req.path.startsWith("/api/pay") ? 12 : 30;
+  const max = req.path.startsWith("/api/checkout") || req.path.startsWith("/api/order") ? 12 : 30;
   const current = hits.get(ip) || [];
   const recent = current.filter((time) => now - time < windowMs);
   recent.push(now);
@@ -99,6 +99,18 @@ function quoteFromBody(body) {
   });
 }
 
+function siteUrl(req) {
+  const fromEnv = String(process.env.PUBLIC_SITE_URL || "").replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  const proto = req.get("x-forwarded-proto") || req.protocol || "http";
+  const host = req.get("host") || `127.0.0.1:${PORT}`;
+  return `${String(proto).split(",")[0]}://${host}`;
+}
+
+function mpClient() {
+  return new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
+}
+
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, demo: DEMO_PAYMENTS, sandbox: SANDBOX, mode: MODE });
 });
@@ -108,7 +120,8 @@ app.get("/api/config", (_req, res) => {
     demo: DEMO_PAYMENTS,
     sandbox: SANDBOX,
     mode: MODE,
-    mpPublicKey: MP_PUBLIC_KEY,
+    mpPublicKey: "",
+    checkout: "pro",
     maxInstallments: MAX_INSTALLMENTS,
     freeShippingFrom: FREE_FROM,
   });
@@ -123,170 +136,88 @@ app.post("/api/quote", rateLimit, (req, res) => {
   }
 });
 
-app.post("/api/pay", rateLimit, async (req, res) => {
+app.post("/api/checkout", rateLimit, async (req, res) => {
   try {
     if (hasForbiddenCardPayload(req.body)) {
       return res.status(400).json({ error: "card_data_not_allowed" });
     }
-    const method = String(req.body?.method || "card");
     const quote = quoteFromBody(req.body || {});
     const requireAddress = quote.hasPhysical && quote.shippingMethod === "delivery";
     const payer = validatePayer(req.body?.payer || {}, { requireAddress });
     const orderId = makeOrderId();
-    const description = quote.lines
-      .map((line) => `${line.name} x${line.qty}`)
-      .join(", ")
-      .slice(0, 200);
-
-    if (method === "pix") {
-      if (DEMO_PAYMENTS) {
-        return res.json({
-          status: "pending",
-          demo: true,
-          orderId,
-          total: quote.total,
-          shipping: quote.shipping,
-          pixCopyPaste: demoPixPayload(orderId, quote.total),
-        });
-      }
-
-      const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
-      const payment = new Payment(client);
-      const result = await payment.create({
-        body: {
-          transaction_amount: Number(quote.total.toFixed(2)),
-          description: `Pedido ${orderId} · ${description}`,
-          payment_method_id: "pix",
-          payer: {
-            email: payer.email,
-            first_name: payer.name.split(" ")[0],
-            last_name: payer.name.split(" ").slice(1).join(" ") || payer.name,
-            identification: { type: "CPF", number: payer.cpf },
-          },
-          additional_info: {
-            items: quote.lines.map((line) => ({
-              id: line.id,
-              title: line.name,
-              description: `${line.name} ${line.volume}`,
-              quantity: line.qty,
-              unit_price: line.unitPrice,
-              category_id: "others",
-            })),
-          },
-          external_reference: orderId,
-          metadata: {
-            order_id: orderId,
-            phone: payer.phone,
-            shipping_method: quote.shippingMethod,
-          },
-        },
-        requestOptions: {
-          idempotencyKey: req.body?.idempotencyKey || randomUUID(),
-        },
-      });
-
-      const pix = result.point_of_interaction?.transaction_data || {};
-      return res.json({
-        status: result.status || "pending",
-        orderId,
-        total: quote.total,
-        shipping: quote.shipping,
-        paymentId: result.id,
-        pixCopyPaste: pix.qr_code,
-        pixQrBase64: pix.qr_code_base64,
-      });
-    }
-
-    const installments = Number(req.body?.installments || 1);
-    const options = installmentOptions(quote.total, MAX_INSTALLMENTS);
-    if (!options.some((option) => option.n === installments)) {
-      return res.status(400).json({ error: "invalid_installments" });
-    }
+    const shop = siteUrl(req);
+    const back = `${shop}/index.html`;
+    const items = preferenceItems(quote);
 
     if (DEMO_PAYMENTS) {
       return res.json({
-        status: "approved",
         demo: true,
         orderId,
         total: quote.total,
         shipping: quote.shipping,
-        installments,
+        checkoutUrl: `${back}?mp=demo&external_reference=${encodeURIComponent(orderId)}`,
       });
     }
 
-    const token = String(req.body?.token || "");
-    if (!token) {
-      return res.status(400).json({ error: "missing_token" });
+    const names = payer.name.split(" ");
+    const preference = new Preference(mpClient());
+    const body = {
+      items,
+      payer: {
+        name: names[0],
+        surname: names.slice(1).join(" ") || names[0],
+        email: payer.email,
+        phone: { area_code: payer.phone.slice(0, 2), number: payer.phone.slice(2) },
+        identification: { type: "CPF", number: payer.cpf },
+        address: requireAddress
+          ? {
+              zip_code: payer.cep,
+              street_name: payer.street,
+              street_number: payer.number,
+            }
+          : undefined,
+      },
+      back_urls: {
+        success: back,
+        failure: back,
+        pending: back,
+      },
+      ...(isHttpsUrl(back) ? { auto_return: "approved" } : {}),
+      external_reference: orderId,
+      statement_descriptor: "FAMILIA CEME",
+      binary_mode: false,
+      payment_methods: {
+        installments: MAX_INSTALLMENTS,
+      },
+      metadata: {
+        order_id: orderId,
+        phone: payer.phone,
+        shipping_method: quote.shippingMethod,
+      },
+    };
+    const notify = String(process.env.NOTIFICATION_URL || "").trim();
+    if (notify.startsWith("https://")) {
+      body.notification_url = notify;
     }
 
-    const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
-    const payment = new Payment(client);
-    const result = await payment.create({
-      body: {
-        transaction_amount: Number(quote.total.toFixed(2)),
-        token,
-        description: `Pedido ${orderId} · ${description}`,
-        installments,
-        payment_method_id: req.body?.paymentMethodId || undefined,
-        issuer_id: req.body?.issuerId || undefined,
-        payer: {
-          email: payer.email,
-          first_name: payer.name.split(" ")[0],
-          last_name: payer.name.split(" ").slice(1).join(" ") || payer.name,
-          identification: {
-            type: "CPF",
-            number: payer.cpf,
-          },
-          address: requireAddress
-            ? {
-                zip_code: payer.cep,
-                street_name: payer.street,
-                street_number: payer.number,
-                neighborhood: payer.neighborhood,
-                city: payer.city,
-                federal_unit: payer.state,
-              }
-            : undefined,
-        },
-        additional_info: {
-          items: quote.lines.map((line) => ({
-            id: line.id,
-            title: line.name,
-            description: `${line.name} ${line.volume}`,
-            quantity: line.qty,
-            unit_price: line.unitPrice,
-            category_id: "others",
-          })),
-        },
-        external_reference: orderId,
-        metadata: {
-          order_id: orderId,
-          phone: payer.phone,
-          complement: payer.complement,
-          shipping_method: quote.shippingMethod,
-        },
-      },
+    const result = await preference.create({
+      body,
       requestOptions: {
         idempotencyKey: req.body?.idempotencyKey || randomUUID(),
       },
     });
 
-    const status = result.status || "unknown";
-    if (status === "rejected" || status === "cancelled") {
-      return res.status(402).json({
-        error: "rejected",
-        status,
-        orderId,
-      });
+    const checkoutUrl = result.init_point;
+    if (!checkoutUrl) {
+      return res.status(502).json({ error: "checkout_failed" });
     }
 
     return res.json({
-      status,
       orderId,
       total: quote.total,
       shipping: quote.shipping,
-      installments,
-      paymentId: result.id,
+      preferenceId: result.id,
+      checkoutUrl,
     });
   } catch (err) {
     const code = publicErrorCode(err);
@@ -295,42 +226,64 @@ app.post("/api/pay", rateLimit, async (req, res) => {
       code === "empty_cart" ||
       code === "invalid_item" ||
       code === "invalid_qty" ||
-      code === "invalid_installments" ||
-      code === "missing_token" ||
       code === "card_data_not_allowed"
         ? 400
-        : code === "rejected"
-          ? 402
-          : 500;
+        : 500;
     if (status === 500) {
-      console.error("pay_failed", code);
+      console.error("checkout_failed", code);
     }
     return res.status(status).json({
-      error: code,
+      error: code === "pay_failed" ? "checkout_failed" : code,
       fields: err.fields || undefined,
     });
   }
 });
 
-app.get("/api/pay/:paymentId", rateLimit, async (req, res) => {
-  const id = String(req.params.paymentId || "").replace(/\D/g, "");
-  if (!id) {
+app.get("/api/order/:orderId", rateLimit, async (req, res) => {
+  const orderId = String(req.params.orderId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
   if (DEMO_PAYMENTS) {
-    return res.json({ status: "pending", demo: true });
+    return res.json({ status: "approved", demo: true, orderId });
   }
   try {
-    const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
-    const payment = new Payment(client);
-    const result = await payment.get({ id });
+    const paymentId = String(req.query.payment_id || "").replace(/\D/g, "");
+    const payment = new Payment(mpClient());
+    if (paymentId) {
+      const result = await payment.get({ id: paymentId });
+      if (result.external_reference && result.external_reference !== orderId) {
+        return res.status(404).json({ error: "not_found" });
+      }
+      return res.json({
+        status: result.status || "unknown",
+        orderId: result.external_reference || orderId,
+      });
+    }
+    const found = await payment.search({
+      options: {
+        external_reference: orderId,
+        sort: "date_created",
+        criteria: "desc",
+      },
+    });
+    const results = found.results || [];
+    const approved = results.find((item) => item.status === "approved");
+    const current = approved || results[0];
+    if (!current) {
+      return res.json({ status: "pending", orderId });
+    }
     return res.json({
-      status: result.status || "unknown",
-      orderId: result.external_reference || undefined,
+      status: current.status || "unknown",
+      orderId: current.external_reference || orderId,
     });
   } catch {
     return res.status(404).json({ error: "not_found" });
   }
+});
+
+app.post("/api/webhooks/mercadopago", (_req, res) => {
+  res.status(200).json({ ok: true });
 });
 
 const blockedPrefixes = ["/server", "/.git", "/node_modules"];

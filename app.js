@@ -2,12 +2,9 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-  const LOCALES = { pt: "pt-BR", en: "en-US", es: "es-ES", de: "de-DE", fr: "fr-FR" };
-  const CURRENCY_BY_LANG = { pt: "BRL", en: "USD", es: "EUR", de: "EUR", fr: "EUR" };
-  const FX_FALLBACK = { USD: 0.194, EUR: 0.166 };
-  const FX_CACHE_KEY = "ceme-fx-rates";
   const ALBUM_PRICE_BRL = 8;
   const PRODUCT_IDS = new Set(PRODUCTS.map((p) => p.id));
+  const CATEGORY_KEYS = ["todos", "mente", "comunicacao", "sensorial", "emocao", "detox", "corpo", "frequencial"];
 
   function readCart() {
     try {
@@ -28,89 +25,22 @@
     cart: readCart(),
     filter: "todos",
     currentAudio: null,
-    lang: localStorage.getItem("ceme-lang") || "pt",
-    fxRates: { BRL: 1, ...FX_FALLBACK },
-    fxDate: null,
+    lang: "pt",
   };
 
-  if (!I18N[state.lang]) state.lang = "pt";
-
   function t(key) {
-    return (I18N[state.lang] && I18N[state.lang][key]) || I18N.pt[key] || key;
+    return I18N.pt[key] || key;
   }
 
-  function readFxCache() {
-    try {
-      const raw = JSON.parse(localStorage.getItem(FX_CACHE_KEY) || "null");
-      if (!raw || !raw.rates || !raw.fetchedAt) return null;
-      if (Date.now() - raw.fetchedAt > 24 * 60 * 60 * 1000) return null;
-      return raw;
-    } catch {
-      return null;
-    }
-  }
-
-  function writeFxCache(rates, date) {
-    localStorage.setItem(
-      FX_CACHE_KEY,
-      JSON.stringify({ rates, date, fetchedAt: Date.now() })
-    );
-  }
-
-  async function loadFxRates() {
-    const cached = readFxCache();
-    if (cached) {
-      state.fxRates = { BRL: 1, ...FX_FALLBACK, ...cached.rates };
-      state.fxDate = cached.date || null;
-      return;
-    }
-    try {
-      const res = await fetch(
-        "https://api.frankfurter.dev/v1/latest?from=BRL&to=USD,EUR"
-      );
-      if (!res.ok) throw new Error("fx");
-      const data = await res.json();
-      const rates = data.rates || {};
-      state.fxRates = { BRL: 1, ...FX_FALLBACK, ...rates };
-      state.fxDate = data.date || null;
-      writeFxCache(rates, state.fxDate);
-    } catch {
-      state.fxRates = { BRL: 1, ...FX_FALLBACK };
-      state.fxDate = null;
-    }
-  }
-
-  function activeCurrency() {
-    return CURRENCY_BY_LANG[state.lang] || "BRL";
-  }
-
-  function formatMoney(amount, currency, locale) {
-    return amount.toLocaleString(locale || LOCALES[state.lang] || "pt-BR", {
+  function money(amountBrl) {
+    return Number(amountBrl).toLocaleString("pt-BR", {
       style: "currency",
-      currency,
+      currency: "BRL",
     });
   }
 
-  function convertFromBrl(amountBrl, currency) {
-    if (!currency || currency === "BRL") return amountBrl;
-    const rate = state.fxRates[currency];
-    if (!rate) return amountBrl;
-    return amountBrl * rate;
-  }
-
-  /** Display price in the language’s local currency (from BRL base). */
-  function money(amountBrl) {
-    const currency = activeCurrency();
-    const locale = LOCALES[state.lang] || "pt-BR";
-    return formatMoney(convertFromBrl(amountBrl, currency), currency, locale);
-  }
-
-  /** WhatsApp keeps official BRL and adds approx local when needed. */
   function moneyForWhatsApp(amountBrl) {
-    const brl = formatMoney(amountBrl, "BRL", "pt-BR");
-    const currency = activeCurrency();
-    if (currency === "BRL") return brl;
-    return `${brl} (≈ ${money(amountBrl)})`;
+    return money(amountBrl);
   }
 
   function renderAlbumPrice() {
@@ -136,18 +66,17 @@
   }
 
   function localizedProduct(p) {
-    const copy = (p.i18n && (p.i18n[state.lang] || p.i18n.pt)) || {};
     return {
       ...p,
-      tagline: copy.tagline || "",
-      description: copy.description || "",
-      indications: copy.indications || [],
+      tagline: p.tagline || "",
+      description: p.description || "",
+      indications: p.indications || [],
       categoryLabel: t(`cat_${p.category}`),
     };
   }
 
   function applyStaticI18n() {
-    const dict = I18N[state.lang] || I18N.pt;
+    const dict = I18N.pt;
     document.documentElement.lang = dict.htmlLang || "pt-BR";
 
     $$("[data-i18n]").forEach((el) => {
@@ -186,22 +115,6 @@
       const a = $(sel);
       if (a) a.href = `https://wa.me/${WHATSAPP}/?text=${evalText}`;
     });
-
-    $$(".lang-btn").forEach((btn) => {
-      const active = btn.dataset.lang === state.lang;
-      btn.classList.toggle("is-active", active);
-      btn.setAttribute("aria-pressed", String(active));
-    });
-  }
-
-  function setLanguage(lang) {
-    if (!I18N[lang]) return;
-    state.lang = lang;
-    localStorage.setItem("ceme-lang", lang);
-    if (!CATEGORY_KEYS.includes(state.filter)) state.filter = "todos";
-    applyStaticI18n();
-    renderFilters();
-    refreshPrices();
   }
 
   function saveCart() {
@@ -579,12 +492,6 @@
   }
 
   function onClick(e) {
-    const langBtn = e.target.closest("[data-lang]");
-    if (langBtn && langBtn.dataset.lang) {
-      setLanguage(langBtn.dataset.lang);
-      return;
-    }
-
     const tEl = e.target.closest(
       "[data-filter],[data-open],[data-add],[data-buy],[data-audio],[data-remove],[data-qty-minus],[data-qty-plus]"
     );
@@ -621,7 +528,6 @@
     renderExtras();
     renderCart();
     renderAlbumPrice();
-    loadFxRates().then(() => refreshPrices());
     setupNav();
     document.addEventListener("click", onClick);
     document.addEventListener("change", (e) => {

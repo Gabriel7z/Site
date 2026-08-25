@@ -215,8 +215,40 @@ export function publicErrorCode(err) {
     "invalid_payment",
     "not_found",
     "pay_failed",
+    "checkout_failed",
   ]);
   return allowed.has(code) ? code : "pay_failed";
+}
+
+export function preferenceItems(quote) {
+  const items = (quote?.lines || []).map((line) => ({
+    id: String(line.id).slice(0, 256),
+    title: String(line.name).slice(0, 256),
+    description: `${line.name} ${line.volume || ""}`.trim().slice(0, 256),
+    quantity: line.qty,
+    unit_price: Number(Number(line.unitPrice).toFixed(2)),
+    currency_id: "BRL",
+    category_id: "others",
+  }));
+  if (Number(quote?.shipping) > 0) {
+    items.push({
+      id: "frete",
+      title: "Frete",
+      quantity: 1,
+      unit_price: Number(Number(quote.shipping).toFixed(2)),
+      currency_id: "BRL",
+      category_id: "others",
+    });
+  }
+  return items;
+}
+
+export function isHttpsUrl(value) {
+  try {
+    return new URL(String(value)).protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 export function validatePayer(payer, { requireAddress = true } = {}) {

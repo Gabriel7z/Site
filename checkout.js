@@ -23,10 +23,7 @@
     orderId: "",
     lastQuoteTotal: 0,
     idempotencyKey: "",
-    payMethod: "card",
     shipMethod: "delivery",
-    pixCode: "",
-    paymentId: "",
   };
 
   function t(key) {
@@ -68,52 +65,6 @@
     return d2 === Number(cpf[10]);
   }
 
-  function luhn(value) {
-    const s = onlyDigits(value);
-    if (s.length < 13 || s.length > 19) return false;
-    let sum = 0;
-    let alt = false;
-    for (let i = s.length - 1; i >= 0; i -= 1) {
-      let n = Number(s[i]);
-      if (alt) {
-        n *= 2;
-        if (n > 9) n -= 9;
-      }
-      sum += n;
-      alt = !alt;
-    }
-    return sum % 10 === 0;
-  }
-
-  function cardBrand(num) {
-    const n = onlyDigits(num);
-    if (/^3[47]/.test(n)) return "amex";
-    if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[01]|2720)/.test(n)) return "mastercard";
-    if (/^(4011|4312|4389|4514|4576|5041|5066|5067|5090|6277|6362|6363|6504|6505|6509|6516|6550)/.test(n)) {
-      return "elo";
-    }
-    if (/^(606282|3841|637095|637568|637599|637609|637612)/.test(n)) return "hipercard";
-    if (/^4/.test(n)) return "visa";
-    return "";
-  }
-
-  function mpBrand(brand) {
-    if (brand === "mastercard") return "master";
-    return brand || undefined;
-  }
-
-  function brandLabel(brand) {
-    return (
-      {
-        visa: "Visa",
-        mastercard: "Mastercard",
-        amex: "Amex",
-        elo: "Elo",
-        hipercard: "Hipercard",
-      }[brand] || "CEME"
-    );
-  }
-
   function maskCpf(value) {
     const d = onlyDigits(value).slice(0, 11);
     if (d.length <= 3) return d;
@@ -126,36 +77,6 @@
     const d = onlyDigits(value).slice(0, 8);
     if (d.length <= 5) return d;
     return `${d.slice(0, 5)}-${d.slice(5)}`;
-  }
-
-  function maskCard(value) {
-    const brand = cardBrand(value);
-    const max = brand === "amex" ? 15 : 16;
-    const d = onlyDigits(value).slice(0, max);
-    if (brand === "amex") {
-      return d.replace(/^(\d{0,4})(\d{0,6})(\d{0,5}).*/, (_, a, b, c) =>
-        [a, b, c].filter(Boolean).join(" ")
-      );
-    }
-    return d.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
-  }
-
-  function maskExpiry(value) {
-    const d = onlyDigits(value).slice(0, 4);
-    if (d.length <= 2) return d;
-    return `${d.slice(0, 2)}/${d.slice(2)}`;
-  }
-
-  function parseExpiry(value) {
-    const d = onlyDigits(value);
-    if (d.length !== 4) return null;
-    const month = Number(d.slice(0, 2));
-    const year = 2000 + Number(d.slice(2));
-    if (month < 1 || month > 12) return null;
-    const now = new Date();
-    const exp = new Date(year, month, 1);
-    if (exp <= now) return null;
-    return { month: String(month).padStart(2, "0"), year: String(year) };
   }
 
   function shippingRegion(cep) {
@@ -232,17 +153,6 @@
     return { items, subtotal, shipping, hasPhysical, shippingMethod: method, total: subtotal + shipping };
   }
 
-  function installmentOptions(total) {
-    const max = Math.min(12, Math.max(1, Number(cfg().maxInstallments || 3)));
-    const options = [];
-    for (let n = 1; n <= max; n += 1) {
-      const value = Math.round((total / n) * 100) / 100;
-      if (n > 1 && value < 20) break;
-      options.push({ n, value });
-    }
-    return options;
-  }
-
   function setError(id, msg) {
     const field = document.getElementById(id);
     const err = document.getElementById(`${id}-error`);
@@ -264,11 +174,6 @@
       neighborhood: get("pay-neighborhood"),
       city: get("pay-city"),
       state: get("pay-state"),
-      cardNumber: get("pay-card-number"),
-      cardName: get("pay-card-name"),
-      cardExpiry: get("pay-card-expiry"),
-      cardCvv: get("pay-card-cvv"),
-      installments: Number(document.getElementById("pay-installments")?.value || 1),
     };
   }
 
@@ -297,8 +202,8 @@
     } else setError("pay-cpf");
 
     if (!needsAddress()) {
-      ["pay-cep", "pay-street", "pay-number", "pay-neighborhood", "pay-city", "pay-state"].forEach(
-        (id) => setError(id)
+      ["pay-cep", "pay-street", "pay-number", "pay-neighborhood", "pay-city", "pay-state"].forEach((id) =>
+        setError(id)
       );
     } else {
       if (onlyDigits(data.cep).length !== 8) {
@@ -332,31 +237,6 @@
       setError("pay-privacy", t("errPrivacy"));
       ok = false;
     } else setError("pay-privacy");
-    return ok;
-  }
-
-  function validateCard(data) {
-    let ok = true;
-    const brand = cardBrand(data.cardNumber);
-    const digits = onlyDigits(data.cardNumber);
-    const need = brand === "amex" ? 15 : 16;
-    if (digits.length !== need || !luhn(digits)) {
-      setError("pay-card-number", t("errCard"));
-      ok = false;
-    } else setError("pay-card-number");
-    if (data.cardName.length < 3) {
-      setError("pay-card-name", t("errCardName"));
-      ok = false;
-    } else setError("pay-card-name");
-    if (!parseExpiry(data.cardExpiry)) {
-      setError("pay-card-expiry", t("errExpiry"));
-      ok = false;
-    } else setError("pay-card-expiry");
-    const cvvLen = brand === "amex" ? 4 : 3;
-    if (onlyDigits(data.cardCvv).length !== cvvLen) {
-      setError("pay-card-cvv", t("errCvv"));
-      ok = false;
-    } else setError("pay-card-cvv");
     return ok;
   }
 
@@ -394,10 +274,7 @@
     }
     syncFulfillmentUI(q);
     const payBtn = $("#checkout-pay");
-    if (payBtn && state.payMethod === "card") {
-      payBtn.textContent = t("checkoutPayNow").replace("{price}", money(q.total));
-    }
-    renderInstallments(q.total);
+    if (payBtn) payBtn.textContent = t("checkoutPayNow").replace("{price}", money(q.total));
     state.lastQuoteTotal = q.total;
   }
 
@@ -408,44 +285,6 @@
     if (methods) methods.hidden = !q.hasPhysical;
     if (address) address.hidden = !q.hasPhysical || q.shippingMethod !== "delivery";
     if (digitalNote) digitalNote.hidden = q.hasPhysical;
-  }
-
-  function renderInstallments(total) {
-    const select = $("#pay-installments");
-    if (!select) return;
-    const current = select.value;
-    select.innerHTML = installmentOptions(total)
-      .map((option) => {
-        const label =
-          option.n === 1
-            ? t("installment1x").replace("{price}", money(option.value))
-            : t("installmentNx")
-                .replace("{n}", String(option.n))
-                .replace("{price}", money(option.value));
-        return `<option value="${option.n}">${label}</option>`;
-      })
-      .join("");
-    if ([...select.options].some((opt) => opt.value === current)) select.value = current;
-  }
-
-  function setPayMethod(method) {
-    state.payMethod = method === "pix" ? "pix" : "card";
-    $$("[data-pay-method]").forEach((btn) => {
-      btn.classList.toggle("is-active", btn.dataset.payMethod === state.payMethod);
-      btn.setAttribute("aria-pressed", String(btn.dataset.payMethod === state.payMethod));
-    });
-    const cardPane = $("#pay-pane-card");
-    const pixPane = $("#pay-pane-pix");
-    if (cardPane) cardPane.hidden = state.payMethod !== "card";
-    if (pixPane) pixPane.hidden = state.payMethod !== "pix";
-    const payBtn = $("#checkout-pay");
-    if (payBtn) {
-      payBtn.textContent =
-        state.payMethod === "pix"
-          ? t("checkoutPixGenerate")
-          : t("checkoutPayNow").replace("{price}", money(quote().total));
-    }
-    setPayMessage("");
   }
 
   function setStep(step) {
@@ -466,23 +305,6 @@
     }
   }
 
-  function updateCardPreview() {
-    const data = formData();
-    const digits = onlyDigits(data.cardNumber);
-    const brand = cardBrand(digits);
-    const display =
-      digits.length > 4
-        ? maskCard(digits.padEnd(brand === "amex" ? 15 : 16, "•"))
-        : t("checkoutCardPlaceholder");
-    const numberEl = $("#pay-card-preview-number");
-    if (!numberEl) return;
-    numberEl.textContent = display;
-    $("#pay-card-preview-name").textContent = data.cardName || t("phCardName");
-    $("#pay-card-preview-expiry").textContent = data.cardExpiry || "MM/AA";
-    $("#pay-card-preview-brand").textContent = brandLabel(brand);
-    $("#pay-card-visual").classList.toggle("is-amex", brand === "amex");
-  }
-
   async function fillAddressFromCep() {
     const cep = onlyDigits($("#pay-cep").value);
     if (cep.length !== 8) {
@@ -499,21 +321,9 @@
         if (data.uf) $("#pay-state").value = data.uf;
       }
     } catch {
-      /* ignore lookup failures */
+      /* ignore */
     }
     renderSummary();
-  }
-
-  function loadMpSdk() {
-    if (window.MercadoPago) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://sdk.mercadopago.com/js/v2";
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
   }
 
   async function loadRemoteConfig() {
@@ -526,14 +336,12 @@
     try {
       const res = await fetch(`${apiUrl}/api/config`);
       const data = await res.json();
-      if (data.mpPublicKey) cfg().mpPublicKey = data.mpPublicKey;
-      if (data.maxInstallments) cfg().maxInstallments = data.maxInstallments;
       if (typeof data.freeShippingFrom === "number") cfg().freeShippingFrom = data.freeShippingFrom;
       state.mode = data.mode || (data.sandbox ? "sandbox" : data.demo ? "demo" : "live");
       state.demo = state.mode === "demo" || state.mode === "local";
     } catch {
       state.mode = "local";
-      state.demo = !cfg().mpPublicKey;
+      state.demo = true;
     }
   }
 
@@ -552,74 +360,6 @@
           ? "checkoutApiTestBanner"
           : "checkoutDemoBanner";
     banner.textContent = t(key);
-  }
-
-  async function tokenizeCard(data) {
-    const key = cfg().mpPublicKey;
-    if (!key || state.demo) return null;
-    await loadMpSdk();
-    const mp = new window.MercadoPago(key, { locale: "pt-BR" });
-    const expiry = parseExpiry(data.cardExpiry);
-    const tokenRes = await mp.createCardToken({
-      cardNumber: onlyDigits(data.cardNumber),
-      cardholderName: data.cardName,
-      cardExpirationMonth: expiry.month,
-      cardExpirationYear: expiry.year,
-      securityCode: onlyDigits(data.cardCvv),
-      identificationType: "CPF",
-      identificationNumber: onlyDigits(data.cpf),
-    });
-    return tokenRes;
-  }
-
-  function demoPay(data) {
-    return new Promise((resolve, reject) => {
-      window.setTimeout(() => {
-        const decision = (() => {
-          const num = onlyDigits(data.cardNumber);
-          if (num === "4000000000000002" || num === "4000000000009995") return "rejected";
-          return luhn(num) ? "approved" : "invalid";
-        })();
-        if (decision === "invalid") {
-          reject(Object.assign(new Error("invalid_card"), { code: "invalid_card" }));
-          return;
-        }
-        if (decision === "rejected") {
-          reject(Object.assign(new Error("rejected"), { code: "rejected" }));
-          return;
-        }
-        resolve({
-          status: "approved",
-          demo: true,
-          orderId: `CEME-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-        });
-      }, 900);
-    });
-  }
-
-  function demoPix(total) {
-    const orderId = `CEME-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-    return {
-      status: "pending",
-      demo: true,
-      orderId,
-      total,
-      pixCopyPaste: `CEMEPIX|DEMO|${orderId}|BRL${Number(total).toFixed(2)}|FAMILIA-CEME`,
-    };
-  }
-
-  async function payOnApi(payload) {
-    const apiUrl = apiBase();
-    const res = await fetch(`${apiUrl}/api/pay`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw Object.assign(new Error(data.error || "pay_failed"), { code: data.error, data });
-    }
-    return data;
   }
 
   function setPayMessage(msg, kind) {
@@ -646,157 +386,147 @@
     };
   }
 
-  function showPixCode(code) {
-    state.pixCode = code || "";
-    const box = $("#pix-code");
-    const wrap = $("#pix-result");
-    if (box) box.textContent = state.pixCode;
-    if (wrap) wrap.hidden = !state.pixCode;
-  }
-
   function finishOrder(result) {
     state.orderId = result.orderId;
     $("#checkout-order-id").textContent = result.orderId;
+    const pending = result.status === "pending" || result.status === "in_process";
+    const title = $("#checkout-success-title");
+    if (title) {
+      title.textContent = pending ? t("checkoutPendingTitle") : t("checkoutSuccessTitle");
+    }
     $("#checkout-success-text").textContent = t(
-      result.demo || state.demo ? "checkoutDemoSuccess" : "checkoutSuccessText"
+      result.demo || state.demo
+        ? "checkoutDemoSuccess"
+        : pending
+          ? "checkoutPendingText"
+          : "checkoutSuccessText"
     ).replace("{order}", result.orderId);
-    ["pay-card-number", "pay-card-cvv", "pay-card-name", "pay-card-expiry"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.value = "";
-    });
-    updateCardPreview();
-    if (shop()) shop().clearCart();
+    if (shop() && !pending) shop().clearCart();
     setStep("done");
   }
 
-  async function confirmPix() {
-    if (state.demo || !state.paymentId || !apiBase()) {
-      finishOrder({
-        orderId: state.orderId || `CEME-${Date.now().toString(36).toUpperCase()}`,
-        demo: true,
-      });
-      return;
-    }
-    try {
-      const res = await fetch(`${apiBase()}/api/pay/${encodeURIComponent(state.paymentId)}`);
-      const data = await res.json().catch(() => ({}));
-      if (data.status === "approved") {
-        finishOrder({ orderId: data.orderId || state.orderId, demo: false });
-        return;
-      }
-      setPayMessage(t("checkoutPixPending"), "error");
-    } catch {
-      setPayMessage(t("checkoutPixPending"), "error");
-    }
-  }
-
-  async function submitPayment() {
+  async function startMercadoPago() {
     if (state.paying) return;
     const data = formData();
+    if (!validateData(data)) return;
     const q = quote();
     if (!q.items.length || q.total <= 0) return;
 
-    if (state.payMethod === "pix") {
-      if (state.pixCode) {
-        await confirmPix();
-        return;
-      }
-      state.paying = true;
-      const btn = $("#checkout-pay");
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = t("checkoutProcessing");
-      }
-      setPayMessage("");
-      try {
-        const payload = {
-          method: "pix",
-          items: q.items.map((item) => ({ id: item.id, qty: item.qty })),
-          shippingMethod: q.shippingMethod,
-          idempotencyKey: state.idempotencyKey,
-          payer: payerPayload(data),
-        };
-        const result = apiBase() ? await payOnApi(payload) : demoPix(q.total);
-        state.orderId = result.orderId;
-        state.paymentId = result.paymentId || "";
-        showPixCode(result.pixCopyPaste);
-        if (btn) btn.textContent = t("checkoutPixConfirm");
-      } catch {
-        setPayMessage(t("checkoutPayError"), "error");
-        if (btn) btn.textContent = t("checkoutPixGenerate");
-      } finally {
-        state.paying = false;
-        if (btn) btn.disabled = false;
-      }
-      return;
-    }
-
-    if (!validateCard(data)) return;
     state.paying = true;
     const btn = $("#checkout-pay");
     if (btn) {
       btn.disabled = true;
-      btn.textContent = t("checkoutProcessing");
+      btn.textContent = t("checkoutRedirecting");
     }
     setPayMessage("");
 
+    const payload = {
+      items: q.items.map((item) => ({ id: item.id, qty: item.qty })),
+      shippingMethod: q.shippingMethod,
+      idempotencyKey: state.idempotencyKey,
+      payer: payerPayload(data),
+    };
+
     try {
-      const tokenRes = await tokenizeCard(data);
-      const payload = {
-        method: "card",
-        items: q.items.map((item) => ({ id: item.id, qty: item.qty })),
-        shippingMethod: q.shippingMethod,
-        installments: data.installments,
-        token: tokenRes?.id || null,
-        paymentMethodId: tokenRes?.payment_method_id || mpBrand(cardBrand(data.cardNumber)),
-        issuerId: tokenRes?.issuer_id || undefined,
-        idempotencyKey: state.idempotencyKey,
-        payer: payerPayload(data),
-      };
-
-      const result = apiBase() ? await payOnApi(payload) : await demoPay(data);
-
-      if (result.status !== "approved" && result.status !== "in_process") {
-        throw Object.assign(new Error(result.status || "rejected"), { code: result.status });
+      const apiUrl = apiBase();
+      if (!apiUrl) {
+        finishOrder({
+          orderId: `CEME-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+          demo: true,
+          status: "approved",
+        });
+        return;
       }
-      finishOrder(result);
-    } catch (err) {
-      const code = err.code || "";
-      setPayMessage(code === "rejected" ? t("checkoutDeclined") : t("checkoutPayError"), "error");
-    } finally {
-      state.paying = false;
+      const res = await fetch(`${apiUrl}/api/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok || !result.checkoutUrl) {
+        throw Object.assign(new Error(result.error || "checkout_failed"), { code: result.error });
+      }
+      window.location.assign(result.checkoutUrl);
+    } catch {
+      setPayMessage(t("checkoutPayError"), "error");
       if (btn) {
         btn.disabled = false;
         btn.textContent = t("checkoutPayNow").replace("{price}", money(quote().total));
       }
+      state.paying = false;
     }
   }
 
+  function clearReturnQuery() {
+    const url = new URL(location.href);
+    ["mp", "collection_id", "collection_status", "payment_id", "status", "external_reference", "preference_id", "merchant_order_id", "payment_type"].forEach(
+      (key) => url.searchParams.delete(key)
+    );
+    history.replaceState({}, "", url.pathname + url.search + url.hash);
+  }
+
+  async function handleReturn() {
+    const params = new URLSearchParams(location.search);
+    const orderId = params.get("external_reference") || "";
+    const paymentId = params.get("payment_id") || params.get("collection_id") || "";
+    const mp = params.get("mp");
+    if (!orderId && !paymentId && !mp) return false;
+
+    open();
+    setPayMessage(t("checkoutChecking"), "");
+    try {
+      if (mp === "demo" || (!apiBase() && orderId)) {
+        finishOrder({ orderId: orderId || `CEME-DEMO`, demo: true, status: "approved" });
+        clearReturnQuery();
+        return true;
+      }
+      if (!apiBase() || !orderId) {
+        setPayMessage(t("checkoutPayError"), "error");
+        setStep("pay");
+        clearReturnQuery();
+        return true;
+      }
+      const qs = paymentId ? `?payment_id=${encodeURIComponent(paymentId)}` : "";
+      const res = await fetch(`${apiBase()}/api/order/${encodeURIComponent(orderId)}${qs}`);
+      const data = await res.json().catch(() => ({}));
+      if (data.status === "approved") {
+        finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "approved" });
+      } else if (data.status === "pending" || data.status === "in_process") {
+        finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "pending" });
+      } else {
+        setStep("pay");
+        setPayMessage(t("checkoutDeclined"), "error");
+      }
+    } catch {
+      setStep("pay");
+      setPayMessage(t("checkoutPayError"), "error");
+    }
+    clearReturnQuery();
+    return true;
+  }
+
   function open() {
-    if (!shop() || !cartItems().length) return;
-    shop().closeCart();
-    shop().closeModal();
+    const modal = $("#checkout-modal");
+    if (!modal) return;
+    if (shop()) {
+      shop().closeCart();
+      shop().closeModal();
+    }
     state.idempotencyKey =
       crypto && crypto.randomUUID ? crypto.randomUUID() : `ceme-${Date.now()}`;
-    state.pixCode = "";
-    state.paymentId = "";
     state.orderId = "";
-    showPixCode("");
-    const modal = $("#checkout-modal");
     modal.hidden = false;
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    setPayMethod("card");
     setStep("data");
     renderSummary();
     showDemoBanner();
-    updateCardPreview();
     loadRemoteConfig().then(() => {
       showDemoBanner();
       renderSummary();
     });
-    modal.querySelector(".checkout-panel").focus();
+    modal.querySelector(".checkout-panel")?.focus();
   }
 
   function close() {
@@ -814,18 +544,7 @@
     const modal = $("#checkout-modal");
     if (!modal || modal.hidden) return;
     renderSummary();
-    updateCardPreview();
     showDemoBanner();
-  }
-
-  async function copyPix() {
-    if (!state.pixCode) return;
-    try {
-      await navigator.clipboard.writeText(state.pixCode);
-      setPayMessage(t("checkoutPixCopied"));
-    } catch {
-      setPayMessage(t("checkoutPixCopied"));
-    }
   }
 
   function bind() {
@@ -846,18 +565,8 @@
       renderSummary();
     });
     $("#checkout-back")?.addEventListener("click", () => setStep("data"));
-    $("#checkout-pay")?.addEventListener("click", submitPayment);
+    $("#checkout-pay")?.addEventListener("click", startMercadoPago);
     $("#checkout-success-close")?.addEventListener("click", close);
-    $("#pix-copy")?.addEventListener("click", copyPix);
-
-    $$("[data-pay-method]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.pixCode = "";
-        state.paymentId = "";
-        showPixCode("");
-        setPayMethod(btn.dataset.payMethod);
-      });
-    });
 
     document.querySelectorAll('input[name="ship-method"]').forEach((input) => {
       input.addEventListener("change", () => {
@@ -884,35 +593,15 @@
       else if (d.length <= 7) e.target.value = `(${d.slice(0, 2)}) ${d.slice(2)}`;
       else e.target.value = `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
     });
-    $("#pay-card-number")?.addEventListener("input", (e) => {
-      e.target.value = maskCard(e.target.value);
-      updateCardPreview();
-    });
-    $("#pay-card-name")?.addEventListener("input", (e) => {
-      e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ'\s]/g, "").slice(0, 40);
-      updateCardPreview();
-    });
-    $("#pay-card-expiry")?.addEventListener("input", (e) => {
-      e.target.value = maskExpiry(e.target.value);
-      updateCardPreview();
-    });
-    $("#pay-card-cvv")?.addEventListener("input", (e) => {
-      const brand = cardBrand($("#pay-card-number").value);
-      e.target.value = onlyDigits(e.target.value).slice(0, brand === "amex" ? 4 : 3);
-    });
-    $("#pay-card-cvv")?.addEventListener("focus", () => {
-      $("#pay-card-visual")?.classList.add("is-flipped");
-    });
-    $("#pay-card-cvv")?.addEventListener("blur", () => {
-      $("#pay-card-visual")?.classList.remove("is-flipped");
-    });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("is-open")) close();
+      if (e.key === "Escape" && !modal.hidden) close();
     });
+
+    handleReturn();
   }
 
-  window.CEMECheckout = { open, close, refresh };
-
   document.addEventListener("DOMContentLoaded", bind);
+
+  window.CEMECheckout = { open, close, refresh };
 })();

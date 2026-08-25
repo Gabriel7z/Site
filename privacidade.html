@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=32">
 </head>
 <body>
   <a class="skip" href="#conteudo">Ir para o conteúdo</a>
@@ -41,10 +41,10 @@
 
     <h2>2. Quais dados coletamos</h2>
     <ul>
-      <li><strong>Checkout:</strong> nome, e-mail, telefone, CPF, endereço (quando há entrega), itens do pedido e forma de pagamento.</li>
-      <li><strong>Cartão:</strong> número, validade e CVV ficam só no seu navegador o tempo da compra. O site envia ao Mercado Pago um <em>token</em>, não o cartão completo, e não grava esses dados.</li>
+      <li><strong>Compra no site:</strong> nome, e-mail, telefone, CPF, endereço (quando há entrega) e itens do pedido.</li>
+      <li><strong>Pagamento:</strong> cartão, Pix e boleto são preenchidos no <strong>Checkout Pro do Mercado Pago</strong>. O site da CEME não vê nem grava número de cartão, validade ou CVV.</li>
       <li><strong>Carrinho:</strong> no seu aparelho, só códigos dos produtos e quantidades (localStorage). Sem nome, CPF ou cartão.</li>
-      <li><strong>Idioma e cotação:</strong> preferência de idioma e cache da cotação do dia, no seu aparelho.</li>
+      <li><strong>Idioma:</strong> a loja está em português. O carrinho fica no seu aparelho.</li>
       <li><strong>Formulário de prescritora:</strong> nome, e-mail, telefone e textos livres. O envio abre o WhatsApp com essas informações.</li>
     </ul>
 
@@ -79,7 +79,7 @@
     <p>Você pode pedir confirmação de tratamento, acesso, correção, anonimização, portabilidade, informação sobre compartilhamentos e revogação do consentimento, pelo WhatsApp <a href="https://wa.me/5561999291377" target="_blank" rel="noopener noreferrer">(61) 99929-1377</a>. Também pode reclamar à <a href="https://www.gov.br/anpd" target="_blank" rel="noopener noreferrer">ANPD</a>.</p>
 
     <h2>8. Transferências e segurança</h2>
-    <p>O Mercado Pago pode processar dados em infraestrutura própria, inclusive fora do Brasil, com as salvaguardas do serviço. Usamos HTTPS no site publicado, limitamos o que a API aceita e não registramos cartão nem CPF em logs da aplicação.</p>
+    <p>O Mercado Pago pode processar dados em infraestrutura própria, inclusive fora do Brasil, com as salvaguardas do serviço. Usamos HTTPS no site publicado, limitamos o que a API aceita e o pagamento ocorre no Checkout Pro (cartão nunca transita pelo servidor da CEME).</p>
     <p>Nenhum sistema é risco zero. Se houver incidente relevante, comunicaremos os titulares e a ANPD quando a lei exigir.</p>
 
     <h2>9. Crianças e adolescentes</h2>

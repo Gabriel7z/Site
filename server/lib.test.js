@@ -16,6 +16,7 @@ import {
   isOriginAllowed,
   hasForbiddenCardPayload,
   publicErrorCode,
+  preferenceItems,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -164,6 +165,17 @@ test("rejeita payload com dados de cartão", () => {
   assert.equal(hasForbiddenCardPayload({ card: { number: "4111111111111111" } }), true);
   assert.equal(hasForbiddenCardPayload({ cvv: "123" }), true);
   assert.equal(hasForbiddenCardPayload({ token: "tok", payer: { cpf: "52998224725" } }), false);
+});
+
+test("itens da preferência do Checkout Pro usam preço do catálogo e somam o frete", () => {
+  const quote = quoteCart(products, [{ id: "neurocodigos", qty: 1 }], {
+    shippingMethod: "delivery",
+    cep: "01310100",
+  });
+  const items = preferenceItems(quote);
+  assert.equal(items[0].unit_price, 120);
+  assert.equal(items[0].currency_id, "BRL");
+  assert.ok(items.some((item) => item.id === "frete"));
 });
 
 test("não devolve mensagem crua de erro interno", () => {

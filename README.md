@@ -11,7 +11,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - Frete calculado pelo CEP, com **frete grátis** a partir de R$ 360 e retirada gratuita na sede
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
-- Seletor de idiomas: **Português / English / Español / Deutsch / Français** (PT · EN · ES · DE · FR)
+- Pagamento pelo **Checkout Pro do Mercado Pago** (Pix, cartão e boleto no site deles)
 
 ## Como abrir no seu computador
 
@@ -42,11 +42,10 @@ Para testar o checkout com a API de teste:
 
 1. Adicione um produto e clique em **Finalizar compra**
 2. O banner deve mostrar **API de teste ligada**
-3. Preencha os dados (CPF de teste: `529.982.247-25`)
-4. Cartão: `4111 1111 1111 1111`, validade futura e CVV `123`
-5. Ou gere um Pix e clique em **Já paguei o Pix**
+3. Preencha os dados (CPF de teste: `529.982.247-25`) e aceite a política
+4. Clique em **Pagar no Mercado Pago** — em demonstração o site simula o retorno, sem cobrança
 
-Nenhum valor é cobrado até o Mercado Pago ser conectado.
+Nenhum valor é cobrado até as chaves `APP_USR-` (ou `TEST-`) estarem no servidor.
 
 ## API de teste
 
@@ -66,19 +65,19 @@ MP_TEST_MODE=true
 ```
 
 4. Reinicie `npm start` na pasta `server/`
-5. No checkout use o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO` e CPF `123.456.789-09`
+5. No Checkout Pro de teste, use um [comprador de teste](https://www.mercadopago.com.br/developers/pt/docs/your-integrations/test/accounts) e o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO`
 
 ## Como o dinheiro cai na conta Mercado Pago
 
 O dinheiro **não** cai no GitHub. Ele cai na **conta Mercado Pago em que você estiver logado** ao copiar as chaves de **produção**. Entre com a conta da Família CEME (a que recebe as vendas), não uma conta pessoal de teste.
 
 1. Abra [Suas integrações](https://www.mercadopago.com.br/developers/panel/app) e faça login na conta que deve receber o dinheiro.
-2. Crie um aplicativo (se ainda não tiver). Produto: **Checkout Transparente** / pagamentos online.
+2. Crie um aplicativo (se ainda não tiver). Produto: **Checkout Pro**.
 3. No menu esquerdo, abra **Credenciais de produção** (não as de teste).
 4. Ative as credenciais: informe o ramo de atividade e o site (`https://gabriel7z.github.io/Site/` ou o domínio da loja).
 5. Copie o par de **produção**:
    - **Access Token** começa com `APP_USR-` (chave secreta da API — nunca cola no GitHub, no `checkout-config.js` nem no chat)
-   - **Public Key** também começa com `APP_USR-` (usada no navegador para o cartão)
+   - **Public Key** também começa com `APP_USR-` (o Checkout Pro usa principalmente o Access Token no servidor)
 6. Chave que começa com `TEST-` **não cobra** e o dinheiro **não cai**. Isso é só laboratório.
 7. A API precisa estar **online** (Render, Railway ou similar). O GitHub Pages só serve o HTML e não consegue cobrar.
 8. Na hospedagem da API, coloque as variáveis (nunca no repositório):
@@ -88,6 +87,7 @@ MP_ACCESS_TOKEN=APP_USR-...
 MP_PUBLIC_KEY=APP_USR-...
 DEMO_PAYMENTS=false
 MP_TEST_MODE=false
+PUBLIC_SITE_URL=https://gabriel7z.github.io/Site
 ALLOWED_ORIGINS=https://gabriel7z.github.io
 ```
 
@@ -114,7 +114,7 @@ npm test
 
 ## Dados pessoais (LGPD)
 
-A loja não cria cadastro permanente. CPF, e-mail, telefone e endereço vão ao **Mercado Pago** para cobrar e entregar. O CEP pode ir à **ViaCEP**. O número do cartão **não** é enviado ao servidor da CEME.
+A loja não cria cadastro permanente. CPF, e-mail, telefone e endereço vão ao **Mercado Pago** no Checkout Pro. O CEP pode ir à **ViaCEP**. O número do cartão **nunca** passa pelo site nem pelo servidor da CEME.
 
 Há política em `privacidade.html`, consentimento no checkout e no formulário, CORS fechado em produção se `ALLOWED_ORIGINS` estiver vazio, e o Pix só confirma pedido depois que o Mercado Pago marca como aprovado.
 
