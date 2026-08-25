@@ -5,18 +5,22 @@ import { fileURLToPath } from "node:url";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
+import { MercadoPagoConfig, MerchantOrder, Payment, Preference } from "mercadopago";
 import {
   FREE_SHIPPING_FROM,
   hasForbiddenCardPayload,
   isHttpsUrl,
   isOriginAllowed,
+  isValidWebhookSignature,
   makeOrderId,
+  notificationUrlFromOrigin,
   paymentMode,
   preferenceItems,
+  publicApiOrigin,
   publicErrorCode,
   quoteCart,
   validatePayer,
+  webhookResource,
 } from "./lib.js";
 
 dotenv.config();
@@ -37,6 +41,8 @@ const MODE = paymentMode({
 });
 const DEMO_PAYMENTS = MODE === "demo";
 const SANDBOX = MODE === "sandbox";
+const MP_WEBHOOK_SECRET = String(process.env.MP_WEBHOOK_SECRET || "").trim();
+const orders = new Map();
 
 const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
   .split(",")
@@ -62,6 +68,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json({ limit: "32kb" }));
 app.use((req, res, next) => {
+  if (req.path.startsWith("/api/webhooks/")) return next();
   const proto = String(req.get("x-forwarded-proto") || req.protocol || "http").split(",")[0];
   const serverOrigin = `${proto}://${req.get("host")}`;
   cors({
@@ -101,12 +108,35 @@ function quoteFromBody(body) {
   });
 }
 
+function requestOrigin(req) {
+  const proto = String(req.get("x-forwarded-proto") || req.protocol || "http").split(",")[0];
+  const host = req.get("host") || `127.0.0.1:${PORT}`;
+  return `${proto}://${host}`;
+}
+
 function siteUrl(req) {
   const fromEnv = String(process.env.PUBLIC_SITE_URL || "").replace(/\/$/, "");
   if (fromEnv) return fromEnv;
-  const proto = req.get("x-forwarded-proto") || req.protocol || "http";
-  const host = req.get("host") || `127.0.0.1:${PORT}`;
-  return `${String(proto).split(",")[0]}://${host}`;
+  return requestOrigin(req);
+}
+
+function webhookNotifyUrl(req) {
+  const fromEnv = String(process.env.NOTIFICATION_URL || "").trim();
+  if (fromEnv.startsWith("https://")) return fromEnv;
+  return notificationUrlFromOrigin(
+    publicApiOrigin({
+      publicApiUrl: process.env.PUBLIC_API_URL,
+      renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
+      requestOrigin: requestOrigin(req),
+    })
+  );
+}
+
+function rememberOrder(orderId, patch) {
+  const id = String(orderId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return;
+  const prev = orders.get(id) || { orderId: id };
+  orders.set(id, { ...prev, ...patch, orderId: id, updatedAt: Date.now() });
 }
 
 function mpClient() {
@@ -152,6 +182,7 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
     const items = preferenceItems(quote);
 
     if (DEMO_PAYMENTS) {
+      rememberOrder(orderId, { status: "approved", demo: true });
       return res.json({
         demo: true,
         orderId,
@@ -197,8 +228,8 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
         shipping_method: quote.shippingMethod,
       },
     };
-    const notify = String(process.env.NOTIFICATION_URL || "").trim();
-    if (notify.startsWith("https://")) {
+    const notify = webhookNotifyUrl(req);
+    if (notify) {
       body.notification_url = notify;
     }
 
@@ -214,6 +245,7 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       return res.status(502).json({ error: "checkout_failed" });
     }
 
+    rememberOrder(orderId, { status: "pending", preferenceId: result.id });
     return res.json({
       orderId,
       total: quote.total,
@@ -247,7 +279,8 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
     return res.status(400).json({ error: "invalid_payment" });
   }
   if (DEMO_PAYMENTS) {
-    return res.json({ status: "approved", demo: true, orderId });
+    const stored = orders.get(orderId);
+    return res.json({ status: stored?.status || "approved", demo: true, orderId });
   }
   try {
     const paymentId = String(req.query.payment_id || "").replace(/\D/g, "");
@@ -257,10 +290,15 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       if (result.external_reference && result.external_reference !== orderId) {
         return res.status(404).json({ error: "not_found" });
       }
+      rememberOrder(orderId, { status: result.status || "unknown", paymentId });
       return res.json({
         status: result.status || "unknown",
         orderId: result.external_reference || orderId,
       });
+    }
+    const stored = orders.get(orderId);
+    if (stored?.status === "approved") {
+      return res.json({ status: "approved", orderId });
     }
     const found = await payment.search({
       options: {
@@ -273,20 +311,80 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
     const approved = results.find((item) => item.status === "approved");
     const current = approved || results[0];
     if (!current) {
-      return res.json({ status: "pending", orderId });
+      return res.json({ status: stored?.status || "pending", orderId });
     }
+    rememberOrder(orderId, { status: current.status || "unknown", paymentId: current.id });
     return res.json({
       status: current.status || "unknown",
       orderId: current.external_reference || orderId,
     });
   } catch {
+    const stored = orders.get(orderId);
+    if (stored?.status) {
+      return res.json({ status: stored.status, orderId });
+    }
     return res.status(404).json({ error: "not_found" });
   }
 });
 
-app.post("/api/webhooks/mercadopago", (_req, res) => {
-  res.status(200).json({ ok: true });
+app.post("/api/webhooks/mercadopago", async (req, res) => {
+  const resource = webhookResource(req.body || {}, req.query || {});
+  const dataId = resource.id || String(req.query["data.id"] || "").trim();
+  if (MP_WEBHOOK_SECRET) {
+    const ok = isValidWebhookSignature({
+      xSignature: req.get("x-signature"),
+      xRequestId: req.get("x-request-id"),
+      dataId,
+      secret: MP_WEBHOOK_SECRET,
+    });
+    if (!ok) {
+      return res.status(401).json({ error: "invalid_signature" });
+    }
+  } else if (MODE === "live") {
+    console.warn("webhook_unsigned");
+  }
+
+  if (DEMO_PAYMENTS || !MP_ACCESS_TOKEN) {
+    return res.status(200).json({ ok: true });
+  }
+
+  try {
+    await applyMercadoPagoNotification(resource);
+  } catch (err) {
+    console.error("webhook_failed", publicErrorCode(err));
+  }
+  return res.status(200).json({ ok: true });
 });
+
+async function applyMercadoPagoNotification(resource) {
+  const topic = String(resource.topic || "");
+  const id = String(resource.id || "").trim();
+  if (!id) return;
+
+  if (topic.includes("merchant_order")) {
+    const order = await new MerchantOrder(mpClient()).get({ merchantOrderId: id });
+    const payments = Array.isArray(order.payments) ? order.payments : [];
+    const paid = payments.find((item) => item.status === "approved") || payments[0];
+    if (paid?.id) {
+      await rememberPayment(paid.id);
+    }
+    return;
+  }
+
+  if (!topic || topic.includes("payment")) {
+    await rememberPayment(id);
+  }
+}
+
+async function rememberPayment(paymentId) {
+  const digits = String(paymentId || "").replace(/\D/g, "");
+  if (!digits) return;
+  const result = await new Payment(mpClient()).get({ id: digits });
+  rememberOrder(result.external_reference, {
+    status: result.status || "unknown",
+    paymentId: digits,
+  });
+}
 
 const blockedPrefixes = ["/server", "/.git", "/node_modules"];
 app.use((req, res, next) => {

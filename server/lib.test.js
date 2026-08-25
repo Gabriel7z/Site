@@ -1,4 +1,5 @@
 import { createRequire } from "node:module";
+import { createHmac } from "node:crypto";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -17,6 +18,11 @@ import {
   hasForbiddenCardPayload,
   publicErrorCode,
   preferenceItems,
+  webhookResource,
+  isValidWebhookSignature,
+  webhookManifest,
+  notificationUrlFromOrigin,
+  publicApiOrigin,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -220,4 +226,61 @@ test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
   );
   assert.equal(quote.subtotal, 1800);
   assert.equal(quote.shipping, 0);
+});
+
+test("lê id do pagamento no webhook e no IPN", () => {
+  assert.deepEqual(
+    webhookResource({ type: "payment", data: { id: "999" } }, {}),
+    { topic: "payment", id: "999" }
+  );
+  assert.deepEqual(webhookResource({}, { topic: "payment", id: "888" }), {
+    topic: "payment",
+    id: "888",
+  });
+  assert.equal(webhookResource({ type: "payment", data: { id: "7" } }, { id: "1" }).id, "7");
+});
+
+test("valida HMAC do webhook do Mercado Pago", () => {
+  const secret = "ceme-webhook-secret";
+  const dataId = "123456";
+  const requestId = "req-1";
+  const ts = String(Date.now());
+  const v1 = createHmac("sha256", secret)
+    .update(webhookManifest({ dataId, requestId, ts }))
+    .digest("hex");
+  assert.equal(
+    isValidWebhookSignature({
+      xSignature: `ts=${ts},v1=${v1}`,
+      xRequestId: requestId,
+      dataId,
+      secret,
+      now: () => Number(ts),
+    }),
+    true
+  );
+  assert.equal(
+    isValidWebhookSignature({
+      xSignature: `ts=${ts},v1=${v1}`,
+      xRequestId: requestId,
+      dataId,
+      secret: "outra",
+      now: () => Number(ts),
+    }),
+    false
+  );
+});
+
+test("só gera notification_url em HTTPS da API", () => {
+  assert.equal(notificationUrlFromOrigin("http://127.0.0.1:3001"), "");
+  assert.equal(
+    notificationUrlFromOrigin("https://ceme-checkout.onrender.com"),
+    "https://ceme-checkout.onrender.com/api/webhooks/mercadopago"
+  );
+  assert.equal(
+    publicApiOrigin({
+      publicApiUrl: "https://api.exemplo.com/",
+      requestOrigin: "http://127.0.0.1:3001",
+    }),
+    "https://api.exemplo.com"
+  );
 });

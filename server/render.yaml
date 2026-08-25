@@ -12,5 +12,13 @@ services:
         sync: false
       - key: MP_PUBLIC_KEY
         sync: false
+      - key: MP_WEBHOOK_SECRET
+        sync: false
       - key: ALLOWED_ORIGINS
         sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: PUBLIC_API_URL
+        sync: false
+      - key: MP_TEST_MODE
+        value: "false"

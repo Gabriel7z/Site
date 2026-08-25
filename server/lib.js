@@ -1,3 +1,5 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 export const MAX_QTY = 20;
 export const MIN_INSTALLMENT = 20;
 export const FREE_SHIPPING_FROM = 360;
@@ -217,6 +219,7 @@ export function publicErrorCode(err) {
     "not_found",
     "pay_failed",
     "checkout_failed",
+    "invalid_signature",
   ]);
   return allowed.has(code) ? code : "pay_failed";
 }
@@ -250,6 +253,83 @@ export function isHttpsUrl(value) {
   } catch {
     return false;
   }
+}
+
+export function publicApiOrigin({
+  publicApiUrl = "",
+  renderExternalUrl = "",
+  requestOrigin = "",
+} = {}) {
+  const candidates = [publicApiUrl, renderExternalUrl, requestOrigin];
+  for (const value of candidates) {
+    const origin = String(value || "").trim().replace(/\/$/, "");
+    if (isHttpsUrl(origin)) return origin;
+  }
+  return "";
+}
+
+export function notificationUrlFromOrigin(origin) {
+  const base = String(origin || "").trim().replace(/\/$/, "");
+  if (!isHttpsUrl(base)) return "";
+  return `${base}/api/webhooks/mercadopago`;
+}
+
+export function webhookResource(body = {}, query = {}) {
+  const topic = String(query.topic || query.type || body.type || body.topic || "")
+    .trim()
+    .toLowerCase();
+  const id = String(
+    query["data.id"] || query.data_id || body?.data?.id || query.id || ""
+  ).trim();
+  return { topic, id };
+}
+
+export function webhookManifest({ dataId = "", requestId = "", ts = "" } = {}) {
+  const parts = [];
+  if (dataId) parts.push(`id:${String(dataId).toLowerCase()}`);
+  if (requestId) parts.push(`request-id:${requestId}`);
+  parts.push(`ts:${ts}`);
+  return `${parts.join(";")};`;
+}
+
+export function parseWebhookSignature(header) {
+  const hashes = {};
+  let ts = "";
+  for (const part of String(header || "").split(",")) {
+    const eq = part.indexOf("=");
+    if (eq === -1) continue;
+    const key = part.slice(0, eq).trim().toLowerCase();
+    const value = part.slice(eq + 1).trim();
+    if (!key || !value) continue;
+    if (key === "ts") ts = value;
+    else if (/^v\d+$/.test(key)) hashes[key] = value;
+  }
+  return { ts, hashes };
+}
+
+export function isValidWebhookSignature({
+  xSignature,
+  xRequestId,
+  dataId,
+  secret,
+  now = Date.now,
+  toleranceSeconds = 300,
+} = {}) {
+  const key = String(secret || "").trim();
+  if (!key) return false;
+  const { ts, hashes } = parseWebhookSignature(xSignature);
+  const received = hashes.v1;
+  if (!ts || !/^\d+$/.test(ts) || !received) return false;
+  const expected = createHmac("sha256", key)
+    .update(webhookManifest({ dataId, requestId: xRequestId, ts }))
+    .digest("hex");
+  if (expected.length !== received.length) return false;
+  if (!timingSafeEqual(Buffer.from(expected), Buffer.from(received))) return false;
+  if (toleranceSeconds != null) {
+    const drift = Math.abs(now() - Number(ts)) / 1000;
+    if (drift > Number(toleranceSeconds)) return false;
+  }
+  return true;
 }
 
 export function validatePayer(payer, { requireAddress = true } = {}) {
