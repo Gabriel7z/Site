@@ -68,7 +68,37 @@ MP_TEST_MODE=true
 4. Reinicie `npm start` na pasta `server/`
 5. No checkout use o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO` e CPF `123.456.789-09`
 
-## Pagamento real (Mercado Pago)
+## Como o dinheiro cai na conta Mercado Pago
+
+O dinheiro **não** cai no GitHub. Ele cai na **conta Mercado Pago em que você estiver logado** ao copiar as chaves de **produção**. Entre com a conta da Família CEME (a que recebe as vendas), não uma conta pessoal de teste.
+
+1. Abra [Suas integrações](https://www.mercadopago.com.br/developers/panel/app) e faça login na conta que deve receber o dinheiro.
+2. Crie um aplicativo (se ainda não tiver). Produto: **Checkout Transparente** / pagamentos online.
+3. No menu esquerdo, abra **Credenciais de produção** (não as de teste).
+4. Ative as credenciais: informe o ramo de atividade e o site (`https://gabriel7z.github.io/Site/` ou o domínio da loja).
+5. Copie o par de **produção**:
+   - **Access Token** começa com `APP_USR-` (chave secreta da API — nunca cola no GitHub, no `checkout-config.js` nem no chat)
+   - **Public Key** também começa com `APP_USR-` (usada no navegador para o cartão)
+6. Chave que começa com `TEST-` **não cobra** e o dinheiro **não cai**. Isso é só laboratório.
+7. A API precisa estar **online** (Render, Railway ou similar). O GitHub Pages só serve o HTML e não consegue cobrar.
+8. Na hospedagem da API, coloque as variáveis (nunca no repositório):
+
+```
+MP_ACCESS_TOKEN=APP_USR-...
+MP_PUBLIC_KEY=APP_USR-...
+DEMO_PAYMENTS=false
+MP_TEST_MODE=false
+ALLOWED_ORIGINS=https://gabriel7z.github.io
+```
+
+9. No site, em `checkout-config.js`, cole a URL pública da API em `apiUrl` (exemplo: `https://sua-api.onrender.com`).
+10. Depois da venda aprovada, o valor aparece no [Mercado Pago](https://www.mercadopago.com.br) daquela conta. De lá vocês transferem para o banco.
+
+A conta Mercado Pago precisa estar verificada (documento e, para sacar, dados bancários). Taxas do MP saem de cada venda aprovada (Pix, cartão etc.).
+
+**Não envie o Access Token** para ninguém. Se vazar, renove as credenciais no painel.
+
+## Pagamento real (resumo técnico)
 
 O GitHub Pages serve só o site estático. A cobrança fica na API da pasta `server/`.
 
@@ -78,8 +108,8 @@ npm install
 npm test
 ```
 
-1. Crie o app no [Mercado Pago Developers](https://www.mercadopago.com.br/developers)
-2. Publique `server/` (Render/Railway) com `MP_ACCESS_TOKEN`, `MP_PUBLIC_KEY` e `DEMO_PAYMENTS=false`
+1. App + **credenciais de produção** (`APP_USR-`) na conta que recebe
+2. Publique `server/` com `DEMO_PAYMENTS=false` e `MP_TEST_MODE=false`
 3. Coloque a URL da API em `checkout-config.js` (`apiUrl`)
 
 ## Publicar (GitHub Pages)
