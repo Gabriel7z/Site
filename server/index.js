@@ -61,16 +61,18 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json({ limit: "32kb" }));
-app.use(
+app.use((req, res, next) => {
+  const proto = String(req.get("x-forwarded-proto") || req.protocol || "http").split(",")[0];
+  const serverOrigin = `${proto}://${req.get("host")}`;
   cors({
     origin(origin, callback) {
-      if (isOriginAllowed(origin, { allowedOrigins, mode: MODE })) {
+      if (isOriginAllowed(origin, { allowedOrigins, mode: MODE, serverOrigin })) {
         return callback(null, true);
       }
       return callback(new Error("origin_not_allowed"));
     },
-  })
-);
+  })(req, res, next);
+});
 if (MODE === "live" && !allowedOrigins.length) {
   console.warn("ALLOWED_ORIGINS vazio em modo live: o navegador não poderá chamar a API.");
 }

@@ -158,7 +158,11 @@ test("CORS: live exige lista; demo aceita vazio; whitelist fecha o resto", () =>
     }),
     false
   );
-  assert.equal(isOriginAllowed("", { mode: "live", allowedOrigins: [] }), true);
+  assert.equal(isOriginAllowed("http://127.0.0.1:3001", {
+    mode: "demo",
+    allowedOrigins: ["http://127.0.0.1:8080"],
+    serverOrigin: "http://127.0.0.1:3001",
+  }), true);
 });
 
 test("rejeita payload com dados de cartão", () => {

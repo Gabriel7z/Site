@@ -184,9 +184,10 @@ export function installmentOptions(total, maxInstallments = 3) {
   return options;
 }
 
-export function isOriginAllowed(origin, { allowedOrigins = [], mode = "demo" } = {}) {
+export function isOriginAllowed(origin, { allowedOrigins = [], mode = "demo", serverOrigin = "" } = {}) {
   const list = (allowedOrigins || []).map((item) => String(item).trim()).filter(Boolean);
   if (!origin) return true;
+  if (serverOrigin && origin === String(serverOrigin).replace(/\/$/, "")) return true;
   if (list.includes(origin)) return true;
   if (list.length) return false;
   return mode !== "live";
