@@ -7,11 +7,11 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - Página inicial com fundadores, Método CEME, ferramentas e depoimentos
 - Aba **Produtos** com os **15 moduladores biofísicos** (60 ml), cada um com imagem, áudio e valor
 - Mapa Holográfico, Garrafadas em Cápsula e álbum digital no mesmo carrinho
-- Checkout no site: dados, entrega (Correios ou retirada em Brasília) e pagamento com **Pix** ou **cartão** (até 3x sem juros)
+- Checkout no site: dados, entrega (Correios ou retirada em Brasília) e redirecionamento ao **Checkout Pro**
 - Frete calculado pelo CEP, com **frete grátis** a partir de R$ 360 e retirada gratuita na sede
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
-- Pagamento pelo **Checkout Pro do Mercado Pago** (Pix, cartão e boleto no site deles)
+- Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
 
 ## Como abrir no seu computador
 
@@ -98,6 +98,28 @@ A conta Mercado Pago precisa estar verificada (documento e, para sacar, dados ba
 
 **Não envie o Access Token** para ninguém. Se vazar, renove as credenciais no painel.
 
+## MCP oficial do Mercado Pago (Cursor)
+
+O arquivo `.cursor/mcp.json` já aponta para o servidor oficial:
+
+`https://mcp.mercadopago.com/mcp`
+
+Isso **não** cobra sozinho. O MCP só funciona no **Cursor no seu computador**, depois de você autorizar a conta Mercado Pago da CEME.
+
+**Como ligar (você precisa fazer uma vez):**
+
+1. Abra esta pasta no [Cursor Desktop](https://cursor.com/download) (não no agente na nuvem).
+2. Vá em **Settings → Tools & MCP**.
+3. Em **mercadopago-mcp-server**, clique em **Connect**.
+4. Escolha o país **Brasil** e autorize o app **Cursor** na tela do Mercado Pago.
+5. Volte a este chat **no Cursor Desktop** e diga: *“usa o MCP do Mercado Pago: cria o app Checkout Pro, pega as credenciais e configura o webhook”*.
+
+No Cursor na nuvem (este ambiente) o MCP **ainda não aparece** nas ferramentas — o OAuth tem que ser no seu login. Depois de Connect, o agente no Desktop pode criar o aplicativo, ler credenciais de teste, medir qualidade e consultar a documentação sem você colar token no chat.
+
+Não coloque Access Token no `mcp.json`. A autenticação é OAuth. Não cole `APP_USR-` nem `TEST-` nesta conversa.
+
+Detalhes: [conexão MCP](https://www.mercadopago.com.br/developers/pt/docs/mcp-server/connection) e `docs/mercadopago-mcp.md`.
+
 ## Pagamento real (resumo técnico)
 
 O GitHub Pages serve só o site estático. A cobrança fica na API da pasta `server/`.
@@ -116,11 +138,9 @@ npm test
 
 A loja não cria cadastro permanente. CPF, e-mail, telefone e endereço vão ao **Mercado Pago** no Checkout Pro. O CEP pode ir à **ViaCEP**. O número do cartão **nunca** passa pelo site nem pelo servidor da CEME.
 
-Há política em `privacidade.html`, consentimento no checkout e no formulário, CORS fechado em produção se `ALLOWED_ORIGINS` estiver vazio, e o Pix só confirma pedido depois que o Mercado Pago marca como aprovado.
+Há política em `privacidade.html`, consentimento no checkout e no formulário, CORS fechado em produção se `ALLOWED_ORIGINS` estiver vazio, e o pedido só confirma depois que a API consulta o Mercado Pago.
 
 Isso reduz risco de vazamento e atende transparência e minimização. Não substitui advogado, DPO (se a lei exigir) nem o contrato com o Mercado Pago.
-
-## Publicar (GitHub Pages)
 
 ## Publicar (GitHub Pages)
 
