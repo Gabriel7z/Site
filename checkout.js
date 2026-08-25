@@ -389,14 +389,17 @@
   function finishOrder(result) {
     state.orderId = result.orderId;
     $("#checkout-order-id").textContent = result.orderId;
+    const pending = result.status === "pending" || result.status === "in_process";
+    const paid = !pending;
     const track = $("#checkout-track-link");
     if (track) {
       track.href = `pedidos.html?pedido=${encodeURIComponent(result.orderId)}`;
+      track.hidden = !paid;
     }
     const cupom = $("#checkout-cupom-link");
     if (cupom) {
       const base = apiBase();
-      if (base && result.orderId && /^CEME-[A-Z0-9-]+$/i.test(result.orderId)) {
+      if (paid && base && result.orderId && /^CEME-[A-Z0-9-]+$/i.test(result.orderId)) {
         cupom.href = `${base}/api/order/${encodeURIComponent(result.orderId)}/cupom.pdf`;
         cupom.hidden = false;
       } else {
@@ -404,7 +407,6 @@
         cupom.hidden = true;
       }
     }
-    const pending = result.status === "pending" || result.status === "in_process";
     const title = $("#checkout-success-title");
     if (title) {
       title.textContent = pending ? t("checkoutPendingTitle") : t("checkoutSuccessTitle");
@@ -506,7 +508,11 @@
       const data = await res.json().catch(() => ({}));
       if (data.status === "approved") {
         finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "approved" });
-      } else if (data.status === "pending" || data.status === "in_process") {
+      } else if (
+        data.status === "pending" ||
+        data.status === "in_process" ||
+        data.error === "payment_pending"
+      ) {
         finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "pending" });
       } else {
         setStep("pay");

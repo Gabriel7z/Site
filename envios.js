@@ -100,7 +100,7 @@
     const orders = data.orders || [];
     list.innerHTML = orders.length
       ? orders.map((order) => card(order)).join("")
-      : "<p>Nenhum pedido ainda.</p>";
+      : "<p>Nenhum pedido pago ainda. Só entra aqui depois que o Mercado Pago confirmar o pagamento.</p>";
   }
 
   function openWhatsApp(url) {

@@ -25,6 +25,8 @@ import {
   publicOrderView,
   adminOrderView,
   correiosTrackingUrl,
+  isPaymentApproved,
+  paidFulfillmentOrders,
   normalizeTrackingCode,
 } from "./lib.js";
 import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
@@ -311,6 +313,9 @@ app.get("/api/order/:orderId/cupom.pdf", rateLimit, async (req, res) => {
   }
   const stored = findOrder(orderId) || orders.get(orderId);
   if (!stored) return res.status(404).json({ error: "not_found" });
+  if (!isPaymentApproved(stored)) {
+    return res.status(404).json({ error: "payment_pending" });
+  }
   try {
     const pdf = await buildCupomPdf(publicOrderView(stored), {
       logoPath: path.join(SITE_ROOT, "assets/img/logo.png"),
@@ -331,51 +336,53 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
   }
   const stored = findOrder(orderId) || orders.get(orderId);
   if (DEMO_PAYMENTS) {
+    if (!isPaymentApproved(stored) && stored) {
+      return res.status(404).json({ error: "payment_pending" });
+    }
     if (!stored) return res.status(404).json({ error: "not_found" });
     return res.json(publicOrderView({ ...stored, status: stored.status || "approved", demo: true }));
   }
   try {
     const paymentId = String(req.query.payment_id || "").replace(/\D/g, "");
     const payment = new Payment(mpClient());
+    let latest = stored;
     if (paymentId) {
       const result = await payment.get({ id: paymentId });
       if (result.external_reference && result.external_reference !== orderId) {
         return res.status(404).json({ error: "not_found" });
       }
-      const saved = rememberOrder(orderId, { status: result.status || "unknown", paymentId });
-      return res.json(publicOrderView(saved));
+      latest = rememberOrder(orderId, { status: result.status || "unknown", paymentId }) || latest;
+    } else if (!isPaymentApproved(stored)) {
+      const found = await payment.search({
+        options: {
+          external_reference: orderId,
+          sort: "date_created",
+          criteria: "desc",
+        },
+      });
+      const results = found.results || [];
+      const approved = results.find((item) => item.status === "approved");
+      const current = approved || results[0];
+      if (current) {
+        latest = rememberOrder(orderId, {
+          status: current.status || "unknown",
+          paymentId: current.id,
+        }) || latest;
+      }
     }
-    if (stored?.status === "approved") {
-      return res.json(publicOrderView(stored));
+    if (!isPaymentApproved(latest)) {
+      return res.status(404).json({ error: "payment_pending" });
     }
-    const found = await payment.search({
-      options: {
-        external_reference: orderId,
-        sort: "date_created",
-        criteria: "desc",
-      },
-    });
-    const results = found.results || [];
-    const approved = results.find((item) => item.status === "approved");
-    const current = approved || results[0];
-    if (!current) {
-      if (!stored) return res.json({ orderId, status: "pending" });
-      return res.json(publicOrderView(stored));
-    }
-    const saved = rememberOrder(orderId, {
-      status: current.status || "unknown",
-      paymentId: current.id,
-    });
-    return res.json(publicOrderView(saved));
+    return res.json(publicOrderView(latest));
   } catch {
-    if (stored) return res.json(publicOrderView(stored));
-    return res.status(404).json({ error: "not_found" });
+    if (isPaymentApproved(stored)) return res.json(publicOrderView(stored));
+    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
   }
 });
 
 app.get("/api/orders", rateLimit, (req, res) => {
   if (!requireAdmin(req, res)) return;
-  const list = readOrders().map((order) => adminOrderView(order)).filter(Boolean);
+  const list = paidFulfillmentOrders(readOrders()).map((order) => adminOrderView(order)).filter(Boolean);
   return res.json({ orders: list });
 });
 
@@ -386,7 +393,9 @@ app.post("/api/orders/:orderId/tracking", rateLimit, (req, res) => {
     return res.status(400).json({ error: "invalid_payment" });
   }
   const stored = findOrder(orderId) || orders.get(orderId);
-  if (!stored) return res.status(404).json({ error: "not_found" });
+  if (!isPaymentApproved(stored)) {
+    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
+  }
   const trackingCode = normalizeTrackingCode(req.body?.trackingCode);
   if (!trackingCode) {
     return res.status(400).json({ error: "invalid_tracking" });
@@ -402,7 +411,9 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
     return res.status(400).json({ error: "invalid_payment" });
   }
   const stored = findOrder(orderId) || orders.get(orderId);
-  if (!stored) return res.status(404).json({ error: "not_found" });
+  if (!isPaymentApproved(stored)) {
+    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
+  }
 
   const trackingCode =
     normalizeTrackingCode(req.body?.trackingCode) || stored.trackingCode || "";

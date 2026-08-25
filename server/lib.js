@@ -15,6 +15,14 @@ export function paymentMode({ accessToken = "", demoPayments, testMode } = {}) {
   return sandbox ? "sandbox" : "live";
 }
 
+export function isPaymentApproved(order) {
+  return String(order?.status || "").toLowerCase() === "approved";
+}
+
+export function paidFulfillmentOrders(orders = []) {
+  return orders.filter(isPaymentApproved);
+}
+
 export const SHIPPING_FEES = {
   pickup: 0,
   df: 15,
@@ -217,6 +225,7 @@ export function publicErrorCode(err) {
     "origin_not_allowed",
     "invalid_payment",
     "not_found",
+    "payment_pending",
     "pay_failed",
     "checkout_failed",
     "invalid_signature",

@@ -74,7 +74,14 @@
     try {
       const res = await fetch(`${base}/api/order/${encodeURIComponent(id)}`);
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "not_found");
+      if (!res.ok) {
+        error.textContent =
+          data.error === "payment_pending"
+            ? "O Mercado Pago ainda não confirmou o pagamento. Quando aprovar, o pedido aparece aqui."
+            : "Não encontramos esse pedido. Confira o número do comprovante.";
+        error.hidden = false;
+        return;
+      }
       render(data);
     } catch {
       error.textContent = "Não encontramos esse pedido. Confira o número do comprovante.";

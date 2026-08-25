@@ -28,6 +28,8 @@ import {
   adminOrderView,
   formatAddress,
   normalizeTrackingCode,
+  isPaymentApproved,
+  paidFulfillmentOrders,
   sanitizeStoredOrder,
 } from "./lib.js";
 
@@ -290,6 +292,21 @@ test("só gera notification_url em HTTPS da API", () => {
     }),
     "https://api.exemplo.com"
   );
+});
+
+test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar", () => {
+  assert.equal(isPaymentApproved({ status: "pending" }), false);
+  assert.equal(isPaymentApproved({ status: "in_process" }), false);
+  assert.equal(isPaymentApproved({ status: "rejected" }), false);
+  assert.equal(isPaymentApproved({ status: "approved" }), true);
+  assert.deepEqual(
+    paidFulfillmentOrders([
+      { orderId: "CEME-A", status: "pending" },
+      { orderId: "CEME-B", status: "approved" },
+    ]).map((order) => order.orderId),
+    ["CEME-B"]
+  );
+  assert.equal(publicErrorCode({ code: "payment_pending" }), "payment_pending");
 });
 
 test("guarda nome, endereço e itens do pedido sem cadastro de membro", () => {
