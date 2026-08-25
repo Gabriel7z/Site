@@ -13,6 +13,9 @@ import {
   demoPixPayload,
   isPhysicalProduct,
   paymentMode,
+  isOriginAllowed,
+  hasForbiddenCardPayload,
+  publicErrorCode,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -128,6 +131,44 @@ test("gera payload Pix de demonstração", () => {
   const code = demoPixPayload("CEME-ABC", 135);
   assert.match(code, /CEMEPIX/);
   assert.match(code, /BRL135.00/);
+});
+
+test("CORS: live exige lista; demo aceita vazio; whitelist fecha o resto", () => {
+  assert.equal(isOriginAllowed("https://evil.example", { mode: "live", allowedOrigins: [] }), false);
+  assert.equal(
+    isOriginAllowed("https://gabriel7z.github.io", {
+      mode: "live",
+      allowedOrigins: ["https://gabriel7z.github.io"],
+    }),
+    true
+  );
+  assert.equal(
+    isOriginAllowed("https://evil.example", {
+      mode: "live",
+      allowedOrigins: ["https://gabriel7z.github.io"],
+    }),
+    false
+  );
+  assert.equal(isOriginAllowed("https://evil.example", { mode: "demo", allowedOrigins: [] }), true);
+  assert.equal(
+    isOriginAllowed("https://evil.example", {
+      mode: "demo",
+      allowedOrigins: ["http://127.0.0.1:3001"],
+    }),
+    false
+  );
+  assert.equal(isOriginAllowed("", { mode: "live", allowedOrigins: [] }), true);
+});
+
+test("rejeita payload com dados de cartão", () => {
+  assert.equal(hasForbiddenCardPayload({ card: { number: "4111111111111111" } }), true);
+  assert.equal(hasForbiddenCardPayload({ cvv: "123" }), true);
+  assert.equal(hasForbiddenCardPayload({ token: "tok", payer: { cpf: "52998224725" } }), false);
+});
+
+test("não devolve mensagem crua de erro interno", () => {
+  assert.equal(publicErrorCode({ code: "invalid_payer" }), "invalid_payer");
+  assert.equal(publicErrorCode({ code: "ENOENT", message: "/secret/.env" }), "pay_failed");
 });
 
 test("modo da API: demo sem token, sandbox com TEST- e live com token de produção", () => {

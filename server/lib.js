@@ -184,22 +184,59 @@ export function installmentOptions(total, maxInstallments = 3) {
   return options;
 }
 
+export function isOriginAllowed(origin, { allowedOrigins = [], mode = "demo" } = {}) {
+  const list = (allowedOrigins || []).map((item) => String(item).trim()).filter(Boolean);
+  if (!origin) return true;
+  if (list.includes(origin)) return true;
+  if (list.length) return false;
+  return mode !== "live";
+}
+
+export function hasForbiddenCardPayload(body) {
+  if (!body || typeof body !== "object") return false;
+  if (body.card != null) return true;
+  const keys = ["cardNumber", "card_number", "pan", "cvv", "securityCode", "security_code", "cardCvv"];
+  return keys.some((key) => body[key] != null && String(body[key]).trim() !== "");
+}
+
+export function publicErrorCode(err) {
+  const code = String(err?.code || "pay_failed");
+  const allowed = new Set([
+    "invalid_payer",
+    "empty_cart",
+    "invalid_item",
+    "invalid_qty",
+    "invalid_installments",
+    "missing_token",
+    "rejected",
+    "rate_limited",
+    "card_data_not_allowed",
+    "origin_not_allowed",
+    "invalid_payment",
+    "not_found",
+    "pay_failed",
+  ]);
+  return allowed.has(code) ? code : "pay_failed";
+}
+
 export function validatePayer(payer, { requireAddress = true } = {}) {
-  const name = String(payer?.name || "").trim();
+  const name = String(payer?.name || "").trim().slice(0, 80);
   const email = String(payer?.email || "")
     .trim()
-    .toLowerCase();
-  const phone = onlyDigits(payer?.phone);
-  const cpf = onlyDigits(payer?.cpf);
-  const cep = onlyDigits(payer?.cep);
-  const street = String(payer?.street || "").trim();
-  const number = String(payer?.number || "").trim();
-  const neighborhood = String(payer?.neighborhood || "").trim();
-  const city = String(payer?.city || "").trim();
+    .toLowerCase()
+    .slice(0, 120);
+  const phone = onlyDigits(payer?.phone).slice(0, 11);
+  const cpf = onlyDigits(payer?.cpf).slice(0, 11);
+  const cep = onlyDigits(payer?.cep).slice(0, 8);
+  const street = String(payer?.street || "").trim().slice(0, 120);
+  const number = String(payer?.number || "").trim().slice(0, 16);
+  const neighborhood = String(payer?.neighborhood || "").trim().slice(0, 80);
+  const city = String(payer?.city || "").trim().slice(0, 80);
   const state = String(payer?.state || "")
     .trim()
-    .toUpperCase();
-  const complement = String(payer?.complement || "").trim();
+    .toUpperCase()
+    .slice(0, 2);
+  const complement = String(payer?.complement || "").trim().slice(0, 80);
 
   const errors = [];
   if (name.length < 3) errors.push("name");

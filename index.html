@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" data-i18n="metaDescription" content="Família CEME — Método Corpo, Emoção, Mente e Espírito. Linha de moduladores biofísicos com 15 produtos, áudios e valores. Brasília-DF.">
   <title data-i18n="title">Família CEME | Moduladores Biofísicos e Método CEME</title>
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=30">
+  <link rel="stylesheet" href="style.css?v=31">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -354,6 +355,14 @@
               <span class="error" id="motivo-error"></span>
             </div>
           </div>
+          <label class="consent-row" for="form-privacy">
+            <input id="form-privacy" name="privacy" type="checkbox">
+            <span>
+              <span data-i18n="formConsent">Li e aceito a política de privacidade. Este envio abre o WhatsApp com os dados que preenchi.</span>
+              <a href="privacidade.html" target="_blank" rel="noopener noreferrer" data-i18n="footerPrivacy">Política de privacidade</a>
+            </span>
+          </label>
+          <span class="error" id="form-privacy-error"></span>
           <button class="btn btn-gold" type="submit" style="margin-top:18px" data-i18n="formSubmit">Enviar</button>
           <p class="form-success" id="form-success" hidden data-i18n="formSuccess">Recebemos seus dados. Se o WhatsApp não abriu, fale com a gente no (61) 99929-1377.</p>
         </form>
@@ -383,6 +392,7 @@
         <p><a href="#livros" data-i18n="footerBooks">Livros</a></p>
         <p><a href="#documentario" data-i18n="footerDoc">Documentário</a></p>
         <p><a href="#contato" data-i18n="footerPrescriber">Seja prescritora</a></p>
+        <p><a href="privacidade.html" data-i18n="footerPrivacy">Política de privacidade</a></p>
         <p><a href="https://www.familiaceme.com.br" target="_blank" rel="noopener">familiaceme.com.br</a></p>
       </div>
     </div>
@@ -456,7 +466,8 @@
             <div class="is-total"><dt data-i18n="cartTotal">Total:</dt><dd id="checkout-total">R$ 0,00</dd></div>
           </dl>
           <p class="checkout-secure" id="checkout-free-hint" hidden></p>
-          <p class="checkout-secure" data-i18n="checkoutSecure">Pagamento seguro. Os dados do cartão não ficam armazenados no site.</p>
+          <p class="checkout-secure" data-i18n="checkoutSecure">Pagamento seguro. Os dados do cartão não ficam gravados no site nem são enviados ao nosso servidor: só o Mercado Pago recebe o cartão, já tokenizado.</p>
+          <p class="checkout-secure" data-i18n="checkoutProcessors">Nome, CPF, e-mail, telefone e endereço vão ao Mercado Pago para cobrar e entregar. O CEP pode ser consultado na ViaCEP. Não criamos cadastro permanente no site.</p>
         </aside>
 
         <div class="checkout-main">
@@ -542,6 +553,14 @@
                 <span class="error" id="pay-city-error"></span>
               </div>
             </div>
+            <label class="consent-row" for="pay-privacy">
+              <input id="pay-privacy" type="checkbox">
+              <span>
+                <span data-i18n="checkoutConsent">Li e aceito a política de privacidade e autorizo o uso dos meus dados para pagamento, entrega e contato sobre este pedido.</span>
+                <a href="privacidade.html" target="_blank" rel="noopener noreferrer" data-i18n="footerPrivacy">Política de privacidade</a>
+              </span>
+            </label>
+            <span class="error" id="pay-privacy-error"></span>
             <button class="btn btn-gold" id="checkout-continue" type="button" style="margin-top:18px" data-i18n="checkoutContinue">Ir para o pagamento</button>
           </section>
 
@@ -626,10 +645,10 @@
     </div>
   </div>
 
-  <script src="checkout-config.js?v=30"></script>
-  <script src="i18n.js?v=30"></script>
-  <script src="produtos.js?v=30"></script>
-  <script src="app.js?v=30"></script>
-  <script src="checkout.js?v=30"></script>
+  <script src="checkout-config.js?v=31"></script>
+  <script src="i18n.js?v=31"></script>
+  <script src="produtos.js?v=31"></script>
+  <script src="app.js?v=31"></script>
+  <script src="checkout.js?v=31"></script>
 </body>
 </html>

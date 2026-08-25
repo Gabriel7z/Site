@@ -7,9 +7,25 @@
   const FX_FALLBACK = { USD: 0.194, EUR: 0.166 };
   const FX_CACHE_KEY = "ceme-fx-rates";
   const ALBUM_PRICE_BRL = 8;
+  const PRODUCT_IDS = new Set(PRODUCTS.map((p) => p.id));
+
+  function readCart() {
+    try {
+      const raw = JSON.parse(localStorage.getItem("ceme-cart") || "[]");
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .filter((item) => item && PRODUCT_IDS.has(String(item.id)))
+        .map((item) => ({
+          id: String(item.id),
+          qty: Math.min(20, Math.max(1, Number(item.qty) || 1)),
+        }));
+    } catch {
+      return [];
+    }
+  }
 
   const state = {
-    cart: JSON.parse(localStorage.getItem("ceme-cart") || "[]"),
+    cart: readCart(),
     filter: "todos",
     currentAudio: null,
     lang: localStorage.getItem("ceme-lang") || "pt",
@@ -189,7 +205,10 @@
   }
 
   function saveCart() {
-    localStorage.setItem("ceme-cart", JSON.stringify(state.cart));
+    localStorage.setItem(
+      "ceme-cart",
+      JSON.stringify(state.cart.map((item) => ({ id: item.id, qty: item.qty })))
+    );
     renderCart();
   }
 
@@ -507,6 +526,10 @@
       setError("motivo", t("errWhy"));
       ok = false;
     } else setError("motivo");
+    if (!$("#form-privacy")?.checked) {
+      setError("form-privacy", t("errPrivacy"));
+      ok = false;
+    } else setError("form-privacy");
     return ok;
   }
 

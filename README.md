@@ -112,6 +112,16 @@ npm test
 2. Publique `server/` com `DEMO_PAYMENTS=false` e `MP_TEST_MODE=false`
 3. Coloque a URL da API em `checkout-config.js` (`apiUrl`)
 
+## Dados pessoais (LGPD)
+
+A loja não cria cadastro permanente. CPF, e-mail, telefone e endereço vão ao **Mercado Pago** para cobrar e entregar. O CEP pode ir à **ViaCEP**. O número do cartão **não** é enviado ao servidor da CEME.
+
+Há política em `privacidade.html`, consentimento no checkout e no formulário, CORS fechado em produção se `ALLOWED_ORIGINS` estiver vazio, e o Pix só confirma pedido depois que o Mercado Pago marca como aprovado.
+
+Isso reduz risco de vazamento e atende transparência e minimização. Não substitui advogado, DPO (se a lei exigir) nem o contrato com o Mercado Pago.
+
+## Publicar (GitHub Pages)
+
 ## Publicar (GitHub Pages)
 
 O site estático pode ficar online em:

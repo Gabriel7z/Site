@@ -8,11 +8,13 @@ import express from "express";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import {
   FREE_SHIPPING_FROM,
-  demoCardDecision,
   demoPixPayload,
+  hasForbiddenCardPayload,
   installmentOptions,
+  isOriginAllowed,
   makeOrderId,
   paymentMode,
+  publicErrorCode,
   quoteCart,
   validatePayer,
 } from "./lib.js";
@@ -42,30 +44,48 @@ const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
   .filter(Boolean);
 
 const app = express();
+app.disable("x-powered-by");
 app.set("trust proxy", 1);
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; img-src 'self' data: https:; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' https://sdk.mercadopago.com; connect-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.mercadopago.com https://http2.mlstatic.com"
+  );
+  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  next();
+});
 app.use(express.json({ limit: "32kb" }));
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin) return callback(null, true);
-      if (!allowedOrigins.length) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      if (MODE !== "live") return callback(null, true);
+      if (isOriginAllowed(origin, { allowedOrigins, mode: MODE })) {
+        return callback(null, true);
+      }
       return callback(new Error("origin_not_allowed"));
     },
   })
 );
+if (MODE === "live" && !allowedOrigins.length) {
+  console.warn("ALLOWED_ORIGINS vazio em modo live: o navegador não poderá chamar a API.");
+}
 
 const hits = new Map();
 function rateLimit(req, res, next) {
   const ip = req.ip || "local";
   const now = Date.now();
   const windowMs = 60_000;
+  const max = req.path.startsWith("/api/pay") ? 12 : 30;
   const current = hits.get(ip) || [];
   const recent = current.filter((time) => now - time < windowMs);
   recent.push(now);
   hits.set(ip, recent);
-  if (recent.length > 30) {
+  if (recent.length > max) {
     return res.status(429).json({ error: "rate_limited" });
   }
   return next();
@@ -105,6 +125,9 @@ app.post("/api/quote", rateLimit, (req, res) => {
 
 app.post("/api/pay", rateLimit, async (req, res) => {
   try {
+    if (hasForbiddenCardPayload(req.body)) {
+      return res.status(400).json({ error: "card_data_not_allowed" });
+    }
     const method = String(req.body?.method || "card");
     const quote = quoteFromBody(req.body || {});
     const requireAddress = quote.hasPhysical && quote.shippingMethod === "delivery";
@@ -181,13 +204,6 @@ app.post("/api/pay", rateLimit, async (req, res) => {
     }
 
     if (DEMO_PAYMENTS) {
-      const decision = demoCardDecision(req.body?.card?.number || "4111111111111111");
-      if (decision === "invalid") {
-        return res.status(400).json({ error: "invalid_card", orderId });
-      }
-      if (decision === "rejected") {
-        return res.status(402).json({ error: "rejected", status: "rejected", orderId });
-      }
       return res.json({
         status: "approved",
         demo: true,
@@ -261,7 +277,6 @@ app.post("/api/pay", rateLimit, async (req, res) => {
         error: "rejected",
         status,
         orderId,
-        detail: result.status_detail,
       });
     }
 
@@ -272,24 +287,49 @@ app.post("/api/pay", rateLimit, async (req, res) => {
       shipping: quote.shipping,
       installments,
       paymentId: result.id,
-      detail: result.status_detail,
     });
   } catch (err) {
-    const code = err.code || "pay_failed";
+    const code = publicErrorCode(err);
     const status =
       code === "invalid_payer" ||
       code === "empty_cart" ||
       code === "invalid_item" ||
-      code === "invalid_qty"
+      code === "invalid_qty" ||
+      code === "invalid_installments" ||
+      code === "missing_token" ||
+      code === "card_data_not_allowed"
         ? 400
-        : 500;
+        : code === "rejected"
+          ? 402
+          : 500;
     if (status === 500) {
-      console.error(err);
+      console.error("pay_failed", code);
     }
     return res.status(status).json({
       error: code,
       fields: err.fields || undefined,
     });
+  }
+});
+
+app.get("/api/pay/:paymentId", rateLimit, async (req, res) => {
+  const id = String(req.params.paymentId || "").replace(/\D/g, "");
+  if (!id) {
+    return res.status(400).json({ error: "invalid_payment" });
+  }
+  if (DEMO_PAYMENTS) {
+    return res.json({ status: "pending", demo: true });
+  }
+  try {
+    const client = new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN });
+    const payment = new Payment(client);
+    const result = await payment.get({ id });
+    return res.json({
+      status: result.status || "unknown",
+      orderId: result.external_reference || undefined,
+    });
+  } catch {
+    return res.status(404).json({ error: "not_found" });
   }
 });
 

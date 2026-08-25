@@ -6,6 +6,15 @@
   const shop = () => window.CEMEShop;
   const FREE_FROM_DEFAULT = 360;
 
+  function apiBase() {
+    const apiUrl = String(cfg().apiUrl || "").replace(/\/$/, "");
+    if (!apiUrl) return "";
+    if (typeof location !== "undefined" && location.protocol === "https:" && /^http:\/\//i.test(apiUrl)) {
+      return "";
+    }
+    return apiUrl;
+  }
+
   const state = {
     step: "data",
     paying: false,
@@ -17,6 +26,7 @@
     payMethod: "card",
     shipMethod: "delivery",
     pixCode: "",
+    paymentId: "",
   };
 
   function t(key) {
@@ -290,33 +300,38 @@
       ["pay-cep", "pay-street", "pay-number", "pay-neighborhood", "pay-city", "pay-state"].forEach(
         (id) => setError(id)
       );
-      return ok;
+    } else {
+      if (onlyDigits(data.cep).length !== 8) {
+        setError("pay-cep", t("errCep"));
+        ok = false;
+      } else setError("pay-cep");
+      if (data.street.length < 2) {
+        setError("pay-street", t("errStreet"));
+        ok = false;
+      } else setError("pay-street");
+      if (!data.number) {
+        setError("pay-number", t("errNumber"));
+        ok = false;
+      } else setError("pay-number");
+      if (data.neighborhood.length < 2) {
+        setError("pay-neighborhood", t("errNeighborhood"));
+        ok = false;
+      } else setError("pay-neighborhood");
+      if (data.city.length < 2) {
+        setError("pay-city", t("errCity"));
+        ok = false;
+      } else setError("pay-city");
+      if (!/^[A-Za-z]{2}$/.test(data.state)) {
+        setError("pay-state", t("errState"));
+        ok = false;
+      } else setError("pay-state");
     }
 
-    if (onlyDigits(data.cep).length !== 8) {
-      setError("pay-cep", t("errCep"));
+    const privacy = document.getElementById("pay-privacy");
+    if (!privacy?.checked) {
+      setError("pay-privacy", t("errPrivacy"));
       ok = false;
-    } else setError("pay-cep");
-    if (data.street.length < 2) {
-      setError("pay-street", t("errStreet"));
-      ok = false;
-    } else setError("pay-street");
-    if (!data.number) {
-      setError("pay-number", t("errNumber"));
-      ok = false;
-    } else setError("pay-number");
-    if (data.neighborhood.length < 2) {
-      setError("pay-neighborhood", t("errNeighborhood"));
-      ok = false;
-    } else setError("pay-neighborhood");
-    if (data.city.length < 2) {
-      setError("pay-city", t("errCity"));
-      ok = false;
-    } else setError("pay-city");
-    if (!/^[A-Za-z]{2}$/.test(data.state)) {
-      setError("pay-state", t("errState"));
-      ok = false;
-    } else setError("pay-state");
+    } else setError("pay-privacy");
     return ok;
   }
 
@@ -502,7 +517,7 @@
   }
 
   async function loadRemoteConfig() {
-    const apiUrl = String(cfg().apiUrl || "").replace(/\/$/, "");
+    const apiUrl = apiBase();
     if (!apiUrl) {
       state.demo = true;
       state.mode = "local";
@@ -594,7 +609,7 @@
   }
 
   async function payOnApi(payload) {
-    const apiUrl = String(cfg().apiUrl || "").replace(/\/$/, "");
+    const apiUrl = apiBase();
     const res = await fetch(`${apiUrl}/api/pay`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -645,8 +660,34 @@
     $("#checkout-success-text").textContent = t(
       result.demo || state.demo ? "checkoutDemoSuccess" : "checkoutSuccessText"
     ).replace("{order}", result.orderId);
+    ["pay-card-number", "pay-card-cvv", "pay-card-name", "pay-card-expiry"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+    updateCardPreview();
     if (shop()) shop().clearCart();
     setStep("done");
+  }
+
+  async function confirmPix() {
+    if (state.demo || !state.paymentId || !apiBase()) {
+      finishOrder({
+        orderId: state.orderId || `CEME-${Date.now().toString(36).toUpperCase()}`,
+        demo: true,
+      });
+      return;
+    }
+    try {
+      const res = await fetch(`${apiBase()}/api/pay/${encodeURIComponent(state.paymentId)}`);
+      const data = await res.json().catch(() => ({}));
+      if (data.status === "approved") {
+        finishOrder({ orderId: data.orderId || state.orderId, demo: false });
+        return;
+      }
+      setPayMessage(t("checkoutPixPending"), "error");
+    } catch {
+      setPayMessage(t("checkoutPixPending"), "error");
+    }
   }
 
   async function submitPayment() {
@@ -657,7 +698,7 @@
 
     if (state.payMethod === "pix") {
       if (state.pixCode) {
-        finishOrder({ orderId: state.orderId || `CEME-${Date.now().toString(36).toUpperCase()}`, demo: state.demo });
+        await confirmPix();
         return;
       }
       state.paying = true;
@@ -675,8 +716,9 @@
           idempotencyKey: state.idempotencyKey,
           payer: payerPayload(data),
         };
-        const result = String(cfg().apiUrl || "") ? await payOnApi(payload) : demoPix(q.total);
+        const result = apiBase() ? await payOnApi(payload) : demoPix(q.total);
         state.orderId = result.orderId;
+        state.paymentId = result.paymentId || "";
         showPixCode(result.pixCopyPaste);
         if (btn) btn.textContent = t("checkoutPixConfirm");
       } catch {
@@ -711,9 +753,8 @@
         idempotencyKey: state.idempotencyKey,
         payer: payerPayload(data),
       };
-      if (state.demo) payload.card = { number: onlyDigits(data.cardNumber) };
 
-      const result = String(cfg().apiUrl || "") ? await payOnApi(payload) : await demoPay(data);
+      const result = apiBase() ? await payOnApi(payload) : await demoPay(data);
 
       if (result.status !== "approved" && result.status !== "in_process") {
         throw Object.assign(new Error(result.status || "rejected"), { code: result.status });
@@ -738,6 +779,7 @@
     state.idempotencyKey =
       crypto && crypto.randomUUID ? crypto.randomUUID() : `ceme-${Date.now()}`;
     state.pixCode = "";
+    state.paymentId = "";
     state.orderId = "";
     showPixCode("");
     const modal = $("#checkout-modal");
@@ -811,6 +853,7 @@
     $$("[data-pay-method]").forEach((btn) => {
       btn.addEventListener("click", () => {
         state.pixCode = "";
+        state.paymentId = "";
         showPixCode("");
         setPayMethod(btn.dataset.payMethod);
       });
