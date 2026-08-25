@@ -21,7 +21,12 @@ import {
   quoteCart,
   validatePayer,
   webhookResource,
+  fulfillmentSnapshot,
+  publicOrderView,
+  adminOrderView,
+  normalizeTrackingCode,
 } from "./lib.js";
+import { findOrder, readOrders, upsertOrder } from "./orders-store.js";
 
 dotenv.config();
 
@@ -42,7 +47,8 @@ const MODE = paymentMode({
 const DEMO_PAYMENTS = MODE === "demo";
 const SANDBOX = MODE === "sandbox";
 const MP_WEBHOOK_SECRET = String(process.env.MP_WEBHOOK_SECRET || "").trim();
-const orders = new Map();
+const ADMIN_KEY = String(process.env.ADMIN_KEY || "").trim();
+const orders = new Map(readOrders().map((order) => [order.orderId, order]));
 
 const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
   .split(",")
@@ -134,9 +140,25 @@ function webhookNotifyUrl(req) {
 
 function rememberOrder(orderId, patch) {
   const id = String(orderId || "").slice(0, 80);
-  if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return;
-  const prev = orders.get(id) || { orderId: id };
-  orders.set(id, { ...prev, ...patch, orderId: id, updatedAt: Date.now() });
+  if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return null;
+  const prev = findOrder(id) || orders.get(id) || { orderId: id };
+  const next = { ...prev, ...patch, orderId: id, updatedAt: Date.now() };
+  orders.set(id, next);
+  upsertOrder(next);
+  return next;
+}
+
+function requireAdmin(req, res) {
+  if (!ADMIN_KEY) {
+    res.status(503).json({ error: "admin_not_configured" });
+    return false;
+  }
+  const got = String(req.get("x-admin-key") || "").trim();
+  if (got !== ADMIN_KEY) {
+    res.status(401).json({ error: "unauthorized" });
+    return false;
+  }
+  return true;
 }
 
 function mpClient() {
@@ -182,7 +204,11 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
     const items = preferenceItems(quote);
 
     if (DEMO_PAYMENTS) {
-      rememberOrder(orderId, { status: "approved", demo: true });
+      rememberOrder(
+        orderId,
+        fulfillmentSnapshot({ orderId, quote, payer, status: "approved" })
+      );
+      rememberOrder(orderId, { demo: true });
       return res.json({
         demo: true,
         orderId,
@@ -245,7 +271,8 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       return res.status(502).json({ error: "checkout_failed" });
     }
 
-    rememberOrder(orderId, { status: "pending", preferenceId: result.id });
+    rememberOrder(orderId, fulfillmentSnapshot({ orderId, quote, payer, status: "pending" }));
+    rememberOrder(orderId, { preferenceId: result.id });
     return res.json({
       orderId,
       total: quote.total,
@@ -278,9 +305,10 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
   if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
+  const stored = findOrder(orderId) || orders.get(orderId);
   if (DEMO_PAYMENTS) {
-    const stored = orders.get(orderId);
-    return res.json({ status: stored?.status || "approved", demo: true, orderId });
+    if (!stored) return res.status(404).json({ error: "not_found" });
+    return res.json(publicOrderView({ ...stored, status: stored.status || "approved", demo: true }));
   }
   try {
     const paymentId = String(req.query.payment_id || "").replace(/\D/g, "");
@@ -290,15 +318,11 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       if (result.external_reference && result.external_reference !== orderId) {
         return res.status(404).json({ error: "not_found" });
       }
-      rememberOrder(orderId, { status: result.status || "unknown", paymentId });
-      return res.json({
-        status: result.status || "unknown",
-        orderId: result.external_reference || orderId,
-      });
+      const saved = rememberOrder(orderId, { status: result.status || "unknown", paymentId });
+      return res.json(publicOrderView(saved));
     }
-    const stored = orders.get(orderId);
     if (stored?.status === "approved") {
-      return res.json({ status: "approved", orderId });
+      return res.json(publicOrderView(stored));
     }
     const found = await payment.search({
       options: {
@@ -311,20 +335,40 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
     const approved = results.find((item) => item.status === "approved");
     const current = approved || results[0];
     if (!current) {
-      return res.json({ status: stored?.status || "pending", orderId });
+      if (!stored) return res.json({ orderId, status: "pending" });
+      return res.json(publicOrderView(stored));
     }
-    rememberOrder(orderId, { status: current.status || "unknown", paymentId: current.id });
-    return res.json({
+    const saved = rememberOrder(orderId, {
       status: current.status || "unknown",
-      orderId: current.external_reference || orderId,
+      paymentId: current.id,
     });
+    return res.json(publicOrderView(saved));
   } catch {
-    const stored = orders.get(orderId);
-    if (stored?.status) {
-      return res.json({ status: stored.status, orderId });
-    }
+    if (stored) return res.json(publicOrderView(stored));
     return res.status(404).json({ error: "not_found" });
   }
+});
+
+app.get("/api/orders", rateLimit, (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const list = readOrders().map((order) => adminOrderView(order)).filter(Boolean);
+  return res.json({ orders: list });
+});
+
+app.post("/api/orders/:orderId/tracking", rateLimit, (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const orderId = String(req.params.orderId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
+    return res.status(400).json({ error: "invalid_payment" });
+  }
+  const stored = findOrder(orderId) || orders.get(orderId);
+  if (!stored) return res.status(404).json({ error: "not_found" });
+  const trackingCode = normalizeTrackingCode(req.body?.trackingCode);
+  if (!trackingCode) {
+    return res.status(400).json({ error: "invalid_tracking" });
+  }
+  const saved = rememberOrder(orderId, { trackingCode, status: stored.status || "approved" });
+  return res.json(adminOrderView(saved));
 });
 
 app.post("/api/webhooks/mercadopago", async (req, res) => {

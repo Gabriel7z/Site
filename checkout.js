@@ -389,6 +389,10 @@
   function finishOrder(result) {
     state.orderId = result.orderId;
     $("#checkout-order-id").textContent = result.orderId;
+    const track = $("#checkout-track-link");
+    if (track) {
+      track.href = `pedidos.html?pedido=${encodeURIComponent(result.orderId)}`;
+    }
     const pending = result.status === "pending" || result.status === "in_process";
     const title = $("#checkout-success-title");
     if (title) {

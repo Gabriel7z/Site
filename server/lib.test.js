@@ -23,6 +23,11 @@ import {
   webhookManifest,
   notificationUrlFromOrigin,
   publicApiOrigin,
+  fulfillmentSnapshot,
+  publicOrderView,
+  adminOrderView,
+  formatAddress,
+  normalizeTrackingCode,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -283,4 +288,41 @@ test("só gera notification_url em HTTPS da API", () => {
     }),
     "https://api.exemplo.com"
   );
+});
+
+test("guarda nome, endereço e itens do pedido sem cadastro de membro", () => {
+  const quote = quoteCart(products, [{ id: "neurocodigos", qty: 2 }], {
+    shippingMethod: "delivery",
+    cep: "70863540",
+  });
+  const payer = validatePayer({
+    name: "Maria Silva",
+    email: "maria@email.com",
+    phone: "61999991111",
+    cpf: "52998224725",
+    cep: "70863540",
+    street: "CLN 211",
+    number: "211",
+    neighborhood: "Asa Norte",
+    city: "Brasília",
+    state: "DF",
+  });
+  const snap = fulfillmentSnapshot({
+    orderId: "CEME-TEST-1",
+    quote,
+    payer,
+    status: "approved",
+    now: () => 1,
+  });
+  assert.equal(snap.customer.name, "Maria Silva");
+  assert.equal(snap.customer.cpf, "52998224725");
+  assert.equal(snap.items[0].qty, 2);
+  assert.match(formatAddress(snap.address), /CLN 211/);
+  const pub = publicOrderView(snap);
+  assert.equal(pub.cpf, undefined);
+  assert.equal(pub.customerName, "Maria Silva");
+  const admin = adminOrderView(snap);
+  assert.equal(admin.cpf, "52998224725");
+  assert.equal(normalizeTrackingCode("ab 123456789 br"), "AB123456789BR");
+  assert.equal(normalizeTrackingCode("x"), "");
 });

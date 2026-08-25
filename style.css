@@ -1635,6 +1635,74 @@ section {
 .checkout-order strong {
   color: var(--burgundy);
 }
+.checkout-track-hint {
+  margin: 0 0 12px;
+}
+.checkout-success .btn-ghost {
+  display: inline-flex;
+  margin-bottom: 10px;
+}
+.mp-brand {
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: #009ee3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+.mp-methods {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+.mp-methods li {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+.fulfill-page {
+  padding: 48px 0 80px;
+  max-width: 760px;
+}
+.track-form {
+  margin: 24px 0;
+}
+.track-form label,
+.track-row {
+  display: block;
+}
+.track-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.track-row input {
+  flex: 1;
+  min-width: 180px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: inherit;
+}
+.order-card {
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+}
+.order-card ul {
+  margin: 10px 0;
+  padding-left: 18px;
+}
+.track-admin {
+  margin-top: 12px;
+}
 
 @media (max-width: 800px) {
   .checkout-grid {

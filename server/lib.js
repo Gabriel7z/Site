@@ -220,6 +220,9 @@ export function publicErrorCode(err) {
     "pay_failed",
     "checkout_failed",
     "invalid_signature",
+    "unauthorized",
+    "admin_not_configured",
+    "invalid_tracking",
   ]);
   return allowed.has(code) ? code : "pay_failed";
 }
@@ -391,6 +394,105 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
 export function makeOrderId() {
   const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
   return `CEME-${Date.now().toString(36).toUpperCase()}-${rand}`;
+}
+
+export function normalizeTrackingCode(value) {
+  const code = String(value || "")
+    .toUpperCase()
+    .replace(/\s+/g, "");
+  if (code.length < 8 || code.length > 22 || !/^[A-Z0-9]+$/.test(code)) return "";
+  return code;
+}
+
+export function correiosTrackingUrl(code) {
+  const tracking = normalizeTrackingCode(code);
+  if (!tracking) return "";
+  return `https://rastreamento.correios.com.br/app/index.php?objetos=${encodeURIComponent(tracking)}`;
+}
+
+export function formatAddress(address) {
+  if (!address) return "";
+  const line = [address.street, address.number, address.complement].filter(Boolean).join(", ");
+  const city = [address.neighborhood, address.city, address.state].filter(Boolean).join(" — ");
+  const cep = address.cep
+    ? `CEP ${String(address.cep).replace(/^(\d{5})(\d{3})$/, "$1-$2")}`
+    : "";
+  return [line, city, cep].filter(Boolean).join(". ");
+}
+
+export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending", now = Date.now } = {}) {
+  const delivery = quote?.shippingMethod === "delivery" && quote?.hasPhysical;
+  return {
+    orderId,
+    status,
+    createdAt: now(),
+    shippingMethod: quote?.shippingMethod || "none",
+    items: (quote?.lines || []).map((line) => ({
+      id: line.id,
+      name: line.name,
+      volume: line.volume || "",
+      qty: line.qty,
+      unitPrice: line.unitPrice,
+    })),
+    subtotal: quote?.subtotal || 0,
+    shipping: quote?.shipping || 0,
+    total: quote?.total || 0,
+    customer: {
+      name: payer?.name || "",
+      email: payer?.email || "",
+      phone: payer?.phone || "",
+      cpf: payer?.cpf || "",
+    },
+    address: delivery
+      ? {
+          cep: payer?.cep || "",
+          street: payer?.street || "",
+          number: payer?.number || "",
+          complement: payer?.complement || "",
+          neighborhood: payer?.neighborhood || "",
+          city: payer?.city || "",
+          state: payer?.state || "",
+        }
+      : null,
+    trackingCode: "",
+  };
+}
+
+export function publicOrderView(order) {
+  if (!order) return null;
+  const trackingCode = normalizeTrackingCode(order.trackingCode);
+  return {
+    orderId: order.orderId,
+    status: order.status || "pending",
+    demo: !!order.demo,
+    shippingMethod: order.shippingMethod || "none",
+    items: (order.items || []).map((item) => ({
+      name: item.name,
+      volume: item.volume || "",
+      qty: item.qty,
+    })),
+    customerName: order.customer?.name || "",
+    addressText: formatAddress(order.address),
+    trackingCode,
+    trackingUrl: correiosTrackingUrl(trackingCode),
+    total: order.total,
+  };
+}
+
+export function adminOrderView(order) {
+  const pub = publicOrderView(order);
+  if (!pub) return null;
+  return {
+    ...pub,
+    createdAt: order.createdAt,
+    email: order.customer?.email || "",
+    phone: order.customer?.phone || "",
+    cpf: order.customer?.cpf || "",
+    subtotal: order.subtotal,
+    shipping: order.shipping,
+    items: order.items || [],
+    address: order.address,
+  };
 }
 
 export function demoCardDecision(cardNumber) {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Acompanhe o envio do seu pedido na Família CEME.">
+  <title>Acompanhar pedido | Família CEME</title>
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=33">
+</head>
+<body>
+  <header class="site-header is-scrolled">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo CEME">
+        <span class="brand-text">
+          <strong>CEME</strong>
+          <span>Corpo, Emoção, Mente e Espírito</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <ul>
+          <li><a href="index.html">Loja</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap fulfill-page">
+    <p class="kicker">Checkout Pro · Mercado Pago</p>
+    <h1>Acompanhar pedido</h1>
+    <p class="lead">Digite o número do pedido (começa com CEME-). Não é preciso criar conta nem cadastro de membro.</p>
+    <form class="track-form" id="track-form">
+      <label for="track-order">Número do pedido</label>
+      <div class="track-row">
+        <input id="track-order" type="text" required maxlength="80" placeholder="CEME-…" autocomplete="off">
+        <button class="btn btn-gold" type="submit">Consultar</button>
+      </div>
+    </form>
+    <p class="error" id="track-error" hidden></p>
+    <article class="order-card" id="track-result" hidden></article>
+  </main>
+
+  <script src="checkout-config.js?v=33"></script>
+  <script src="pedidos.js?v=33"></script>
+</body>
+</html>

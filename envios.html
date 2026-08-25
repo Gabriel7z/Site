@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Envios | Família CEME</title>
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=33">
+</head>
+<body>
+  <header class="site-header is-scrolled">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/img/logo.png" alt="Logo CEME">
+        <span class="brand-text">
+          <strong>CEME</strong>
+          <span>Lista de envio — sem cadastro de membros</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap fulfill-page">
+    <p class="kicker">Uso interno da loja</p>
+    <h1>Quem comprou e para onde mandar</h1>
+    <p class="lead">Cada pedido tem nome, WhatsApp, itens e endereço. Assim 10 compras não se misturam. Pagamento continua no Checkout Pro do Mercado Pago.</p>
+    <form class="track-form" id="admin-form">
+      <label for="admin-key">Senha da loja (ADMIN_KEY)</label>
+      <div class="track-row">
+        <input id="admin-key" type="password" required maxlength="80" autocomplete="current-password">
+        <button class="btn btn-gold" type="submit">Abrir pedidos</button>
+      </div>
+    </form>
+    <p class="error" id="admin-error" hidden></p>
+    <div id="admin-list"></div>
+  </main>
+
+  <script src="checkout-config.js?v=33"></script>
+  <script src="envios.js?v=33"></script>
+</body>
+</html>
