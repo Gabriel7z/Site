@@ -28,23 +28,28 @@
 
   function render(order) {
     const box = document.getElementById("track-result");
+    const base = apiBase();
     const items = (order.items || [])
       .map((item) => `<li>${escapeHtml(item.name)} × ${Number(item.qty)}</li>`)
       .join("");
     const tracking = order.trackingCode
-      ? `<p><strong>Rastreio:</strong> ${escapeHtml(order.trackingCode)}</p>
-         <p><a class="btn btn-gold" href="${escapeHtml(order.trackingUrl)}" target="_blank" rel="noopener">Ver nos Correios</a></p>`
+      ? `<p><strong>Código dos Correios:</strong> ${escapeHtml(order.trackingCode)}</p>
+         <p><a class="btn btn-ghost" href="${escapeHtml(order.trackingUrl)}" target="_blank" rel="noopener">Ver nos Correios</a></p>`
       : order.shippingMethod === "delivery"
-        ? "<p>Ainda não postamos. Quando sair, o código dos Correios aparece aqui.</p>"
+        ? "<p>Quando postarmos, o código dos Correios aparece aqui. O rastreio da loja já é o número acima.</p>"
         : "";
+    const cupom = base
+      ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/cupom.pdf" download>Baixar cupom PDF</a></p>`
+      : "";
     box.innerHTML = `
       <p class="kicker">${escapeHtml(statusLabel(order))}</p>
-      <h2>${escapeHtml(order.orderId)}</h2>
+      <h2>Rastreio ${escapeHtml(order.trackingId || order.orderId)}</h2>
       <p><strong>${escapeHtml(order.customerName || "Cliente")}</strong></p>
       <p>${escapeHtml(shipLabel(order.shippingMethod))}</p>
       ${order.addressText ? `<p>${escapeHtml(order.addressText)}</p>` : ""}
       <ul>${items}</ul>
       ${tracking}
+      ${cupom}
     `;
     box.hidden = false;
   }

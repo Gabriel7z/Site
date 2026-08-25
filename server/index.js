@@ -28,6 +28,7 @@ import {
   normalizeTrackingCode,
 } from "./lib.js";
 import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
+import { buildCupomPdf, cupomFilename } from "./cupom.js";
 import { findOrder, readOrders, scrubOrderFile, upsertOrder } from "./orders-store.js";
 
 dotenv.config();
@@ -214,6 +215,7 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       return res.json({
         demo: true,
         orderId,
+        trackingId: orderId,
         total: quote.total,
         shipping: quote.shipping,
         checkoutUrl: `${back}?mp=demo&external_reference=${encodeURIComponent(orderId)}`,
@@ -276,6 +278,7 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
     rememberOrder(orderId, { preferenceId: result.id });
     return res.json({
       orderId,
+      trackingId: orderId,
       total: quote.total,
       shipping: quote.shipping,
       preferenceId: result.id,
@@ -298,6 +301,26 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       error: code === "pay_failed" ? "checkout_failed" : code,
       fields: err.fields || undefined,
     });
+  }
+});
+
+app.get("/api/order/:orderId/cupom.pdf", rateLimit, async (req, res) => {
+  const orderId = String(req.params.orderId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
+    return res.status(400).json({ error: "invalid_payment" });
+  }
+  const stored = findOrder(orderId) || orders.get(orderId);
+  if (!stored) return res.status(404).json({ error: "not_found" });
+  try {
+    const pdf = await buildCupomPdf(publicOrderView(stored), {
+      logoPath: path.join(SITE_ROOT, "assets/img/logo.png"),
+    });
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${cupomFilename(orderId)}"`);
+    return res.send(pdf);
+  } catch (err) {
+    console.error("cupom_pdf_failed", publicErrorCode(err));
+    return res.status(502).json({ error: "pay_failed" });
   }
 });
 

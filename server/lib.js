@@ -476,6 +476,8 @@ export function publicOrderView(order) {
     addressText: formatAddress(order.address),
     trackingCode,
     trackingUrl: correiosTrackingUrl(trackingCode),
+    trackingId: order.orderId || "",
+    createdAt: order.createdAt || null,
     total: order.total,
     shipped: !!order.shipped,
     shippedAt: order.shippedAt || null,

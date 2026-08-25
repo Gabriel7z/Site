@@ -1638,9 +1638,10 @@ section {
 .checkout-track-hint {
   margin: 0 0 12px;
 }
-.checkout-success .btn-ghost {
+.checkout-success .btn-ghost,
+.checkout-success .btn-gold {
   display: inline-flex;
-  margin-bottom: 10px;
+  margin: 0 8px 10px 0;
 }
 .mp-brand {
   margin: 0 0 10px;

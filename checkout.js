@@ -393,6 +393,17 @@
     if (track) {
       track.href = `pedidos.html?pedido=${encodeURIComponent(result.orderId)}`;
     }
+    const cupom = $("#checkout-cupom-link");
+    if (cupom) {
+      const base = apiBase();
+      if (base && result.orderId && /^CEME-[A-Z0-9-]+$/i.test(result.orderId)) {
+        cupom.href = `${base}/api/order/${encodeURIComponent(result.orderId)}/cupom.pdf`;
+        cupom.hidden = false;
+      } else {
+        cupom.removeAttribute("href");
+        cupom.hidden = true;
+      }
+    }
     const pending = result.status === "pending" || result.status === "in_process";
     const title = $("#checkout-success-title");
     if (title) {
