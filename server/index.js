@@ -24,8 +24,10 @@ import {
   fulfillmentSnapshot,
   publicOrderView,
   adminOrderView,
+  correiosTrackingUrl,
   normalizeTrackingCode,
 } from "./lib.js";
+import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { findOrder, readOrders, scrubOrderFile, upsertOrder } from "./orders-store.js";
 
 dotenv.config();
@@ -368,6 +370,57 @@ app.post("/api/orders/:orderId/tracking", rateLimit, (req, res) => {
   }
   const saved = rememberOrder(orderId, { trackingCode, status: stored.status || "approved" });
   return res.json(adminOrderView(saved));
+});
+
+app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const orderId = String(req.params.orderId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
+    return res.status(400).json({ error: "invalid_payment" });
+  }
+  const stored = findOrder(orderId) || orders.get(orderId);
+  if (!stored) return res.status(404).json({ error: "not_found" });
+
+  const trackingCode =
+    normalizeTrackingCode(req.body?.trackingCode) || stored.trackingCode || "";
+  const trackingUrl = correiosTrackingUrl(trackingCode);
+  const text = shippedMessage({
+    name: stored.customer?.name,
+    orderId: stored.orderId,
+    trackingCode,
+    trackingUrl,
+  });
+  const whatsappUrl = whatsappSendUrl(stored.customer?.phone, text);
+
+  if (stored.shipped) {
+    return res.json({
+      ...adminOrderView(stored),
+      alreadyShipped: true,
+      whatsappUrl,
+    });
+  }
+
+  const notify = await notifyShipped(
+    { ...stored, trackingCode },
+    { trackingCode, trackingUrl }
+  );
+  const saved = rememberOrder(orderId, {
+    trackingCode,
+    shipped: true,
+    shippedAt: Date.now(),
+    notify: {
+      email: !!notify.email?.sent,
+      whatsapp: !!notify.whatsapp?.sent,
+      emailReason: notify.email?.reason || "",
+      whatsappReason: notify.whatsapp?.reason || "",
+    },
+  });
+  return res.json({
+    ...adminOrderView(saved),
+    alreadyShipped: false,
+    whatsappUrl: notify.whatsapp?.url || whatsappUrl,
+    notify: saved.notify,
+  });
 });
 
 app.post("/api/webhooks/mercadopago", async (req, res) => {

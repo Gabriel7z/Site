@@ -19,9 +19,10 @@
     return "Pedido digital — sem postagem";
   }
 
-  function statusLabel(status) {
-    if (status === "approved") return "Pagamento aprovado";
-    if (status === "pending" || status === "in_process") return "Aguardando pagamento no Mercado Pago";
+  function statusLabel(order) {
+    if (order.shipped) return "Seu pedido acabou de ser enviado";
+    if (order.status === "approved") return "Pagamento aprovado";
+    if (order.status === "pending" || order.status === "in_process") return "Aguardando pagamento no Mercado Pago";
     return "Pagamento não confirmado";
   }
 
@@ -37,7 +38,7 @@
         ? "<p>Ainda não postamos. Quando sair, o código dos Correios aparece aqui.</p>"
         : "";
     box.innerHTML = `
-      <p class="kicker">${escapeHtml(statusLabel(order.status))}</p>
+      <p class="kicker">${escapeHtml(statusLabel(order))}</p>
       <h2>${escapeHtml(order.orderId)}</h2>
       <p><strong>${escapeHtml(order.customerName || "Cliente")}</strong></p>
       <p>${escapeHtml(shipLabel(order.shippingMethod))}</p>

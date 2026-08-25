@@ -440,7 +440,10 @@ export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending",
     customer: {
       name: payer?.name || "",
       phone: payer?.phone || "",
+      email: payer?.email || "",
     },
+    shipped: false,
+    shippedAt: null,
     address: delivery
       ? {
           cep: payer?.cep || "",
@@ -474,6 +477,8 @@ export function publicOrderView(order) {
     trackingCode,
     trackingUrl: correiosTrackingUrl(trackingCode),
     total: order.total,
+    shipped: !!order.shipped,
+    shippedAt: order.shippedAt || null,
   };
 }
 
@@ -481,11 +486,12 @@ export function sanitizeStoredOrder(order) {
   if (!order || typeof order !== "object") return order;
   const customer = { ...(order.customer || {}) };
   delete customer.cpf;
-  delete customer.email;
   delete customer.document;
+  const email = String(customer.email || "").trim().toLowerCase();
+  if (email) customer.email = email;
+  else delete customer.email;
   const clean = { ...order, customer };
   delete clean.cpf;
-  delete clean.email;
   return clean;
 }
 
@@ -500,6 +506,8 @@ export function adminOrderView(order) {
     shipping: order.shipping,
     items: order.items || [],
     address: order.address,
+    hasEmail: Boolean(order.customer?.email),
+    notify: order.notify || null,
   };
 }
 
