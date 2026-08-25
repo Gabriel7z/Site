@@ -439,9 +439,7 @@ export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending",
     total: quote?.total || 0,
     customer: {
       name: payer?.name || "",
-      email: payer?.email || "",
       phone: payer?.phone || "",
-      cpf: payer?.cpf || "",
     },
     address: delivery
       ? {
@@ -479,15 +477,25 @@ export function publicOrderView(order) {
   };
 }
 
+export function sanitizeStoredOrder(order) {
+  if (!order || typeof order !== "object") return order;
+  const customer = { ...(order.customer || {}) };
+  delete customer.cpf;
+  delete customer.email;
+  delete customer.document;
+  const clean = { ...order, customer };
+  delete clean.cpf;
+  delete clean.email;
+  return clean;
+}
+
 export function adminOrderView(order) {
   const pub = publicOrderView(order);
   if (!pub) return null;
   return {
     ...pub,
     createdAt: order.createdAt,
-    email: order.customer?.email || "",
     phone: order.customer?.phone || "",
-    cpf: order.customer?.cpf || "",
     subtotal: order.subtotal,
     shipping: order.shipping,
     items: order.items || [],

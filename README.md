@@ -137,7 +137,7 @@ npm test
 
 ## Dados pessoais (LGPD)
 
-A loja não cria cadastro permanente. CPF, e-mail, telefone e endereço vão ao **Mercado Pago** no Checkout Pro. O CEP pode ir à **ViaCEP**. O número do cartão **nunca** passa pelo site nem pelo servidor da CEME.
+A loja não cria cadastro permanente. O **CPF vai só ao Mercado Pago**. Na CEME ficam nome, WhatsApp, itens e endereço para postar. O CEP pode ir à **ViaCEP**. O número do cartão **nunca** passa pelo site nem pelo servidor da CEME.
 
 Há política em `privacidade.html`, consentimento no checkout e no formulário, CORS fechado em produção se `ALLOWED_ORIGINS` estiver vazio, e o pedido só confirma depois que a API consulta o Mercado Pago.
 

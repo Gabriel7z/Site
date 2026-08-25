@@ -28,6 +28,7 @@ import {
   adminOrderView,
   formatAddress,
   normalizeTrackingCode,
+  sanitizeStoredOrder,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -315,14 +316,19 @@ test("guarda nome, endereço e itens do pedido sem cadastro de membro", () => {
     now: () => 1,
   });
   assert.equal(snap.customer.name, "Maria Silva");
-  assert.equal(snap.customer.cpf, "52998224725");
+  assert.equal(snap.customer.cpf, undefined);
+  assert.equal(snap.customer.email, undefined);
   assert.equal(snap.items[0].qty, 2);
   assert.match(formatAddress(snap.address), /CLN 211/);
   const pub = publicOrderView(snap);
   assert.equal(pub.cpf, undefined);
+  assert.equal(pub.email, undefined);
   assert.equal(pub.customerName, "Maria Silva");
   const admin = adminOrderView(snap);
-  assert.equal(admin.cpf, "52998224725");
+  assert.equal(admin.cpf, undefined);
+  assert.equal(admin.email, undefined);
+  assert.equal(admin.phone, "61999991111");
+  assert.equal(sanitizeStoredOrder({ customer: { cpf: "52998224725", email: "a@b.c", name: "Ana" } }).customer.cpf, undefined);
   assert.equal(normalizeTrackingCode("ab 123456789 br"), "AB123456789BR");
   assert.equal(normalizeTrackingCode("x"), "");
 });

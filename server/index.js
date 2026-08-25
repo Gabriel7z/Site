@@ -26,7 +26,7 @@ import {
   adminOrderView,
   normalizeTrackingCode,
 } from "./lib.js";
-import { findOrder, readOrders, upsertOrder } from "./orders-store.js";
+import { findOrder, readOrders, scrubOrderFile, upsertOrder } from "./orders-store.js";
 
 dotenv.config();
 
@@ -48,6 +48,7 @@ const DEMO_PAYMENTS = MODE === "demo";
 const SANDBOX = MODE === "sandbox";
 const MP_WEBHOOK_SECRET = String(process.env.MP_WEBHOOK_SECRET || "").trim();
 const ADMIN_KEY = String(process.env.ADMIN_KEY || "").trim();
+scrubOrderFile();
 const orders = new Map(readOrders().map((order) => [order.orderId, order]));
 
 const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
@@ -142,9 +143,8 @@ function rememberOrder(orderId, patch) {
   const id = String(orderId || "").slice(0, 80);
   if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return null;
   const prev = findOrder(id) || orders.get(id) || { orderId: id };
-  const next = { ...prev, ...patch, orderId: id, updatedAt: Date.now() };
+  const next = upsertOrder({ ...prev, ...patch, orderId: id, updatedAt: Date.now() });
   orders.set(id, next);
-  upsertOrder(next);
   return next;
 }
 
@@ -250,7 +250,6 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       },
       metadata: {
         order_id: orderId,
-        phone: payer.phone,
         shipping_method: quote.shippingMethod,
       },
     };

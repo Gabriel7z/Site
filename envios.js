@@ -27,15 +27,14 @@
     const items = (order.items || [])
       .map((item) => `<li>${escapeHtml(item.name)} × ${Number(item.qty)}</li>`)
       .join("");
-    const wa = order.phone
-      ? `https://wa.me/55${String(order.phone).replace(/\D/g, "")}`
-      : "";
     return `<article class="order-card" data-order="${escapeHtml(order.orderId)}">
       <p class="kicker">${escapeHtml(order.status || "")} · ${escapeHtml(shipLabel(order.shippingMethod))}</p>
       <h2>${escapeHtml(order.orderId)}</h2>
-      <p><strong>${escapeHtml(order.customerName)}</strong></p>
-      <p>${escapeHtml(order.email || "")} · ${escapeHtml(order.phone || "")}${
-        wa ? ` · <a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""
+      <p><strong>${escapeHtml(order.customerName)}</strong>
+      ${
+        order.phone
+          ? ` · <a href="https://wa.me/55${String(order.phone).replace(/\D/g, "")}" target="_blank" rel="noopener">WhatsApp</a>`
+          : ""
       }</p>
       <p>${escapeHtml(order.addressText || "Sem endereço de postagem")}</p>
       <ul>${items}</ul>
