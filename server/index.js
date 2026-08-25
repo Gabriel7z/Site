@@ -1,5 +1,7 @@
 import { createRequire } from "node:module";
 import { randomUUID } from "node:crypto";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -19,6 +21,7 @@ dotenv.config();
 
 const require = createRequire(import.meta.url);
 const { PRODUCTS } = require("../produtos.js");
+const SITE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const PORT = Number(process.env.PORT) || 3001;
 const MAX_INSTALLMENTS = Number(process.env.MAX_INSTALLMENTS || 3);
@@ -290,6 +293,16 @@ app.post("/api/pay", rateLimit, async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`CEME checkout API on :${PORT} (mode=${MODE})`);
+const blockedPrefixes = ["/server", "/.git", "/node_modules"];
+app.use((req, res, next) => {
+  const p = String(req.path || "").toLowerCase();
+  if (blockedPrefixes.some((prefix) => p === prefix || p.startsWith(`${prefix}/`))) {
+    return res.status(404).end();
+  }
+  return next();
+});
+app.use(express.static(SITE_ROOT, { index: "index.html", extensions: ["html"] }));
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Loja CEME em http://127.0.0.1:${PORT}  (mode=${MODE})`);
 });

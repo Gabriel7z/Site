@@ -13,35 +13,44 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - Layout responsivo (celular, tablet e desktop)
 - Seletor de idiomas: **Português / English / Español / Deutsch / Français** (PT · EN · ES · DE · FR)
 
-## Como abrir localmente
+## Como abrir no seu computador
 
-Abra o `index.html` no navegador ou, na pasta do projeto:
+O endereço **não** é só `localhost`. Tem que ter a porta **3001**:
+
+**http://127.0.0.1:3001**
+
+1. Abra a pasta do projeto no terminal
+2. Rode:
 
 ```bash
-python3 -m http.server 8080
+bash abrir-local.sh
 ```
 
-Depois acesse `http://localhost:8080`.
+Ou, sem o script:
 
-Para testar o checkout em modo demonstração:
+```bash
+cd server && npm install && npm start
+```
+
+3. No navegador, cole `http://127.0.0.1:3001` ou `http://localhost:3001`
+
+`http://localhost` **sem a porta** não abre — a loja não está na porta 80.
+
+Ainda mais simples para só ver o catálogo: dê dois cliques em `index.html`. Sem o script, o checkout fica em modo demonstração no próprio navegador.
+
+Para testar o checkout com a API de teste:
 
 1. Adicione um produto e clique em **Finalizar compra**
-2. Preencha os dados (CPF de teste: `529.982.247-25`)
-3. Cartão: `4111 1111 1111 1111`, validade futura e CVV `123`
-4. Ou gere um Pix e clique em **Já paguei o Pix**
+2. O banner deve mostrar **API de teste ligada**
+3. Preencha os dados (CPF de teste: `529.982.247-25`)
+4. Cartão: `4111 1111 1111 1111`, validade futura e CVV `123`
+5. Ou gere um Pix e clique em **Já paguei o Pix**
 
 Nenhum valor é cobrado até o Mercado Pago ser conectado.
 
 ## API de teste
 
-No computador, o site chama a API local em `http://127.0.0.1:3001`.
-
-```bash
-python3 -m http.server 8080
-cd server && npm start
-```
-
-Abra `http://127.0.0.1:8080`. O checkout deve mostrar **API de teste ligada**.
+`abrir-local.sh` sobe a loja e a API **juntos** em `http://127.0.0.1:3001`.
 
 Para o sandbox real do Mercado Pago (ainda sem cobrança):
 
