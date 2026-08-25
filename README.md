@@ -8,7 +8,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - Aba **Produtos** com os **15 moduladores biofísicos** (60 ml), cada um com imagem, áudio e valor
 - Mapa Holográfico, Garrafadas em Cápsula e álbum digital no mesmo carrinho
 - Checkout no site: dados, entrega (Correios ou retirada em Brasília) e redirecionamento ao **Checkout Pro**
-- Frete calculado pelo CEP, com **frete grátis** a partir de R$ 360 e retirada gratuita na sede
+- Frete **grátis neste teste** (produtos a **R$ 0,10** para validar o Mercado Pago)
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
 - Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
@@ -46,7 +46,29 @@ Para testar o checkout com a API de teste:
 3. Preencha os dados (CPF de teste: `529.982.247-25`) e aceite a política
 4. Clique em **Pagar no Mercado Pago** — em demonstração o site simula o retorno, sem cobrança
 
-Nenhum valor é cobrado até as chaves `APP_USR-` (ou `TEST-`) estarem no servidor.
+Nenhum valor é cobrado até as chaves `APP_USR-` (ou `TEST-`) estarem no `server/.env` (nunca no chat).
+
+## Teste na sua conta (R$ 0,10)
+
+Os produtos estão a **R$ 0,10** e o frete de teste está grátis.
+
+1. Crie o app **Checkout Pro** em [Suas integrações](https://www.mercadopago.com.br/developers/panel/app)
+2. Cole **só no arquivo** `server/.env` (não manda no WhatsApp nem no Cursor):
+
+```
+MP_ACCESS_TOKEN=TEST-...   # ou APP_USR- se for cobrança real de 10 centavos
+MP_PUBLIC_KEY=TEST-...
+DEMO_PAYMENTS=false
+MP_TEST_MODE=true
+```
+
+Com `APP_USR-` use `MP_TEST_MODE=false` — cai **R$ 0,10 de verdade** na sua conta.
+
+3. Pare o servidor (Ctrl+C) e rode de novo: `bash abrir-local.sh`
+4. Abra **http://127.0.0.1:3001**, compre 1 item, pague no Mercado Pago
+5. Confira o pedido em `envios.html` (senha `ceme-local`)
+
+Com token `TEST-`, no Checkout Pro use comprador de teste e o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO`.
 
 ## API de teste
 

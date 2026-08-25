@@ -114,16 +114,16 @@ test("cartão de demonstração: aprovado, recusado e inválido", () => {
   assert.equal(demoCardDecision("1234"), "invalid");
 });
 
-test("frete por CEP, retirada grátis e frete grátis acima de R$ 360", () => {
+test("frete por CEP, retirada grátis e frete grátis acima do limite", () => {
   assert.equal(shippingRegion("70863540"), "df");
   assert.equal(shippingRegion("01310100"), "sudeste");
-  assert.equal(calcShipping({ method: "pickup", hasPhysical: true, subtotal: 120 }), 0);
+  assert.equal(calcShipping({ method: "pickup", hasPhysical: true, subtotal: 120, freeFrom: 360 }), 0);
   assert.equal(
-    calcShipping({ method: "delivery", cep: "70863540", hasPhysical: true, subtotal: 120 }),
+    calcShipping({ method: "delivery", cep: "70863540", hasPhysical: true, subtotal: 120, freeFrom: 360 }),
     15
   );
   assert.equal(
-    calcShipping({ method: "delivery", cep: "70863540", hasPhysical: true, subtotal: 360 }),
+    calcShipping({ method: "delivery", cep: "70863540", hasPhysical: true, subtotal: 360, freeFrom: 360 }),
     0
   );
   assert.equal(calcShipping({ method: "delivery", hasPhysical: false, subtotal: 8 }), 0);
@@ -187,6 +187,7 @@ test("itens da preferência do Checkout Pro usam preço do catálogo e somam o f
   const quote = quoteCart(products, [{ id: "neurocodigos", qty: 1 }], {
     shippingMethod: "delivery",
     cep: "01310100",
+    freeFrom: 360,
   });
   const items = preferenceItems(quote);
   assert.equal(items[0].unit_price, 120);
@@ -219,10 +220,10 @@ test("modo da API: demo sem token, sandbox com TEST- e live com token de produç
   );
 });
 
-test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
+test("catálogo oficial tem 15 sprays a R$ 0,10 (teste Mercado Pago) e extras compráveis", () => {
   const sprays = PRODUCTS.filter((p) => !p.kind || p.kind === "spray");
   assert.equal(sprays.length, 15);
-  assert.ok(sprays.every((p) => p.price === 120));
+  assert.ok(sprays.every((p) => p.price === 0.1));
   assert.ok(PRODUCTS.some((p) => p.kind === "garrafada"));
   assert.ok(PRODUCTS.some((p) => p.kind === "mapa"));
   assert.ok(PRODUCTS.some((p) => p.kind === "musica"));
@@ -230,7 +231,7 @@ test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
     PRODUCTS,
     sprays.map((product) => ({ id: product.id, qty: 1 }))
   );
-  assert.equal(quote.subtotal, 1800);
+  assert.equal(Number(quote.subtotal.toFixed(2)), 1.5);
   assert.equal(quote.shipping, 0);
 });
 

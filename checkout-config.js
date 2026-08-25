@@ -14,6 +14,6 @@
         : `${location.protocol}//${host}:3001`,
     mpPublicKey: "",
     maxInstallments: 3,
-    freeShippingFrom: 360,
+    freeShippingFrom: 0,
   };
 })();

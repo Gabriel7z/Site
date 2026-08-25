@@ -173,7 +173,7 @@ const I18N = {
   "checkoutShippingNone": "Sem frete (digital/serviço)",
   "checkoutShippingMethod": "Como prefere receber?",
   "checkoutShippingDelivery": "Entrega pelos Correios",
-  "checkoutShippingDeliveryHint": "O valor do frete sai pelo CEP. Frete grátis a partir de R$ 360.",
+  "checkoutShippingDeliveryHint": "Neste teste o frete está grátis, para validar o Checkout Pro com R$ 0,10.",
   "checkoutShippingPickup": "Retirada em Brasília",
   "checkoutPickupHint": "CLN 211, Bloco D, Sala 211 — Asa Norte — Brasília-DF. Frete grátis.",
   "checkoutShippingFreeOver": "Frete grátis acima de {price}",

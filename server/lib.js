@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 export const MAX_QTY = 20;
 export const MIN_INSTALLMENT = 20;
-export const FREE_SHIPPING_FROM = 360;
+export const FREE_SHIPPING_FROM = 0;
 
 /** demo = API local sem Mercado Pago; sandbox = credenciais TEST; live = produção. */
 export function paymentMode({ accessToken = "", demoPayments, testMode } = {}) {
