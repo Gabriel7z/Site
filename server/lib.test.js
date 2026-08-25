@@ -4,6 +4,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   isCpf,
+  isEmail,
+  isBrazilianMobile,
+  brazilianMobileDigits,
   luhn,
   quoteCart,
   installmentOptions,
@@ -346,11 +349,58 @@ test("guarda nome, endereço e itens do pedido sem cadastro de membro", () => {
   assert.equal(pub.customerName, "Maria Silva");
   const admin = adminOrderView(snap);
   assert.equal(admin.cpf, undefined);
-  assert.equal(admin.email, undefined);
+  assert.equal(admin.email, "maria@email.com");
   assert.equal(admin.hasEmail, true);
   assert.equal(admin.phone, "61999991111");
+  assert.equal(admin.paymentId, "");
+  const adminPay = adminOrderView({ ...snap, paymentId: "1234567890" });
+  assert.equal(adminPay.paymentId, "1234567890");
   assert.equal(sanitizeStoredOrder({ customer: { cpf: "52998224725", email: "a@b.c", name: "Ana" } }).customer.cpf, undefined);
   assert.equal(sanitizeStoredOrder({ customer: { cpf: "52998224725", email: "a@b.c", name: "Ana" } }).customer.email, "a@b.c");
   assert.equal(normalizeTrackingCode("ab 123456789 br"), "AB123456789BR");
   assert.equal(normalizeTrackingCode("x"), "");
+});
+
+test("valida e-mail e celular brasileiro, inclusive confirmação", () => {
+  assert.equal(isEmail("maria@gmail.com"), true);
+  assert.equal(isEmail("x"), false);
+  assert.equal(isEmail("sem-arroba.com"), false);
+  assert.equal(isBrazilianMobile("61999991111"), true);
+  assert.equal(isBrazilianMobile("(61) 99999-1111"), true);
+  assert.equal(isBrazilianMobile("+55 61 99999-1111"), true);
+  assert.equal(brazilianMobileDigits("+55 61 99999-1111"), "61999991111");
+  assert.equal(isBrazilianMobile("6133334444"), false);
+  assert.equal(isBrazilianMobile("11111111111"), false);
+  assert.equal(isBrazilianMobile("00999991111"), false);
+  const base = {
+    name: "Maria Silva",
+    email: "maria@gmail.com",
+    phone: "61999991111",
+    cpf: "52998224725",
+    cep: "70863540",
+    street: "CLN 211",
+    number: "211",
+    neighborhood: "Asa Norte",
+    city: "Brasília",
+    state: "DF",
+  };
+  const ok = validatePayer({
+    ...base,
+    emailConfirm: "maria@gmail.com",
+    phoneConfirm: "(61) 99999-1111",
+  });
+  assert.equal(ok.email, "maria@gmail.com");
+  assert.equal(ok.phone, "61999991111");
+  assert.throws(
+    () => validatePayer({ ...base, emailConfirm: "outra@gmail.com" }),
+    (err) => err.code === "invalid_payer" && err.fields.includes("emailConfirm")
+  );
+  assert.throws(
+    () => validatePayer({ ...base, phoneConfirm: "61988887777" }),
+    (err) => err.code === "invalid_payer" && err.fields.includes("phoneConfirm")
+  );
+  assert.throws(
+    () => validatePayer({ ...base, phone: "6133334444" }),
+    (err) => err.code === "invalid_payer" && err.fields.includes("phone")
+  );
 });

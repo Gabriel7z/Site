@@ -1267,6 +1267,10 @@ section {
   .header-actions {
     gap: 5px;
   }
+  .staff-entry {
+    font-size: 0.68rem;
+    padding: 6px 8px;
+  }
   .icon-btn,
   .menu-toggle,
   .cart-btn {
@@ -1760,6 +1764,28 @@ section {
 }
 .ship-hint.is-sent {
   color: #3a2a12;
+}
+.contact-block {
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border: 1px dashed #c5a36a;
+  border-radius: 12px;
+  background: #fffdf8;
+}
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.contact-links a {
+  color: var(--burgundy);
+}
+.contact-fallback {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #5a5348;
 }
 
 @media (max-width: 800px) {

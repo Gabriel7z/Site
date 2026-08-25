@@ -23,6 +23,38 @@
     return "Digital";
   }
 
+  function formatPhone(value) {
+    const d = String(value || "").replace(/\D/g, "");
+    if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+    return d;
+  }
+
+  function waNumber(value) {
+    let d = String(value || "").replace(/\D/g, "");
+    if (d.startsWith("55") && d.length >= 12) d = d.slice(2);
+    return d.length === 11 ? `55${d}` : "";
+  }
+
+  function contactBlock(order) {
+    const phoneLabel = formatPhone(order.phone);
+    const wa = waNumber(order.phone);
+    const email = String(order.email || "").trim();
+    const pay = String(order.paymentId || "").trim();
+    const waLink = wa
+      ? `<a href="https://wa.me/${escapeHtml(wa)}" target="_blank" rel="noopener">WhatsApp ${escapeHtml(phoneLabel)}</a>`
+      : "<span>WhatsApp não informado</span>";
+    const mailLink = email
+      ? `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`
+      : "<span>E-mail não informado</span>";
+    const mp = pay
+      ? `venda nº ${escapeHtml(pay)} no Mercado Pago`
+      : "a venda deste pedido no Mercado Pago";
+    return `<div class="contact-block">
+      <p class="contact-links">${waLink}<span aria-hidden="true"> · </span>${mailLink}</p>
+      <p class="contact-fallback">Se o WhatsApp não responder ou for falso, use o e-mail. Se os dois falharem, fale com o comprador por ${mp}. O endereço de postagem continua válido.</p>
+    </div>`;
+  }
+
   function notifyHint(order) {
     if (!order.shipped) {
       return "<p class=\"ship-hint\">Quando postar, marque com o X. O cliente recebe: “seu pedido acabou de ser enviado” no e-mail e no WhatsApp.</p>";
@@ -44,12 +76,8 @@
     return `<article class="order-card${sent ? " is-shipped" : ""}" data-order="${escapeHtml(order.orderId)}">
       <p class="kicker">${escapeHtml(order.status || "")} · ${escapeHtml(shipLabel(order.shippingMethod))}</p>
       <h2>${escapeHtml(order.orderId)}</h2>
-      <p><strong>${escapeHtml(order.customerName)}</strong>
-      ${
-        order.phone
-          ? ` · <a href="https://wa.me/55${String(order.phone).replace(/\D/g, "")}" target="_blank" rel="noopener">WhatsApp</a>`
-          : ""
-      }</p>
+      <p><strong>${escapeHtml(order.customerName)}</strong></p>
+      ${contactBlock(order)}
       <p>${escapeHtml(order.addressText || "Sem endereço de postagem")}</p>
       <ul>${items}</ul>
       <p><strong>${money(order.total)}</strong></p>

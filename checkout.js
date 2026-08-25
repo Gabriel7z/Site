@@ -47,7 +47,32 @@
   }
 
   function isEmail(value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+    const email = String(value || "").trim().toLowerCase();
+    if (email.length < 6 || email.length > 120) return false;
+    return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$/i.test(email);
+  }
+
+  function brazilianMobileDigits(value) {
+    let digits = onlyDigits(value);
+    if (digits.startsWith("55") && digits.length >= 12) digits = digits.slice(2);
+    return digits.slice(0, 11);
+  }
+
+  function isBrazilianMobile(value) {
+    const digits = brazilianMobileDigits(value);
+    if (digits.length !== 11) return false;
+    const ddd = Number(digits.slice(0, 2));
+    if (ddd < 11 || ddd > 99) return false;
+    if (digits[2] !== "9") return false;
+    if (/^(\d)\1+$/.test(digits)) return false;
+    return true;
+  }
+
+  function maskPhone(value) {
+    const d = brazilianMobileDigits(value);
+    if (d.length <= 2) return d.length ? `(${d}` : "";
+    if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
   }
 
   function isCpf(value) {
@@ -165,7 +190,9 @@
     return {
       name: get("pay-name"),
       email: get("pay-email"),
+      emailConfirm: get("pay-email-confirm"),
       phone: get("pay-phone"),
+      phoneConfirm: get("pay-phone-confirm"),
       cpf: get("pay-cpf"),
       cep: get("pay-cep"),
       street: get("pay-street"),
@@ -192,10 +219,18 @@
       setError("pay-email", t("errEmail"));
       ok = false;
     } else setError("pay-email");
-    if (onlyDigits(data.phone).length < 10) {
+    if (data.emailConfirm.toLowerCase() !== data.email.toLowerCase()) {
+      setError("pay-email-confirm", t("errEmailConfirm"));
+      ok = false;
+    } else setError("pay-email-confirm");
+    if (!isBrazilianMobile(data.phone)) {
       setError("pay-phone", t("errPhone"));
       ok = false;
     } else setError("pay-phone");
+    if (onlyDigits(data.phoneConfirm) !== onlyDigits(data.phone)) {
+      setError("pay-phone-confirm", t("errPhoneConfirm"));
+      ok = false;
+    } else setError("pay-phone-confirm");
     if (!isCpf(data.cpf)) {
       setError("pay-cpf", t("errCpf"));
       ok = false;
@@ -374,7 +409,9 @@
     return {
       name: data.name,
       email: data.email,
+      emailConfirm: data.emailConfirm,
       phone: data.phone,
+      phoneConfirm: data.phoneConfirm,
       cpf: data.cpf,
       cep: data.cep,
       street: data.street,
@@ -609,10 +646,10 @@
       e.target.value = e.target.value.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase();
     });
     $("#pay-phone")?.addEventListener("input", (e) => {
-      const d = onlyDigits(e.target.value).slice(0, 11);
-      if (d.length <= 2) e.target.value = d.length ? `(${d}` : "";
-      else if (d.length <= 7) e.target.value = `(${d.slice(0, 2)}) ${d.slice(2)}`;
-      else e.target.value = `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+      e.target.value = maskPhone(e.target.value);
+    });
+    $("#pay-phone-confirm")?.addEventListener("input", (e) => {
+      e.target.value = maskPhone(e.target.value);
     });
 
     document.addEventListener("keydown", (e) => {

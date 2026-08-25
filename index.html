@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=39">
+  <link rel="stylesheet" href="style.css?v=40">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -470,6 +470,7 @@
         <div class="checkout-main">
           <section class="checkout-step" data-step="data">
             <h3 data-i18n="checkoutDataTitle">Dados e entrega</h3>
+            <p class="checkout-secure" data-i18n="checkoutContactHint">E-mail e WhatsApp precisam estar certos e iguais na confirmação. Se um estiver errado, a loja usa o outro. Se os dois falharem, o contato sai pela compra no Mercado Pago.</p>
             <div class="form-grid">
               <div class="field full">
                 <label for="pay-name" data-i18n="labelFullName">Nome completo</label>
@@ -482,9 +483,19 @@
                 <span class="error" id="pay-email-error"></span>
               </div>
               <div class="field">
-                <label for="pay-phone" data-i18n="labelPhone">Telefone</label>
+                <label for="pay-email-confirm" data-i18n="labelEmailConfirm">Confirme o e-mail</label>
+                <input id="pay-email-confirm" type="email" autocomplete="off" required maxlength="120" placeholder="Repita o e-mail" data-i18n-placeholder="phEmailConfirm">
+                <span class="error" id="pay-email-confirm-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-phone" data-i18n="labelCheckoutPhone">Celular com WhatsApp</label>
                 <input id="pay-phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="16" placeholder="(61) 99999-9999" data-i18n-placeholder="phPhone">
                 <span class="error" id="pay-phone-error"></span>
+              </div>
+              <div class="field">
+                <label for="pay-phone-confirm" data-i18n="labelPhoneConfirm">Confirme o celular</label>
+                <input id="pay-phone-confirm" type="tel" inputmode="tel" autocomplete="off" required maxlength="16" placeholder="(61) 99999-9999" data-i18n-placeholder="phPhoneConfirm">
+                <span class="error" id="pay-phone-confirm-error"></span>
               </div>
               <div class="field">
                 <label for="pay-cpf" data-i18n="labelCpf">CPF</label>
@@ -592,10 +603,10 @@
     </div>
   </div>
 
-  <script src="checkout-config.js?v=39"></script>
-  <script src="i18n.js?v=39"></script>
-  <script src="produtos.js?v=39"></script>
-  <script src="app.js?v=39"></script>
-  <script src="checkout.js?v=39"></script>
+  <script src="checkout-config.js?v=40"></script>
+  <script src="i18n.js?v=40"></script>
+  <script src="produtos.js?v=40"></script>
+  <script src="app.js?v=40"></script>
+  <script src="checkout.js?v=40"></script>
 </body>
 </html>

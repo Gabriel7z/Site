@@ -39,7 +39,25 @@ export function onlyDigits(value) {
 }
 
 export function isEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+  const email = String(value || "").trim().toLowerCase();
+  if (email.length < 6 || email.length > 120) return false;
+  return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$/i.test(email);
+}
+
+export function brazilianMobileDigits(value) {
+  let digits = onlyDigits(value);
+  if (digits.startsWith("55") && digits.length >= 12) digits = digits.slice(2);
+  return digits.slice(0, 11);
+}
+
+export function isBrazilianMobile(value) {
+  const digits = brazilianMobileDigits(value);
+  if (digits.length !== 11) return false;
+  const ddd = Number(digits.slice(0, 2));
+  if (ddd < 11 || ddd > 99) return false;
+  if (digits[2] !== "9") return false;
+  if (/^(\d)\1+$/.test(digits)) return false;
+  return true;
 }
 
 export function isCpf(value) {
@@ -350,7 +368,7 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
     .trim()
     .toLowerCase()
     .slice(0, 120);
-  const phone = onlyDigits(payer?.phone).slice(0, 11);
+  const phone = brazilianMobileDigits(payer?.phone);
   const cpf = onlyDigits(payer?.cpf).slice(0, 11);
   const cep = onlyDigits(payer?.cep).slice(0, 8);
   const street = String(payer?.street || "").trim().slice(0, 120);
@@ -366,7 +384,12 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
   const errors = [];
   if (name.length < 3) errors.push("name");
   if (!isEmail(email)) errors.push("email");
-  if (phone.length < 10 || phone.length > 11) errors.push("phone");
+  const emailConfirm = String(payer?.emailConfirm || "").trim().toLowerCase();
+  if (emailConfirm && emailConfirm !== email) errors.push("emailConfirm");
+  if (!isBrazilianMobile(phone)) errors.push("phone");
+  const phoneConfirmRaw = String(payer?.phoneConfirm || "").trim();
+  const phoneConfirm = brazilianMobileDigits(payer?.phoneConfirm);
+  if (phoneConfirmRaw && phoneConfirm !== phone) errors.push("phoneConfirm");
   if (!isCpf(cpf)) errors.push("cpf");
 
   if (requireAddress) {
@@ -513,11 +536,13 @@ export function adminOrderView(order) {
     ...pub,
     createdAt: order.createdAt,
     phone: order.customer?.phone || "",
+    email: order.customer?.email || "",
+    paymentId: order.paymentId || "",
+    hasEmail: Boolean(order.customer?.email),
     subtotal: order.subtotal,
     shipping: order.shipping,
     items: order.items || [],
     address: order.address,
-    hasEmail: Boolean(order.customer?.email),
     notify: order.notify || null,
   };
 }
