@@ -475,16 +475,33 @@
   function setupNav() {
     const toggle = $("#menu-toggle");
     const nav = $("#site-nav");
-    toggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
+    if (!toggle || !nav) return;
+
+    const setOpen = (open) => {
+      nav.classList.toggle("is-open", open);
+      toggle.classList.toggle("is-open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      const key = open ? "menuClose" : "menuOpen";
+      toggle.setAttribute("data-i18n-aria", key);
+      toggle.setAttribute("aria-label", t(key));
+    };
+
+    toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setOpen(!nav.classList.contains("is-open"));
     });
     $$("#site-nav a").forEach((a) =>
-      a.addEventListener("click", () => {
-        nav.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      })
+      a.addEventListener("click", () => setOpen(false))
     );
+    document.addEventListener("click", (event) => {
+      if (!nav.classList.contains("is-open")) return;
+      if (toggle.contains(event.target) || nav.contains(event.target)) return;
+      setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+
     const header = $(".site-header");
     const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });

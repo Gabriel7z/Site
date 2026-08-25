@@ -20,6 +20,7 @@ const I18N = {
   "navContact": "Contato",
   "cartOpen": "Abrir carrinho",
   "menuOpen": "Abrir menu",
+  "menuClose": "Fechar menu",
   "langAria": "Idioma",
   "heroKicker": "Lançamento exclusivo",
   "heroTitle": "Moduladores Biofísicos CEME",
