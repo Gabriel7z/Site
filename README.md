@@ -32,6 +32,33 @@ Para testar o checkout em modo demonstração:
 
 Nenhum valor é cobrado até o Mercado Pago ser conectado.
 
+## API de teste
+
+No computador, o site chama a API local em `http://127.0.0.1:3001`.
+
+```bash
+python3 -m http.server 8080
+cd server && npm start
+```
+
+Abra `http://127.0.0.1:8080`. O checkout deve mostrar **API de teste ligada**.
+
+Para o sandbox real do Mercado Pago (ainda sem cobrança):
+
+1. Crie o app em [Suas integrações](https://www.mercadopago.com.br/developers/panel/app)
+2. Copie as **credenciais de teste** (Access Token e Public Key, prefixo `TEST-`)
+3. Cole em `server/.env`:
+
+```
+MP_ACCESS_TOKEN=TEST-...
+MP_PUBLIC_KEY=TEST-...
+DEMO_PAYMENTS=false
+MP_TEST_MODE=true
+```
+
+4. Reinicie `npm start` na pasta `server/`
+5. No checkout use o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO` e CPF `123.456.789-09`
+
 ## Pagamento real (Mercado Pago)
 
 O GitHub Pages serve só o site estático. A cobrança fica na API da pasta `server/`.

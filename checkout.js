@@ -10,6 +10,7 @@
     step: "data",
     paying: false,
     demo: true,
+    mode: "local",
     orderId: "",
     lastQuoteTotal: 0,
     idempotencyKey: "",
@@ -504,6 +505,7 @@
     const apiUrl = String(cfg().apiUrl || "").replace(/\/$/, "");
     if (!apiUrl) {
       state.demo = true;
+      state.mode = "local";
       return;
     }
     try {
@@ -512,15 +514,29 @@
       if (data.mpPublicKey) cfg().mpPublicKey = data.mpPublicKey;
       if (data.maxInstallments) cfg().maxInstallments = data.maxInstallments;
       if (typeof data.freeShippingFrom === "number") cfg().freeShippingFrom = data.freeShippingFrom;
-      state.demo = !!data.demo;
+      state.mode = data.mode || (data.sandbox ? "sandbox" : data.demo ? "demo" : "live");
+      state.demo = state.mode === "demo" || state.mode === "local";
     } catch {
+      state.mode = "local";
       state.demo = !cfg().mpPublicKey;
     }
   }
 
   function showDemoBanner() {
     const banner = $("#checkout-demo-banner");
-    if (banner) banner.hidden = !state.demo;
+    if (!banner) return;
+    if (state.mode === "live") {
+      banner.hidden = true;
+      return;
+    }
+    banner.hidden = false;
+    const key =
+      state.mode === "sandbox"
+        ? "checkoutSandboxBanner"
+        : state.mode === "demo"
+          ? "checkoutApiTestBanner"
+          : "checkoutDemoBanner";
+    banner.textContent = t(key);
   }
 
   async function tokenizeCard(data) {

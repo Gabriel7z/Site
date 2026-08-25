@@ -2,6 +2,17 @@ export const MAX_QTY = 20;
 export const MIN_INSTALLMENT = 20;
 export const FREE_SHIPPING_FROM = 360;
 
+/** demo = API local sem Mercado Pago; sandbox = credenciais TEST; live = produção. */
+export function paymentMode({ accessToken = "", demoPayments, testMode } = {}) {
+  const token = String(accessToken || "").trim();
+  const forceDemo =
+    String(demoPayments).toLowerCase() === "true" || !token;
+  if (forceDemo) return "demo";
+  const sandbox =
+    String(testMode).toLowerCase() === "true" || token.startsWith("TEST-");
+  return sandbox ? "sandbox" : "live";
+}
+
 export const SHIPPING_FEES = {
   pickup: 0,
   df: 15,

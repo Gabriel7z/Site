@@ -10,6 +10,7 @@ import {
   demoPixPayload,
   installmentOptions,
   makeOrderId,
+  paymentMode,
   quoteCart,
   validatePayer,
 } from "./lib.js";
@@ -22,11 +23,15 @@ const { PRODUCTS } = require("../produtos.js");
 const PORT = Number(process.env.PORT) || 3001;
 const MAX_INSTALLMENTS = Number(process.env.MAX_INSTALLMENTS || 3);
 const FREE_FROM = Number(process.env.FREE_SHIPPING_FROM || FREE_SHIPPING_FROM);
-const DEMO_PAYMENTS =
-  String(process.env.DEMO_PAYMENTS || "").toLowerCase() === "true" ||
-  !process.env.MP_ACCESS_TOKEN;
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || "";
 const MP_PUBLIC_KEY = process.env.MP_PUBLIC_KEY || "";
+const MODE = paymentMode({
+  accessToken: MP_ACCESS_TOKEN,
+  demoPayments: process.env.DEMO_PAYMENTS,
+  testMode: process.env.MP_TEST_MODE,
+});
+const DEMO_PAYMENTS = MODE === "demo";
+const SANDBOX = MODE === "sandbox";
 
 const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
   .split(",")
@@ -42,6 +47,7 @@ app.use(
       if (!origin) return callback(null, true);
       if (!allowedOrigins.length) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (MODE !== "live") return callback(null, true);
       return callback(new Error("origin_not_allowed"));
     },
   })
@@ -71,12 +77,14 @@ function quoteFromBody(body) {
 }
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, demo: DEMO_PAYMENTS });
+  res.json({ ok: true, demo: DEMO_PAYMENTS, sandbox: SANDBOX, mode: MODE });
 });
 
 app.get("/api/config", (_req, res) => {
   res.json({
     demo: DEMO_PAYMENTS,
+    sandbox: SANDBOX,
+    mode: MODE,
     mpPublicKey: MP_PUBLIC_KEY,
     maxInstallments: MAX_INSTALLMENTS,
     freeShippingFrom: FREE_FROM,
@@ -283,5 +291,5 @@ app.post("/api/pay", rateLimit, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`CEME checkout API on :${PORT} (${DEMO_PAYMENTS ? "demo" : "Mercado Pago"})`);
+  console.log(`CEME checkout API on :${PORT} (mode=${MODE})`);
 });

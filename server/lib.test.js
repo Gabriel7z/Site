@@ -12,6 +12,7 @@ import {
   shippingRegion,
   demoPixPayload,
   isPhysicalProduct,
+  paymentMode,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -127,6 +128,26 @@ test("gera payload Pix de demonstração", () => {
   const code = demoPixPayload("CEME-ABC", 135);
   assert.match(code, /CEMEPIX/);
   assert.match(code, /BRL135.00/);
+});
+
+test("modo da API: demo sem token, sandbox com TEST- e live com token de produção", () => {
+  assert.equal(paymentMode({ accessToken: "", demoPayments: "false" }), "demo");
+  assert.equal(
+    paymentMode({ accessToken: "TEST-abc", demoPayments: "true" }),
+    "demo"
+  );
+  assert.equal(
+    paymentMode({ accessToken: "TEST-abc", demoPayments: "false" }),
+    "sandbox"
+  );
+  assert.equal(
+    paymentMode({ accessToken: "APP_USR-abc", demoPayments: "false", testMode: "true" }),
+    "sandbox"
+  );
+  assert.equal(
+    paymentMode({ accessToken: "APP_USR-abc", demoPayments: "false" }),
+    "live"
+  );
 });
 
 test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
