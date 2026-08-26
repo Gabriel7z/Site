@@ -16,6 +16,6 @@
         : location.origin,
     mpPublicKey: "",
     maxInstallments: 3,
-    freeShippingFrom: 0,
+    freeShippingFrom: 360,
   };
 })();

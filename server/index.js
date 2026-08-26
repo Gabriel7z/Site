@@ -253,6 +253,7 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       binary_mode: false,
       payment_methods: {
         installments: MAX_INSTALLMENTS,
+        default_installments: 1,
       },
       metadata: {
         order_id: orderId,
@@ -271,7 +272,9 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       },
     });
 
-    const checkoutUrl = result.init_point;
+    const checkoutUrl = SANDBOX
+      ? result.sandbox_init_point || result.init_point
+      : result.init_point || result.sandbox_init_point;
     if (!checkoutUrl) {
       return res.status(502).json({ error: "checkout_failed" });
     }

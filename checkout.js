@@ -4,7 +4,7 @@
 
   const cfg = () => window.CEME_CHECKOUT || {};
   const shop = () => window.CEMEShop;
-  const FREE_FROM_DEFAULT = 0;
+  const FREE_FROM_DEFAULT = 360;
 
   function apiBase() {
     const apiUrl = String(cfg().apiUrl || "").replace(/\/$/, "");

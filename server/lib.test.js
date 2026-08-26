@@ -225,18 +225,19 @@ test("modo da API: demo sem token, sandbox com TEST- e live com token de produç
   );
 });
 
-test("catálogo oficial tem 15 sprays a R$ 0,10 (teste Mercado Pago) e extras compráveis", () => {
+test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
   const sprays = PRODUCTS.filter((p) => !p.kind || p.kind === "spray");
   assert.equal(sprays.length, 15);
-  assert.ok(sprays.every((p) => p.price === 0.1));
-  assert.ok(PRODUCTS.some((p) => p.kind === "garrafada"));
-  assert.ok(PRODUCTS.some((p) => p.kind === "mapa"));
-  assert.ok(PRODUCTS.some((p) => p.kind === "musica"));
+  assert.ok(sprays.every((p) => p.price === 120));
+  const extras = Object.fromEntries(PRODUCTS.filter((p) => p.kind).map((p) => [p.id, p.price]));
+  assert.equal(extras["garrafadas-capsula"], 88);
+  assert.equal(extras["mapa-holografico"], 149.99);
+  assert.equal(extras["musicas-neuroconectivas"], 8);
   const quote = quoteCart(
     PRODUCTS,
     sprays.map((product) => ({ id: product.id, qty: 1 }))
   );
-  assert.equal(Number(quote.subtotal.toFixed(2)), 1.5);
+  assert.equal(Number(quote.subtotal.toFixed(2)), 1800);
   assert.equal(quote.shipping, 0);
 });
 
