@@ -76,8 +76,8 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         error.textContent =
-          data.error === "payment_pending"
-            ? "O Mercado Pago ainda não confirmou o pagamento. Quando aprovar, o pedido aparece aqui."
+          data.error === "payment_pending" || data.error === "payment_not_confirmed" || data.error === "payment_rejected"
+            ? "O Mercado Pago não confirmou este pagamento. O pedido só aparece depois da aprovação."
             : "Não encontramos esse pedido. Confira o número do comprovante.";
         error.hidden = false;
         return;

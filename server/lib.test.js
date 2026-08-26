@@ -32,6 +32,7 @@ import {
   formatAddress,
   normalizeTrackingCode,
   isPaymentApproved,
+  unpaidPaymentError,
   paidFulfillmentOrders,
   sanitizeStoredOrder,
   formatOrderId,
@@ -344,6 +345,10 @@ test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar"
   assert.equal(isPaymentApproved({ status: "in_process" }), false);
   assert.equal(isPaymentApproved({ status: "rejected" }), false);
   assert.equal(isPaymentApproved({ status: "approved" }), true);
+  assert.equal(unpaidPaymentError("approved"), "");
+  assert.equal(unpaidPaymentError("pending"), "payment_not_confirmed");
+  assert.equal(unpaidPaymentError("rejected"), "payment_not_confirmed");
+  assert.equal(unpaidPaymentError(""), "payment_not_confirmed");
   assert.deepEqual(
     paidFulfillmentOrders([
       { orderId: "CEME-A", status: "pending" },
