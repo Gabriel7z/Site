@@ -2,6 +2,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
+  const LOCALES = { pt: "pt-BR", en: "en-US", es: "es-ES", de: "de-DE", fr: "fr-FR" };
   const ALBUM_PRICE_BRL = 8;
   const PRODUCT_IDS = new Set(PRODUCTS.map((p) => p.id));
   const CATEGORY_KEYS = ["todos", "mente", "comunicacao", "sensorial", "emocao", "detox", "corpo", "frequencial"];
@@ -25,15 +26,17 @@
     cart: readCart(),
     filter: "todos",
     currentAudio: null,
-    lang: "pt",
+    lang: localStorage.getItem("ceme-lang") || "pt",
   };
 
+  if (!I18N[state.lang]) state.lang = "pt";
+
   function t(key) {
-    return I18N.pt[key] || key;
+    return (I18N[state.lang] && I18N[state.lang][key]) || I18N.pt[key] || key;
   }
 
   function money(amountBrl) {
-    return Number(amountBrl).toLocaleString("pt-BR", {
+    return Number(amountBrl).toLocaleString(LOCALES[state.lang] || "pt-BR", {
       style: "currency",
       currency: "BRL",
     });
@@ -66,17 +69,18 @@
   }
 
   function localizedProduct(p) {
+    const copy = (p.i18n && (p.i18n[state.lang] || p.i18n.pt)) || {};
     return {
       ...p,
-      tagline: p.tagline || "",
-      description: p.description || "",
-      indications: p.indications || [],
+      tagline: copy.tagline || p.tagline || "",
+      description: copy.description || p.description || "",
+      indications: copy.indications || p.indications || [],
       categoryLabel: t(`cat_${p.category}`),
     };
   }
 
   function applyStaticI18n() {
-    const dict = I18N.pt;
+    const dict = I18N[state.lang] || I18N.pt;
     document.documentElement.lang = dict.htmlLang || "pt-BR";
 
     $$("[data-i18n]").forEach((el) => {
@@ -115,6 +119,22 @@
       const a = $(sel);
       if (a) a.href = `https://wa.me/${WHATSAPP}/?text=${evalText}`;
     });
+
+    $$(".lang-btn").forEach((btn) => {
+      const active = btn.dataset.lang === state.lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  function setLanguage(lang) {
+    if (!I18N[lang]) return;
+    state.lang = lang;
+    localStorage.setItem("ceme-lang", lang);
+    if (!CATEGORY_KEYS.includes(state.filter)) state.filter = "todos";
+    applyStaticI18n();
+    renderFilters();
+    refreshPrices();
   }
 
   function saveCart() {
@@ -509,6 +529,11 @@
   }
 
   function onClick(e) {
+    const langBtn = e.target.closest("[data-lang]");
+    if (langBtn && langBtn.dataset.lang) {
+      setLanguage(langBtn.dataset.lang);
+      return;
+    }
     const tEl = e.target.closest(
       "[data-filter],[data-open],[data-add],[data-buy],[data-audio],[data-remove],[data-qty-minus],[data-qty-plus]"
     );
