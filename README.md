@@ -12,7 +12,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
 - Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
-- Cada compra vira um **pedido identificado** (nome, itens, endereço) para postar certo. O cliente acompanha em `pedidos.html`. A loja vê a lista em `envios.html` (senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção.
+- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. O dono vê vendas, pendentes e enviados em `envios.html` (usuário **Dono**, senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. Hospedagem e banco são **só o Render** (`render.yaml`).
 
 ## Como abrir no seu computador
 
@@ -66,7 +66,7 @@ Com `APP_USR-` use `MP_TEST_MODE=false` — cai **R$ 0,10 de verdade** na sua co
 
 3. Pare o servidor (Ctrl+C) e rode de novo: `bash abrir-local.sh`
 4. Abra **http://127.0.0.1:3001**, compre 1 item, pague no Mercado Pago
-5. Confira o pedido em `envios.html` (senha `ceme-local`)
+5. Confira o pedido no painel do dono (`envios.html`, usuário Dono, senha `ceme-local`)
 
 Com token `TEST-`, no Checkout Pro use comprador de teste e o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO`.
 
@@ -97,25 +97,22 @@ O dinheiro **não** cai no GitHub. Ele cai na **conta Mercado Pago em que você 
 1. Abra [Suas integrações](https://www.mercadopago.com.br/developers/panel/app) e faça login na conta que deve receber o dinheiro.
 2. Crie um aplicativo (se ainda não tiver). Produto: **Checkout Pro**.
 3. No menu esquerdo, abra **Credenciais de produção** (não as de teste).
-4. Ative as credenciais: informe o ramo de atividade e o site (`https://gabriel7z.github.io/Site/` ou o domínio da loja).
+4. Ative as credenciais: informe o ramo de atividade e o site da loja (GitHub Pages ou o domínio).
 5. Copie o par de **produção**:
    - **Access Token** começa com `APP_USR-` (chave secreta da API — nunca cola no GitHub, no `checkout-config.js` nem no chat)
    - **Public Key** também começa com `APP_USR-` (o Checkout Pro usa principalmente o Access Token no servidor)
 6. Chave que começa com `TEST-` **não cobra** e o dinheiro **não cai**. Isso é só laboratório.
-7. A API precisa estar **online** (Render, Railway ou similar). O GitHub Pages só serve o HTML e não consegue cobrar.
-8. Na hospedagem da API, coloque as variáveis (nunca no repositório):
+7. A API precisa estar **online** no Render. O GitHub Pages só serve o HTML e não consegue cobrar.
+8. Na conta **dele**, siga `docs/passar-para-o-dono.md`: Mercado Pago, Render e uma linha em `checkout-config.js`. Não cole token no GitHub nem no chat.
+9. Depois da venda aprovada, o valor aparece no [Mercado Pago](https://www.mercadopago.com.br) daquela conta. De lá vocês transferem para o banco.
 
-```
-MP_ACCESS_TOKEN=APP_USR-...
-MP_PUBLIC_KEY=APP_USR-...
-DEMO_PAYMENTS=false
-MP_TEST_MODE=false
-PUBLIC_SITE_URL=https://gabriel7z.github.io/Site
-ALLOWED_ORIGINS=https://gabriel7z.github.io
-```
+## Produção: só o Render, na conta do dono
 
-9. No site, em `checkout-config.js`, cole a URL pública da API em `apiUrl` (exemplo: `https://sua-api.onrender.com`).
-10. Depois da venda aprovada, o valor aparece no [Mercado Pago](https://www.mercadopago.com.br) daquela conta. De lá vocês transferem para o banco.
+Não use a conta de teste para vender. O molde está em `render.yaml` e o passo a passo em **`docs/passar-para-o-dono.md`**.
+
+Na conta dele: Blueprint → Apply → colar as chaves `APP_USR-` só no painel. Conferir `/api/health` com `"storage":"postgres"` e `"sandbox":false`.
+
+O primeiro pedido no banco dele será `CEME-1`.
 
 A conta Mercado Pago precisa estar verificada (documento e, para sacar, dados bancários). Taxas do MP saem de cada venda aprovada (Pix, cartão etc.).
 
@@ -154,8 +151,8 @@ npm test
 ```
 
 1. App + **credenciais de produção** (`APP_USR-`) na conta que recebe
-2. Publique `server/` com `DEMO_PAYMENTS=false` e `MP_TEST_MODE=false`
-3. Coloque a URL da API em `checkout-config.js` (`apiUrl`)
+2. Publique no Render dele com `DEMO_PAYMENTS=false` e `MP_TEST_MODE=false`
+3. Se a URL do Render mudar, uma linha em `checkout-config.js` (`RENDER_API_URL`)
 
 ## Dados pessoais (LGPD)
 
@@ -167,11 +164,9 @@ Isso reduz risco de vazamento e atende transparência e minimização. Não subs
 
 ## Publicar (GitHub Pages)
 
-O site estático pode ficar online em:
+O site estático pode ficar no GitHub Pages da conta **dele** (`https://USUARIO.github.io/Site/`). Passo a passo: `docs/passar-para-o-dono.md`.
 
-`https://gabriel7z.github.io/Site/`
-
-**Passos (uma vez):**
+**Uma vez no repo dele:**
 1. No GitHub: **Settings → General → Danger Zone** — deixe o repositório **público** (necessário no plano Free).
 2. **Settings → Pages → Build and deployment → Source**: escolha **GitHub Actions**.
 3. Faça push em `main` (ou rode o workflow **Deploy GitHub Pages** manualmente).

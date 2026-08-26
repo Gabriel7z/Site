@@ -1,13 +1,36 @@
+# Único serviço de hospedagem da CEME: Render.
+# Um clique no painel (Blueprints → Apply) cria o Postgres e liga DATABASE_URL.
+# Não use Supabase nem outro banco.
+
+databases:
+  - name: ceme-orders
+    plan: basic-256mb
+    databaseName: ceme
+    user: ceme
+    ipAllowList: []
+
 services:
   - type: web
     name: ceme-checkout
     runtime: node
-    plan: free
+    plan: starter
+    rootDir: server
+    branch: main
+    autoDeployTrigger: commit
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ceme-orders
+          property: connectionString
       - key: DEMO_PAYMENTS
         value: "false"
+      - key: MP_TEST_MODE
+        value: "false"
+      - key: FREE_SHIPPING_FROM
+        value: "360"
       - key: MP_ACCESS_TOKEN
         sync: false
       - key: MP_PUBLIC_KEY
@@ -26,7 +49,3 @@ services:
         sync: false
       - key: GMAIL_APP_PASSWORD
         sync: false
-      - key: MP_TEST_MODE
-        value: "false"
-      - key: FREE_SHIPPING_FROM
-        value: "360"

@@ -12,7 +12,7 @@ const I18N = {
   "navMethod": "O Método",
   "navProducts": "Produtos",
   "navTrack": "Rastreio",
-  "navStaff": "Área da loja",
+  "navStaff": "Painel do dono",
   "navMapa": "Mapa",
   "navGarrafadas": "Garrafadas",
   "navBooks": "Livros",

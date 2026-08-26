@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>Envios | Família CEME</title>
+  <title>Painel do dono | Família CEME</title>
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=40">
+  <link rel="stylesheet" href="style.css?v=46">
 </head>
 <body>
   <header class="site-header is-scrolled">
@@ -19,7 +19,7 @@
         <img src="assets/img/logo.png" alt="Logo CEME">
         <span class="brand-text">
           <strong>CEME</strong>
-          <span>Área da loja — só quem posta</span>
+          <span>Painel do dono</span>
         </span>
       </a>
       <nav class="site-nav" aria-label="Principal">
@@ -31,22 +31,49 @@
     </div>
   </header>
 
-  <main class="wrap fulfill-page">
-    <p class="kicker">Dono da loja · postagem</p>
-    <h1>Área da loja — envios</h1>
-    <p class="lead">Esta página é para quem separa e posta. O cliente não usa aqui: ele entra em <a href="pedidos.html">Acompanhar pedido</a> com o número CEME-… Só aparecem compras já aprovadas no Mercado Pago. No checkout o cliente confirma e-mail e celular; se um for falso, use o outro — se os dois falharem, fale pelo Mercado Pago daquela venda.</p>
-    <form class="track-form" id="admin-form">
-      <label for="admin-key">Senha da loja (ADMIN_KEY)</label>
-      <div class="track-row">
-        <input id="admin-key" type="password" required maxlength="80" autocomplete="current-password">
-        <button class="btn btn-gold" type="submit">Abrir pedidos</button>
+  <main class="wrap owner-page">
+    <section id="owner-login">
+      <p class="kicker">Acesso único</p>
+      <h1>Painel do dono</h1>
+      <p class="lead">Só o dono da loja entra aqui. Um usuário, uma senha. O cliente acompanha o pedido em <a href="pedidos.html">Acompanhar pedido</a>.</p>
+      <form class="owner-login-card" id="admin-form">
+        <label for="admin-user">Usuário</label>
+        <input id="admin-user" type="text" value="Dono" readonly autocomplete="username">
+        <label for="admin-key">Senha</label>
+        <div class="track-row">
+          <input id="admin-key" type="password" required maxlength="80" autocomplete="current-password">
+          <button class="btn btn-gold" type="submit">Entrar</button>
+        </div>
+      </form>
+      <p class="error" id="admin-error" hidden></p>
+    </section>
+
+    <section id="owner-app" hidden>
+      <div class="owner-toolbar">
+        <div>
+          <p class="kicker">Controle de vendas</p>
+          <h1>Olá, Dono</h1>
+        </div>
+        <button class="btn btn-ghost" id="owner-logout" type="button">Sair</button>
       </div>
-    </form>
-    <p class="error" id="admin-error" hidden></p>
-    <div id="admin-list"></div>
+      <p class="error" id="owner-error" hidden></p>
+      <div class="dash-kpis" id="dash-kpis"></div>
+      <div class="dash-tools">
+        <div class="dash-tabs" role="tablist" aria-label="Pedidos">
+          <button type="button" class="dash-tab is-active" data-filter="all">Histórico</button>
+          <button type="button" class="dash-tab" data-filter="pending">Pendentes</button>
+          <button type="button" class="dash-tab" data-filter="shipped">Enviados</button>
+        </div>
+        <label class="dash-search">
+          <span class="visually-hidden">Buscar pedido</span>
+          <input id="dash-search" type="search" placeholder="Buscar CEME-1, nome ou cidade" maxlength="80">
+        </label>
+      </div>
+      <div id="admin-list"></div>
+    </section>
   </main>
 
-  <script src="checkout-config.js?v=40"></script>
-  <script src="envios.js?v=40"></script>
+  <script src="checkout-config.js?v=46"></script>
+  <script src="envios.js?v=46"></script>
 </body>
 </html>
