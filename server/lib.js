@@ -420,9 +420,24 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
   };
 }
 
-export function makeOrderId() {
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `CEME-${Date.now().toString(36).toUpperCase()}-${rand}`;
+export function formatOrderId(n) {
+  const num = Number(n);
+  if (!Number.isInteger(num) || num < 1) return "";
+  return `CEME-${num}`;
+}
+
+export function orderSequence(orderId) {
+  const match = /^CEME-(\d+)$/i.exec(String(orderId || "").trim());
+  return match ? Number(match[1]) : 0;
+}
+
+export function nextOrderSequence(orderIds = []) {
+  let max = 0;
+  for (const id of orderIds) {
+    const n = orderSequence(id);
+    if (n > max) max = n;
+  }
+  return max + 1;
 }
 
 export function normalizeTrackingCode(value) {

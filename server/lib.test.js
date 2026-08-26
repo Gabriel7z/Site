@@ -34,6 +34,9 @@ import {
   isPaymentApproved,
   paidFulfillmentOrders,
   sanitizeStoredOrder,
+  formatOrderId,
+  orderSequence,
+  nextOrderSequence,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -309,6 +312,17 @@ test("só gera notification_url em HTTPS da API", () => {
     }),
     "https://api.exemplo.com"
   );
+});
+
+test("número do pedido é sequencial a partir de CEME-1", () => {
+  assert.equal(formatOrderId(1), "CEME-1");
+  assert.equal(formatOrderId(12), "CEME-12");
+  assert.equal(formatOrderId(0), "");
+  assert.equal(orderSequence("CEME-1"), 1);
+  assert.equal(orderSequence("CEME-12"), 12);
+  assert.equal(orderSequence("CEME-ABC"), 0);
+  assert.equal(nextOrderSequence([]), 1);
+  assert.equal(nextOrderSequence(["CEME-1", "CEME-3", "CEME-ABC"]), 4);
 });
 
 test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar", () => {

@@ -12,7 +12,6 @@ import {
   isHttpsUrl,
   isOriginAllowed,
   isValidWebhookSignature,
-  makeOrderId,
   notificationUrlFromOrigin,
   paymentMode,
   preferenceItems,
@@ -31,9 +30,9 @@ import {
 } from "./lib.js";
 import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
-import { findOrder, readOrders, scrubOrderFile, upsertOrder } from "./orders-store.js";
+import { allocateOrderId, findOrder, initStore, ordersBackend, readOrders, upsertOrder } from "./orders-store.js";
 
-dotenv.config();
+dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), ".env") });
 
 const require = createRequire(import.meta.url);
 const { PRODUCTS } = require("../produtos.js");
@@ -53,8 +52,6 @@ const DEMO_PAYMENTS = MODE === "demo";
 const SANDBOX = MODE === "sandbox";
 const MP_WEBHOOK_SECRET = String(process.env.MP_WEBHOOK_SECRET || "").trim();
 const ADMIN_KEY = String(process.env.ADMIN_KEY || "").trim();
-scrubOrderFile();
-const orders = new Map(readOrders().map((order) => [order.orderId, order]));
 
 const allowedOrigins = String(process.env.ALLOWED_ORIGINS || "")
   .split(",")
@@ -144,13 +141,11 @@ function webhookNotifyUrl(req) {
   );
 }
 
-function rememberOrder(orderId, patch) {
+async function rememberOrder(orderId, patch) {
   const id = String(orderId || "").slice(0, 80);
   if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return null;
-  const prev = findOrder(id) || orders.get(id) || { orderId: id };
-  const next = upsertOrder({ ...prev, ...patch, orderId: id, updatedAt: Date.now() });
-  orders.set(id, next);
-  return next;
+  const prev = (await findOrder(id)) || { orderId: id };
+  return upsertOrder({ ...prev, ...patch, orderId: id, updatedAt: Date.now() });
 }
 
 function requireAdmin(req, res) {
@@ -171,7 +166,13 @@ function mpClient() {
 }
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, demo: DEMO_PAYMENTS, sandbox: SANDBOX, mode: MODE });
+  res.json({
+    ok: true,
+    demo: DEMO_PAYMENTS,
+    sandbox: SANDBOX,
+    mode: MODE,
+    storage: ordersBackend(),
+  });
 });
 
 app.get("/api/config", (_req, res) => {
@@ -203,17 +204,17 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
     const quote = quoteFromBody(req.body || {});
     const requireAddress = quote.hasPhysical && quote.shippingMethod === "delivery";
     const payer = validatePayer(req.body?.payer || {}, { requireAddress });
-    const orderId = makeOrderId();
+    const orderId = await allocateOrderId();
     const shop = siteUrl(req);
     const back = `${shop}/index.html`;
     const items = preferenceItems(quote);
 
     if (DEMO_PAYMENTS) {
-      rememberOrder(
+      await rememberOrder(
         orderId,
         fulfillmentSnapshot({ orderId, quote, payer, status: "approved" })
       );
-      rememberOrder(orderId, { demo: true });
+      await rememberOrder(orderId, { demo: true });
       return res.json({
         demo: true,
         orderId,
@@ -278,8 +279,8 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       return res.status(502).json({ error: "checkout_failed" });
     }
 
-    rememberOrder(orderId, fulfillmentSnapshot({ orderId, quote, payer, status: "pending" }));
-    rememberOrder(orderId, { preferenceId: result.id });
+    await rememberOrder(orderId, fulfillmentSnapshot({ orderId, quote, payer, status: "pending" }));
+    await rememberOrder(orderId, { preferenceId: result.id });
     return res.json({
       orderId,
       trackingId: orderId,
@@ -313,7 +314,7 @@ app.get("/api/order/:orderId/cupom.pdf", rateLimit, async (req, res) => {
   if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
-  const stored = findOrder(orderId) || orders.get(orderId);
+  const stored = await findOrder(orderId);
   if (!stored) return res.status(404).json({ error: "not_found" });
   if (!isPaymentApproved(stored)) {
     return res.status(404).json({ error: "payment_pending" });
@@ -336,7 +337,7 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
   if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
-  const stored = findOrder(orderId) || orders.get(orderId);
+  const stored = await findOrder(orderId);
   if (DEMO_PAYMENTS) {
     if (!isPaymentApproved(stored) && stored) {
       return res.status(404).json({ error: "payment_pending" });
@@ -353,7 +354,7 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       if (result.external_reference && result.external_reference !== orderId) {
         return res.status(404).json({ error: "not_found" });
       }
-      latest = rememberOrder(orderId, { status: result.status || "unknown", paymentId }) || latest;
+      latest = (await rememberOrder(orderId, { status: result.status || "unknown", paymentId })) || latest;
     } else if (!isPaymentApproved(stored)) {
       const found = await payment.search({
         options: {
@@ -366,10 +367,10 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       const approved = results.find((item) => item.status === "approved");
       const current = approved || results[0];
       if (current) {
-        latest = rememberOrder(orderId, {
+        latest = (await rememberOrder(orderId, {
           status: current.status || "unknown",
           paymentId: current.id,
-        }) || latest;
+        })) || latest;
       }
     }
     if (!isPaymentApproved(latest)) {
@@ -382,19 +383,21 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
   }
 });
 
-app.get("/api/orders", rateLimit, (req, res) => {
+app.get("/api/orders", rateLimit, async (req, res) => {
   if (!requireAdmin(req, res)) return;
-  const list = paidFulfillmentOrders(readOrders()).map((order) => adminOrderView(order)).filter(Boolean);
+  const list = paidFulfillmentOrders(await readOrders())
+    .map((order) => adminOrderView(order))
+    .filter(Boolean);
   return res.json({ orders: list });
 });
 
-app.post("/api/orders/:orderId/tracking", rateLimit, (req, res) => {
+app.post("/api/orders/:orderId/tracking", rateLimit, async (req, res) => {
   if (!requireAdmin(req, res)) return;
   const orderId = String(req.params.orderId || "").slice(0, 80);
   if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
-  const stored = findOrder(orderId) || orders.get(orderId);
+  const stored = await findOrder(orderId);
   if (!isPaymentApproved(stored)) {
     return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
   }
@@ -402,7 +405,7 @@ app.post("/api/orders/:orderId/tracking", rateLimit, (req, res) => {
   if (!trackingCode) {
     return res.status(400).json({ error: "invalid_tracking" });
   }
-  const saved = rememberOrder(orderId, { trackingCode, status: stored.status || "approved" });
+  const saved = await rememberOrder(orderId, { trackingCode, status: stored.status || "approved" });
   return res.json(adminOrderView(saved));
 });
 
@@ -412,7 +415,7 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
   if (!/^CEME-[A-Z0-9-]+$/i.test(orderId)) {
     return res.status(400).json({ error: "invalid_payment" });
   }
-  const stored = findOrder(orderId) || orders.get(orderId);
+  const stored = await findOrder(orderId);
   if (!isPaymentApproved(stored)) {
     return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
   }
@@ -440,7 +443,7 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
     { ...stored, trackingCode },
     { trackingCode, trackingUrl }
   );
-  const saved = rememberOrder(orderId, {
+  const saved = await rememberOrder(orderId, {
     trackingCode,
     shipped: true,
     shippedAt: Date.now(),
@@ -512,7 +515,7 @@ async function rememberPayment(paymentId) {
   const digits = String(paymentId || "").replace(/\D/g, "");
   if (!digits) return;
   const result = await new Payment(mpClient()).get({ id: digits });
-  rememberOrder(result.external_reference, {
+  await rememberOrder(result.external_reference, {
     status: result.status || "unknown",
     paymentId: digits,
   });
@@ -528,6 +531,11 @@ app.use((req, res, next) => {
 });
 app.use(express.static(SITE_ROOT, { index: "index.html", extensions: ["html"] }));
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Loja CEME em http://127.0.0.1:${PORT}  (mode=${MODE})`);
+await initStore().then(({ backend }) => {
+  if (MODE === "live" && backend !== "postgres") {
+    console.warn("DATABASE_URL ausente: o histórico de pedidos some no restart do Render.");
+  }
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Loja CEME em http://127.0.0.1:${PORT}  (mode=${MODE}, storage=${backend})`);
+  });
 });

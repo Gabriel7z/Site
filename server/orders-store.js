@@ -1,49 +1,186 @@
 import fs from "node:fs";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { sanitizeStoredOrder } from "./lib.js";
+import dotenv from "dotenv";
+import pg from "pg";
+import { formatOrderId, nextOrderSequence, sanitizeStoredOrder } from "./lib.js";
 
-const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "data");
-const FILE = path.join(DIR, "orders.json");
+const SERVER_DIR = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(SERVER_DIR, ".env") });
+
+const DEFAULT_DIR = path.join(SERVER_DIR, "data");
+const DEFAULT_FILE = path.join(DEFAULT_DIR, "orders.json");
+
+let pool;
+
+function databaseUrl() {
+  return String(process.env.DATABASE_URL || "").trim();
+}
+
+function ordersFile() {
+  const custom = String(process.env.ORDERS_FILE || "").trim();
+  return custom || DEFAULT_FILE;
+}
+
+function usePostgres() {
+  return Boolean(databaseUrl());
+}
+
+export function ordersBackend() {
+  return usePostgres() ? "postgres" : "file";
+}
+
+function sslFor(url) {
+  if (/localhost|127\.0\.0\.1/i.test(url)) return false;
+  return { rejectUnauthorized: false };
+}
 
 function ensureFile() {
-  fs.mkdirSync(DIR, { recursive: true });
-  if (!fs.existsSync(FILE)) {
-    fs.writeFileSync(FILE, "[]\n", "utf8");
+  const file = ordersFile();
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, "[]\n", "utf8");
   }
 }
 
-export function readOrders() {
+function readFileOrders() {
   ensureFile();
   try {
-    const parsed = JSON.parse(fs.readFileSync(FILE, "utf8"));
+    const parsed = JSON.parse(fs.readFileSync(ordersFile(), "utf8"));
     return Array.isArray(parsed) ? parsed.map(sanitizeStoredOrder) : [];
   } catch {
     return [];
   }
 }
 
-export function scrubOrderFile() {
-  const all = readOrders();
-  fs.writeFileSync(FILE, `${JSON.stringify(all, null, 2)}\n`, "utf8");
-  return all;
+function writeFileOrders(all) {
+  ensureFile();
+  fs.writeFileSync(ordersFile(), `${JSON.stringify(all, null, 2)}\n`, "utf8");
 }
 
-export function findOrder(orderId) {
+async function withPg(fn) {
+  const url = databaseUrl();
+  if (!url) {
+    throw new Error("DATABASE_URL ausente");
+  }
+  if (!pool) {
+    pool = new pg.Pool({
+      connectionString: url,
+      ssl: sslFor(url),
+      max: 4,
+    });
+  }
+  return fn(pool);
+}
+
+export async function initStore() {
+  if (!usePostgres()) {
+    const all = readFileOrders();
+    writeFileOrders(all);
+    return { backend: "file" };
+  }
+  await withPg((db) =>
+    db.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        seq INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        order_id TEXT UNIQUE NOT NULL,
+        payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
+  );
+  const leftover = readFileOrders();
+  for (const order of leftover) {
+    if (order?.orderId) {
+      await upsertOrder(order);
+    }
+  }
+  return { backend: "postgres" };
+}
+
+export async function allocateOrderId() {
+  if (!usePostgres()) {
+    const all = readFileOrders();
+    const orderId = formatOrderId(nextOrderSequence(all.map((order) => order.orderId)));
+    all.unshift({ orderId, status: "reserved", createdAt: Date.now() });
+    writeFileOrders(all);
+    return orderId;
+  }
+  return withPg(async (db) => {
+    const client = await db.connect();
+    try {
+      await client.query("BEGIN");
+      const inserted = await client.query(
+        `INSERT INTO orders (order_id, payload) VALUES ($1, '{}'::jsonb) RETURNING seq`,
+        [`tmp-${randomUUID()}`]
+      );
+      const seq = Number(inserted.rows[0].seq);
+      const orderId = formatOrderId(seq);
+      await client.query(`UPDATE orders SET order_id = $1 WHERE seq = $2`, [orderId, seq]);
+      await client.query("COMMIT");
+      return orderId;
+    } catch (err) {
+      await client.query("ROLLBACK");
+      throw err;
+    } finally {
+      client.release();
+    }
+  });
+}
+
+export async function readOrders() {
+  if (!usePostgres()) return readFileOrders();
+  const result = await withPg((db) =>
+    db.query(`SELECT payload FROM orders WHERE order_id LIKE 'CEME-%' ORDER BY seq DESC`)
+  );
+  return result.rows.map((row) => sanitizeStoredOrder(row.payload));
+}
+
+export async function findOrder(orderId) {
   const id = String(orderId || "");
-  return readOrders().find((order) => order.orderId === id) || null;
+  if (!usePostgres()) {
+    return readFileOrders().find((order) => order.orderId === id) || null;
+  }
+  const result = await withPg((db) =>
+    db.query(`SELECT payload FROM orders WHERE order_id = $1 LIMIT 1`, [id])
+  );
+  return result.rows[0] ? sanitizeStoredOrder(result.rows[0].payload) : null;
 }
 
-export function upsertOrder(record) {
+export async function upsertOrder(record) {
   if (!record?.orderId) return record;
   const next = sanitizeStoredOrder(record);
-  const all = readOrders();
-  const index = all.findIndex((order) => order.orderId === next.orderId);
-  if (index >= 0) {
-    all[index] = sanitizeStoredOrder({ ...all[index], ...next, orderId: next.orderId });
-  } else {
-    all.unshift(next);
+  if (!usePostgres()) {
+    const all = readFileOrders();
+    const index = all.findIndex((order) => order.orderId === next.orderId);
+    if (index >= 0) {
+      all[index] = sanitizeStoredOrder({ ...all[index], ...next, orderId: next.orderId });
+    } else {
+      all.unshift(next);
+    }
+    writeFileOrders(all);
+    return index >= 0 ? all[index] : next;
   }
-  fs.writeFileSync(FILE, `${JSON.stringify(all, null, 2)}\n`, "utf8");
-  return index >= 0 ? all[index] : next;
+  await withPg((db) =>
+    db.query(
+      `INSERT INTO orders (order_id, payload)
+       VALUES ($1, $2::jsonb)
+       ON CONFLICT (order_id)
+       DO UPDATE SET payload = EXCLUDED.payload, updated_at = NOW()`,
+      [next.orderId, JSON.stringify(next)]
+    )
+  );
+  return next;
+}
+
+export async function closeStore() {
+  if (pool) {
+    await pool.end();
+    pool = undefined;
+  }
+}
+
+export async function scrubOrderFile() {
+  return initStore();
 }
