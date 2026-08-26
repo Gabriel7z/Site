@@ -28,8 +28,10 @@ import {
   paidFulfillmentOrders,
   normalizeTrackingCode,
   unpaidPaymentError,
+  deliveryProgress,
+  DELIVERY_DAYS,
 } from "./lib.js";
-import { notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
+import { notifyArrival, notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
 import { allocateOrderId, findOrder, initStore, ordersBackend, readOrders, upsertOrder } from "./orders-store.js";
 
@@ -168,6 +170,43 @@ async function rememberOrder(orderId, patch) {
   return saved;
 }
 
+async function maybeNotifyArrival(order) {
+  if (!order || order.notifyArrival || deliveryProgress(order).phase !== "arrives_tomorrow") {
+    return order;
+  }
+  try {
+    const notify = await notifyArrival(order);
+    const saved = await rememberOrder(order.orderId, {
+      notifyArrival: {
+        email: !!notify.email?.sent,
+        whatsapp: !!notify.whatsapp?.sent,
+        attemptedAt: Date.now(),
+      },
+    });
+    return saved || order;
+  } catch (err) {
+    console.error("notify_arrival_failed", publicErrorCode(err));
+    return order;
+  }
+}
+
+let lastArrivalTickAt = 0;
+async function tickArrivalNotices() {
+  const now = Date.now();
+  if (now - lastArrivalTickAt < 30 * 60 * 1000) return;
+  lastArrivalTickAt = now;
+  try {
+    const list = paidFulfillmentOrders(await readOrders());
+    for (const order of list) {
+      if (order?.shipped && !order.notifyArrival) {
+        await maybeNotifyArrival(order);
+      }
+    }
+  } catch (err) {
+    console.error("arrival_tick_failed", publicErrorCode(err));
+  }
+}
+
 function requireAdmin(req, res) {
   if (!ADMIN_KEY) {
     res.status(503).json({ error: "admin_not_configured" });
@@ -193,6 +232,7 @@ app.get("/api/health", (_req, res) => {
     mode: MODE,
     storage: ordersBackend(),
   });
+  void tickArrivalNotices();
 });
 
 app.get("/api/config", (_req, res) => {
@@ -363,7 +403,8 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       return res.status(404).json({ error: unpaidPaymentError(stored.status) });
     }
     if (!stored) return res.status(404).json({ error: "not_found" });
-    return res.json(publicOrderView({ ...stored, status: stored.status || "approved", demo: true }));
+    const latest = await maybeNotifyArrival({ ...stored, status: stored.status || "approved", demo: true });
+    return res.json(publicOrderView(latest));
   }
   try {
     const paymentId = String(req.query.payment_id || "").replace(/\D/g, "");
@@ -396,19 +437,25 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
     if (!isPaymentApproved(latest)) {
       return res.status(404).json({ error: unpaidPaymentError(latest?.status) });
     }
+    latest = await maybeNotifyArrival(latest);
     return res.json(publicOrderView(latest));
   } catch {
-    if (isPaymentApproved(stored)) return res.json(publicOrderView(stored));
+    if (isPaymentApproved(stored)) {
+      const latest = await maybeNotifyArrival(stored);
+      return res.json(publicOrderView(latest));
+    }
     return res.status(404).json({ error: stored ? unpaidPaymentError(stored.status) : "not_found" });
   }
 });
 
 app.get("/api/orders", rateLimit, async (req, res) => {
   if (!requireAdmin(req, res)) return;
-  const list = paidFulfillmentOrders(await readOrders())
-    .map((order) => adminOrderView(order))
-    .filter(Boolean);
-  return res.json({ orders: list });
+  const listed = paidFulfillmentOrders(await readOrders());
+  const orders = [];
+  for (const order of listed) {
+    orders.push(adminOrderView(await maybeNotifyArrival(order)));
+  }
+  return res.json({ orders: orders.filter(Boolean) });
 });
 
 app.post("/api/orders/:orderId/tracking", rateLimit, async (req, res) => {
@@ -443,11 +490,21 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
   const trackingCode =
     normalizeTrackingCode(req.body?.trackingCode) || stored.trackingCode || "";
   const trackingUrl = correiosTrackingUrl(trackingCode);
+  const shippedAt = stored.shippedAt || Date.now();
+  const progress = deliveryProgress({
+    ...stored,
+    shipped: true,
+    shippedAt,
+    trackingCode,
+  });
   const text = shippedMessage({
     name: stored.customer?.name,
     orderId: stored.orderId,
     trackingCode,
     trackingUrl,
+    etaLabel: progress.etaLabel,
+    days: DELIVERY_DAYS,
+    shippingMethod: stored.shippingMethod || "delivery",
   });
   const whatsappUrl = whatsappSendUrl(stored.customer?.phone, text);
 
@@ -460,13 +517,14 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
   }
 
   const notify = await notifyShipped(
-    { ...stored, trackingCode },
-    { trackingCode, trackingUrl }
+    { ...stored, trackingCode, shippingMethod: stored.shippingMethod || "delivery" },
+    { trackingCode, trackingUrl, progress, days: DELIVERY_DAYS }
   );
   const saved = await rememberOrder(orderId, {
     trackingCode,
     shipped: true,
-    shippedAt: Date.now(),
+    shippedAt,
+    etaAt: progress.etaAt,
     notify: {
       email: !!notify.email?.sent,
       whatsapp: !!notify.whatsapp?.sent,

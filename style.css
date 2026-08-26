@@ -1892,6 +1892,46 @@ section {
   border-color: #c5a36a;
   background: #fffdf8;
 }
+.track-steps {
+  list-style: none;
+  margin: 16px 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.track-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #5a5348;
+}
+.track-step span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #c5b8a4;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.track-step.is-done {
+  color: #3a2a12;
+}
+.track-step.is-done span {
+  border-color: #1c1c1c;
+  background: #1c1c1c;
+}
+.track-step.is-current {
+  color: #7a1f2b;
+}
+.track-step.is-current span {
+  border-color: #7a1f2b;
+  background: #c5a36a;
+}
+.track-note {
+  font-size: 0.92rem;
+  color: #5a5348;
+}
 .ship-mark {
   display: inline-flex;
   align-items: center;

@@ -45,7 +45,12 @@ ALLOWED_ORIGINS=https://USUARIO.github.io
 ADMIN_KEY=uma-senha-nova-só-da-loja
 GMAIL_USER=email-da-loja
 GMAIL_APP_PASSWORD=senha-de-app-do-gmail
+WHATSAPP_TOKEN=
+WHATSAPP_PHONE_ID=
+STORE_ALERT_PHONE=
 ```
+
+Sem Gmail e sem API da Meta, o site **não dispara sozinho** no celular. Aí o painel abre o WhatsApp com o texto pronto. O número CEME **não** é o rastreio dos Correios: depois de marcar enviado, o cliente vê prazo de **3 dias** e recebe “saiu hoje” e, no dia anterior à previsão, “chega amanhã”.
 
 4. Se o Render não deixar o nome `ceme-checkout` (já usado na conta de teste), o serviço nascerá com outro endereço. Aí é a linha da etapa 4.
 

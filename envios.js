@@ -123,15 +123,22 @@
 
   function notifyHint(order) {
     if (!order.shipped) {
-      return "<p class=\"ship-hint\">Quando postar, marque como enviado. O cliente recebe o aviso no e-mail e no WhatsApp.</p>";
+      return "<p class=\"ship-hint\">Quando postar, marque como enviado. O cliente recebe: “sua entrega saiu hoje, prazo de 3 dias”. Dois dias depois: “sua entrega chega amanhã”.</p>";
     }
+    const bits = [];
+    if (order.headline) bits.push(order.headline);
     const emailOk = order.notify?.email;
-    const mail = emailOk
-      ? "E-mail de envio disparado."
-      : order.hasEmail
-        ? "WhatsApp aberto. Para o e-mail ir sozinho, coloque GMAIL_USER no Render."
-        : "Pedido antigo sem e-mail. WhatsApp segue no telefone.";
-    return `<p class="ship-hint is-sent">${escapeHtml(mail)}</p>`;
+    bits.push(
+      emailOk
+        ? "E-mail de envio disparado."
+        : order.hasEmail
+          ? "WhatsApp aberto. Para o e-mail ir sozinho, coloque GMAIL_USER no Render."
+          : "Pedido antigo sem e-mail. WhatsApp segue no telefone."
+    );
+    if (order.notifyArrival?.email || order.notifyArrival?.whatsapp) {
+      bits.push("Aviso “chega amanhã” já enviado.");
+    }
+    return `<p class="ship-hint is-sent">${escapeHtml(bits.join(" "))}</p>`;
   }
 
   function card(order) {
@@ -145,7 +152,9 @@
     const created = when(order.createdAt);
     return `<article class="order-card${sent ? " is-shipped" : ""}" data-order="${escapeHtml(order.orderId)}">
       <div class="order-card-head">
-        <p class="kicker">${sent ? "Enviado" : "Pendente de envio"} · ${escapeHtml(shipLabel(order.shippingMethod))}</p>
+        <p class="kicker">${sent ? "Enviado" : "Pendente de envio"} · ${escapeHtml(shipLabel(order.shippingMethod))}${
+          order.etaLabel ? ` · chega ${escapeHtml(order.etaLabel)}` : ""
+        }</p>
         <p class="order-date">${escapeHtml(created)}</p>
       </div>
       <h2>${escapeHtml(order.orderId)}</h2>

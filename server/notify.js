@@ -1,11 +1,27 @@
-import { onlyDigits } from "./lib.js";
+import { DELIVERY_DAYS, onlyDigits } from "./lib.js";
 
 const STORE_NAME = "Família CEME";
 
-export function shippedMessage({ name = "", orderId = "", trackingCode = "", trackingUrl = "" } = {}) {
+export function shippedMessage({
+  name = "",
+  orderId = "",
+  trackingCode = "",
+  trackingUrl = "",
+  etaLabel = "",
+  days = DELIVERY_DAYS,
+  shippingMethod = "delivery",
+} = {}) {
   const who = String(name || "").trim().split(/\s+/)[0] || "olá";
   const id = String(orderId || "").trim();
-  const lines = [`Olá ${who}, seu pedido ${id} acabou de ser enviado.`];
+  const lines =
+    shippingMethod === "pickup"
+      ? [`Olá ${who}, seu pedido ${id} já pode ser retirado na loja.`]
+      : shippingMethod === "delivery"
+        ? [
+            `Olá ${who}, sua entrega do pedido ${id} saiu hoje.`,
+            `Prazo de ${days} dias.${etaLabel ? ` Chegada prevista: ${etaLabel}.` : ""}`,
+          ]
+        : [`Olá ${who}, seu pedido ${id} está disponível.`];
   const tracking = String(trackingCode || "").trim();
   if (tracking) {
     lines.push(`Código dos Correios: ${tracking}`);
@@ -15,8 +31,19 @@ export function shippedMessage({ name = "", orderId = "", trackingCode = "", tra
   return lines.join("\n");
 }
 
-export function shippedEmailSubject(orderId) {
-  return `Seu pedido ${orderId} acabou de ser enviado`;
+export function shippedEmailSubject(orderId, shippingMethod = "delivery") {
+  if (shippingMethod === "pickup") return `Seu pedido ${orderId} já pode ser retirado`;
+  return `Sua entrega saiu hoje — pedido ${orderId}`;
+}
+
+export function arrivesTomorrowMessage({ name = "", orderId = "" } = {}) {
+  const who = String(name || "").trim().split(/\s+/)[0] || "olá";
+  const id = String(orderId || "").trim();
+  return `Olá ${who}, sua entrega do pedido ${id} chega amanhã.\n\n${STORE_NAME}`;
+}
+
+export function arrivesTomorrowSubject(orderId) {
+  return `Sua entrega chega amanhã — pedido ${orderId}`;
 }
 
 export function paidMessage({ name = "", orderId = "", total = 0, trackingUrl = "" } = {}) {
@@ -196,16 +223,56 @@ export async function notifyPaid(order, extras = {}) {
   return { text, subject, email, whatsapp, store };
 }
 
+export async function notifyArrival(order, extras = {}) {
+  const text = arrivesTomorrowMessage({
+    name: order.customer?.name || order.customerName || "",
+    orderId: order.orderId,
+  });
+  const subject = arrivesTomorrowSubject(order.orderId);
+  let email = { sent: false, reason: "no_email" };
+  let whatsapp = { sent: false, reason: "no_phone", url: "" };
+  try {
+    email = await sendShippedEmail({
+      to: order.customer?.email,
+      subject,
+      text,
+      env: extras.env,
+      send: extras.sendEmail,
+    });
+  } catch {
+    email = { sent: false, reason: "send_failed" };
+  }
+  try {
+    whatsapp = await sendWhatsAppApi({
+      phone: order.customer?.phone || order.phone,
+      text,
+      env: extras.env,
+      fetchImpl: extras.fetchImpl,
+    });
+  } catch {
+    whatsapp = {
+      sent: false,
+      reason: "send_failed",
+      url: whatsappSendUrl(order.customer?.phone || order.phone, text),
+    };
+  }
+  return { text, subject, email, whatsapp };
+}
+
 export async function notifyShipped(order, extras = {}) {
   const trackingCode = extras.trackingCode || order.trackingCode || "";
   const trackingUrl = extras.trackingUrl || "";
+  const progress = extras.progress || {};
   const text = shippedMessage({
     name: order.customer?.name || order.customerName || "",
     orderId: order.orderId,
     trackingCode,
     trackingUrl,
+    etaLabel: progress.etaLabel || extras.etaLabel || "",
+    days: extras.days || DELIVERY_DAYS,
+    shippingMethod: order.shippingMethod || "delivery",
   });
-  const subject = shippedEmailSubject(order.orderId);
+  const subject = shippedEmailSubject(order.orderId, order.shippingMethod);
   let email = { sent: false, reason: "no_email" };
   let whatsapp = { sent: false, reason: "no_phone", url: "" };
   try {

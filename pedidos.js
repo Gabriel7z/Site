@@ -20,10 +20,64 @@
   }
 
   function statusLabel(order) {
-    if (order.shipped) return "Seu pedido acabou de ser enviado";
+    if (order.headline) return order.headline;
+    if (order.shipped) return "Seu pedido foi enviado";
     if (order.status === "approved") return "Pagamento aprovado";
     if (order.status === "pending" || order.status === "in_process") return "Aguardando pagamento no Mercado Pago";
     return "Pagamento não confirmado";
+  }
+
+  function trackSteps(order) {
+    const phase = order.phase || "packing";
+    if (order.shippingMethod === "pickup") {
+      return [
+        { label: "Pagamento aprovado", state: "done" },
+        {
+          label: order.shipped ? "Pode retirar na loja" : "Separando para retirada",
+          state: order.shipped ? "done" : "current",
+        },
+      ];
+    }
+    if (order.shippingMethod !== "delivery") {
+      return [{ label: "Pedido digital disponível", state: "done" }];
+    }
+    const eta = order.etaLabel ? `Chegada prevista: ${order.etaLabel}` : "Prazo de 3 dias após o envio";
+    const posted = ["left_today", "in_transit", "arrives_tomorrow", "due_today", "overdue"].includes(phase);
+    let lastLabel = eta;
+    let lastState = "todo";
+    if (phase === "left_today") {
+      lastLabel = eta;
+      lastState = "todo";
+    } else if (phase === "in_transit") {
+      lastState = "current";
+    } else if (phase === "arrives_tomorrow") {
+      lastLabel = "Chega amanhã";
+      lastState = "current";
+    } else if (phase === "due_today") {
+      lastLabel = "Chega hoje";
+      lastState = "done";
+    } else if (phase === "overdue") {
+      lastLabel = order.etaLabel ? `Previsão era ${order.etaLabel}` : "Fora do prazo previsto";
+      lastState = "done";
+    }
+    return [
+      { label: "Pagamento aprovado", state: "done" },
+      {
+        label: phase === "left_today" ? "Saiu hoje" : posted ? "Pedido enviado" : "Aguardando postagem",
+        state: posted ? "done" : "current",
+      },
+      { label: lastLabel, state: lastState },
+    ];
+  }
+
+  function stepsHtml(order) {
+    const items = trackSteps(order)
+      .map(
+        (step) =>
+          `<li class="track-step is-${escapeHtml(step.state)}"><span></span>${escapeHtml(step.label)}</li>`
+      )
+      .join("");
+    return `<ol class="track-steps">${items}</ol>`;
   }
 
   function render(order) {
@@ -36,7 +90,7 @@
       ? `<p><strong>Código dos Correios:</strong> ${escapeHtml(order.trackingCode)}</p>
          <p><a class="btn btn-ghost" href="${escapeHtml(order.trackingUrl)}" target="_blank" rel="noopener">Ver nos Correios</a></p>`
       : order.shippingMethod === "delivery"
-        ? "<p>Quando postarmos, o código dos Correios aparece aqui. O rastreio da loja já é o número acima.</p>"
+        ? "<p class=\"track-note\">O número CEME é o rastreio da loja, não o código dos Correios. Sem código dos Correios, o prazo é de 3 dias a partir do envio. Avisamos no e-mail e no WhatsApp: saiu hoje e chega amanhã.</p>"
         : "";
     const cupom = base
       ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/cupom.pdf" download>Baixar cupom PDF</a></p>`
@@ -44,6 +98,7 @@
     box.innerHTML = `
       <p class="kicker">${escapeHtml(statusLabel(order))}</p>
       <h2>Rastreio ${escapeHtml(order.trackingId || order.orderId)}</h2>
+      ${stepsHtml(order)}
       <p><strong>${escapeHtml(order.customerName || "Cliente")}</strong></p>
       <p>${escapeHtml(shipLabel(order.shippingMethod))}</p>
       ${order.addressText ? `<p>${escapeHtml(order.addressText)}</p>` : ""}

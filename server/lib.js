@@ -510,6 +510,96 @@ export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending",
   };
 }
 
+export const DELIVERY_DAYS = 3;
+const BRASILIA_TZ = "America/Sao_Paulo";
+
+export function brasiliaDateKey(ms = Date.now()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: BRASILIA_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(ms));
+}
+
+export function brasiliaAddDays(fromMs, days) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: BRASILIA_TZ,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(new Date(fromMs));
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  const day = Number(parts.find((part) => part.type === "day")?.value);
+  return brasiliaDateKey(Date.UTC(year, month - 1, day + days, 15, 0, 0));
+}
+
+export function formatBrasiliaDate(ms) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BRASILIA_TZ,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(new Date(ms));
+}
+
+export function etaMsFromShip(shippedAt, days = DELIVERY_DAYS) {
+  const key = brasiliaAddDays(shippedAt || Date.now(), days);
+  const [year, month, day] = key.split("-").map(Number);
+  return Date.UTC(year, month - 1, day, 15, 0, 0);
+}
+
+export function deliveryProgress(order, now = Date.now()) {
+  const method = order?.shippingMethod || "none";
+  if (method === "pickup") {
+    return order?.shipped
+      ? { phase: "pickup_ready", etaAt: null, etaLabel: "", headline: "Pode retirar na loja a partir de hoje." }
+      : { phase: "packing", etaAt: null, etaLabel: "", headline: "Separando para retirada em Brasília." };
+  }
+  if (method !== "delivery") {
+    return { phase: "digital", etaAt: null, etaLabel: "", headline: "Pedido digital — sem postagem." };
+  }
+  if (!order?.shipped) {
+    return {
+      phase: "packing",
+      etaAt: null,
+      etaLabel: "",
+      headline: `Aguardando postagem. Depois de enviado, o prazo é de ${DELIVERY_DAYS} dias.`,
+    };
+  }
+  const shippedAt = order.shippedAt || now;
+  const etaAt = etaMsFromShip(shippedAt);
+  const etaLabel = formatBrasiliaDate(etaAt);
+  const today = brasiliaDateKey(now);
+  const shipDay = brasiliaDateKey(shippedAt);
+  const etaDay = brasiliaDateKey(etaAt);
+  const tomorrow = brasiliaAddDays(now, 1);
+  if (today === shipDay) {
+    return {
+      phase: "left_today",
+      etaAt,
+      etaLabel,
+      headline: `Sua entrega saiu hoje. Prazo de ${DELIVERY_DAYS} dias. Chegada prevista: ${etaLabel}.`,
+    };
+  }
+  if (etaDay === tomorrow) {
+    return { phase: "arrives_tomorrow", etaAt, etaLabel, headline: "Sua entrega chega amanhã." };
+  }
+  if (today === etaDay) {
+    return { phase: "due_today", etaAt, etaLabel, headline: `Sua entrega chega hoje (previsão ${etaLabel}).` };
+  }
+  if (today > etaDay) {
+    return {
+      phase: "overdue",
+      etaAt,
+      etaLabel,
+      headline: `Previsão era ${etaLabel}. Se ainda não chegou, fale com a loja.`,
+    };
+  }
+  return { phase: "in_transit", etaAt, etaLabel, headline: `A caminho. Chegada prevista: ${etaLabel}.` };
+}
+
 export function publicOrderView(order) {
   if (!order) return null;
   const trackingCode = normalizeTrackingCode(order.trackingCode);
@@ -532,6 +622,7 @@ export function publicOrderView(order) {
     total: order.total,
     shipped: !!order.shipped,
     shippedAt: order.shippedAt || null,
+    ...deliveryProgress(order),
   };
 }
 
@@ -581,6 +672,7 @@ export function adminOrderView(order) {
     items: order.items || [],
     address: order.address,
     notify: order.notify || null,
+    notifyArrival: order.notifyArrival || null,
   };
 }
 

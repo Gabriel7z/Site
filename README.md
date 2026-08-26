@@ -12,7 +12,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
 - Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
-- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. O dono vê vendas, pendentes e enviados em `envios.html` (usuário **Dono**, senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. Hospedagem e banco são **só o Render** (`render.yaml`).
+- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html` (prazo de 3 dias após o envio; avisos “saiu hoje” e “chega amanhã” por e-mail/WhatsApp). O dono vê vendas, pendentes e enviados em `envios.html` (usuário **Dono**, senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. Hospedagem e banco são **só o Render** (`render.yaml`).
 
 ## Como abrir no seu computador
 

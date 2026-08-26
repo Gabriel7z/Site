@@ -39,6 +39,8 @@ import {
   orderSequence,
   nextOrderSequence,
   ownerDashboardStats,
+  deliveryProgress,
+  DELIVERY_DAYS,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -451,4 +453,31 @@ test("valida e-mail e celular brasileiro, inclusive confirmação", () => {
     () => validatePayer({ ...base, phone: "6133334444" }),
     (err) => err.code === "invalid_payer" && err.fields.includes("phone")
   );
+});
+
+test("prazo de entrega de 3 dias em Brasília, com saiu hoje e chega amanhã", () => {
+  const noon = (year, month, day) => Date.UTC(year, month - 1, day, 15, 0, 0);
+  const order = { shippingMethod: "delivery", shipped: true, shippedAt: noon(2026, 8, 26) };
+  const left = deliveryProgress(order, noon(2026, 8, 26));
+  assert.equal(DELIVERY_DAYS, 3);
+  assert.equal(left.phase, "left_today");
+  assert.equal(left.etaLabel, "29/08/2026");
+  assert.match(left.headline, /saiu hoje/i);
+  assert.match(left.headline, /prazo de 3 dias/i);
+  assert.equal(deliveryProgress(order, noon(2026, 8, 27)).phase, "in_transit");
+  const tomorrow = deliveryProgress(order, noon(2026, 8, 28));
+  assert.equal(tomorrow.phase, "arrives_tomorrow");
+  assert.equal(tomorrow.headline, "Sua entrega chega amanhã.");
+  assert.equal(deliveryProgress(order, noon(2026, 8, 29)).phase, "due_today");
+  assert.equal(deliveryProgress(order, noon(2026, 8, 30)).phase, "overdue");
+  const packing = deliveryProgress({ shippingMethod: "delivery", shipped: false }, noon(2026, 8, 26));
+  assert.equal(packing.phase, "packing");
+  assert.equal(
+    deliveryProgress({ shippingMethod: "pickup", shipped: true }, noon(2026, 8, 26)).phase,
+    "pickup_ready"
+  );
+  const view = publicOrderView(order);
+  assert.equal(view.phase, deliveryProgress(order).phase);
+  assert.ok(view.headline);
+  assert.equal(view.etaLabel, "29/08/2026");
 });
