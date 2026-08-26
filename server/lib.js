@@ -639,23 +639,7 @@ export function sanitizeStoredOrder(order) {
   return clean;
 }
 
-export function ownerDashboardStats(orders = []) {
-  const list = Array.isArray(orders) ? orders : [];
-  let revenue = 0;
-  let pending = 0;
-  let shipped = 0;
-  for (const order of list) {
-    revenue += Number(order.total || 0);
-    if (order.shipped) shipped += 1;
-    else pending += 1;
-  }
-  return {
-    count: list.length,
-    pending,
-    shipped,
-    revenue: Math.round(revenue * 100) / 100,
-  };
-}
+export { ownerDashboardStats } from "../dashboard-stats.js";
 
 export function adminOrderView(order) {
   const pub = publicOrderView(order);

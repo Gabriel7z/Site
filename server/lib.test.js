@@ -339,7 +339,61 @@ test("painel do dono soma vendas e separa pendentes de enviados", () => {
   assert.equal(stats.pending, 2);
   assert.equal(stats.shipped, 1);
   assert.equal(stats.revenue, 448.5);
-  assert.deepEqual(ownerDashboardStats([]), { count: 0, pending: 0, shipped: 0, revenue: 0 });
+  assert.equal(stats.ticket, 149.5);
+  const empty = ownerDashboardStats([]);
+  assert.equal(empty.count, 0);
+  assert.equal(empty.pending, 0);
+  assert.equal(empty.shipped, 0);
+  assert.equal(empty.revenue, 0);
+  assert.equal(empty.bestMonth, null);
+  assert.equal(empty.topProducts.length, 0);
+});
+
+test("painel do dono aponta o mês que mais vendeu e monta a série do gráfico", () => {
+  const now = Date.UTC(2026, 7, 26, 15, 0, 0);
+  const july = Date.UTC(2026, 6, 10, 15, 0, 0);
+  const aug1 = Date.UTC(2026, 7, 2, 15, 0, 0);
+  const aug20 = Date.UTC(2026, 7, 20, 15, 0, 0);
+  const stats = ownerDashboardStats(
+    [
+      {
+        total: 120,
+        shipped: true,
+        createdAt: july,
+        shippingMethod: "delivery",
+        items: [{ name: "NeuroCódigos", qty: 1, unitPrice: 120 }],
+      },
+      {
+        total: 240,
+        shipped: true,
+        createdAt: aug1,
+        shippingMethod: "delivery",
+        items: [{ name: "NeuroCódigos", qty: 2, unitPrice: 120 }],
+      },
+      {
+        total: 88,
+        shipped: false,
+        createdAt: aug20,
+        shippingMethod: "pickup",
+        items: [{ name: "Garrafadas", qty: 1, unitPrice: 88 }],
+      },
+    ],
+    now
+  );
+  assert.equal(stats.bestMonth.key, "2026-08");
+  assert.equal(stats.bestMonth.label, "agosto de 2026");
+  assert.equal(stats.bestMonth.revenue, 328);
+  assert.equal(stats.thisMonth.revenue, 328);
+  assert.equal(stats.lastMonth.revenue, 120);
+  assert.equal(stats.monthDeltaPct, 173.3);
+  assert.equal(stats.months.at(-1).key, "2026-08");
+  assert.equal(stats.months.at(-1).count, 2);
+  assert.equal(stats.topProducts[0].name, "NeuroCódigos");
+  assert.equal(stats.topProducts[0].qty, 3);
+  assert.equal(stats.shipping.delivery.count, 2);
+  assert.equal(stats.shipping.pickup.count, 1);
+  const day20 = stats.days.find((day) => day.key === "2026-08-20");
+  assert.equal(day20.revenue, 88);
 });
 
 test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar", () => {

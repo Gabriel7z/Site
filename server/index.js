@@ -30,6 +30,7 @@ import {
   unpaidPaymentError,
   deliveryProgress,
   DELIVERY_DAYS,
+  ownerDashboardStats,
 } from "./lib.js";
 import { notifyArrival, notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
@@ -455,7 +456,11 @@ app.get("/api/orders", rateLimit, async (req, res) => {
   for (const order of listed) {
     orders.push(adminOrderView(await maybeNotifyArrival(order)));
   }
-  return res.json({ orders: orders.filter(Boolean) });
+  const views = orders.filter(Boolean);
+  return res.json({
+    orders: views,
+    stats: ownerDashboardStats(views),
+  });
 });
 
 app.post("/api/orders/:orderId/tracking", rateLimit, async (req, res) => {

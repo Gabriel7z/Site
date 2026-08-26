@@ -1,9 +1,10 @@
-(function () {
-  const PICKUP_ADDRESS =
-    "CLN 211, Bloco D, Sala 211 — Asa Norte, Brasília-DF — CEP 70863-540";
-  const KEY_NAME = "ceme-admin-key";
-  let ordersCache = [];
-  let currentFilter = "all";
+import { ownerDashboardStats } from "./dashboard-stats.js";
+
+const PICKUP_ADDRESS =
+  "CLN 211, Bloco D, Sala 211 — Asa Norte, Brasília-DF — CEP 70863-540";
+const KEY_NAME = "ceme-admin-key";
+let ordersCache = [];
+let currentFilter = "all";
 
   function apiBase() {
     const apiUrl = String(window.CEME_CHECKOUT?.apiUrl || "").replace(/\/$/, "");
@@ -59,16 +60,48 @@
     return d.length === 11 ? `55${d}` : "";
   }
 
-  function statsOf(orders) {
-    let revenue = 0;
-    let pending = 0;
-    let shipped = 0;
-    for (const order of orders) {
-      revenue += Number(order.total || 0);
-      if (order.shipped) shipped += 1;
-      else pending += 1;
-    }
-    return { count: orders.length, pending, shipped, revenue };
+  function deltaLabel(pct) {
+    if (pct === null || pct === undefined) return "Sem mês anterior para comparar";
+    if (pct === 0) return "Igual ao mês passado";
+    const abs = Math.abs(pct).toLocaleString("pt-BR");
+    return pct > 0 ? `+${abs}% vs mês passado` : `−${abs}% vs mês passado`;
+  }
+
+  function barChart(series, { bestKey = "", aria = "" } = {}) {
+    const max = Math.max(1, ...series.map((row) => Number(row.revenue || 0)));
+    const width = 720;
+    const height = 210;
+    const padTop = 16;
+    const padBottom = 32;
+    const padX = 6;
+    const innerW = width - padX * 2;
+    const innerH = height - padTop - padBottom;
+    const barW = innerW / Math.max(series.length, 1);
+    const cols = series
+      .map((row, index) => {
+        const value = Number(row.revenue || 0);
+        const barH = (value / max) * innerH;
+        const x = padX + index * barW;
+        const y = padTop + innerH - barH;
+        const title = `${row.label || row.short}: ${money(value)}${row.count ? ` · ${row.count} pedido${row.count === 1 ? "" : "s"}` : ""}`;
+        return `<g class="dash-bar${row.key === bestKey ? " is-best" : ""}${value ? "" : " is-empty"}">
+          <title>${escapeHtml(title)}</title>
+          <rect x="${(x + barW * 0.2).toFixed(2)}" y="${y.toFixed(2)}" width="${(barW * 0.6).toFixed(2)}" height="${Math.max(value ? 2 : 0, barH).toFixed(2)}" rx="4"></rect>
+          <text x="${(x + barW / 2).toFixed(2)}" y="${height - 10}" text-anchor="middle">${escapeHtml(String(row.short || ""))}</text>
+        </g>`;
+      })
+      .join("");
+    return `<svg class="dash-bars" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(aria)}">${cols}</svg>`;
+  }
+
+  function mixRow(label, bucket, total) {
+    const pct = total ? Math.round((bucket.revenue / total) * 100) : 0;
+    return `<li>
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(money(bucket.revenue))}</strong>
+      <small>${bucket.count} pedido${bucket.count === 1 ? "" : "s"} · ${pct}%</small>
+      <i style="width:${pct}%"></i>
+    </li>`;
   }
 
   function addressBlock(order) {
@@ -226,7 +259,7 @@
   }
 
   function renderKpis() {
-    const stats = statsOf(ordersCache);
+    const stats = ownerDashboardStats(ordersCache);
     const box = document.getElementById("dash-kpis");
     const cards = [
       { filter: "all", label: "Vendas", value: money(stats.revenue), hint: `${stats.count} pedido${stats.count === 1 ? "" : "s"}` },
@@ -245,8 +278,93 @@
       .join("");
   }
 
+  function renderAnalytics() {
+    const box = document.getElementById("dash-analytics");
+    if (!box) return;
+    if (!ordersCache.length) {
+      box.hidden = true;
+      box.innerHTML = "";
+      return;
+    }
+    const stats = ownerDashboardStats(ordersCache);
+    const best = stats.bestMonth;
+    const top = stats.topProducts[0];
+    const products = stats.topProducts.length
+      ? stats.topProducts
+          .map(
+            (item) => `<li>
+              <span>${escapeHtml(item.name)}</span>
+              <strong>${item.qty} un.</strong>
+              <small>${escapeHtml(item.revenue ? money(item.revenue) : "—")}</small>
+            </li>`
+          )
+          .join("")
+      : "<li>Ainda sem itens para ranquear.</li>";
+    const delta = stats.monthDeltaPct;
+    const deltaClass = delta > 0 ? "is-up" : delta < 0 ? "is-down" : "";
+    box.hidden = false;
+    box.innerHTML = `
+      <div class="dash-highlights">
+        <article class="dash-hi">
+          <span>Ticket médio</span>
+          <strong>${escapeHtml(money(stats.ticket))}</strong>
+          <small>por pedido pago</small>
+        </article>
+        <article class="dash-hi${best ? " is-best" : ""}">
+          <span>Mês que mais vendeu</span>
+          <strong>${escapeHtml(best ? best.label : "—")}</strong>
+          <small>${escapeHtml(best ? `${money(best.revenue)} · ${best.count} pedido${best.count === 1 ? "" : "s"}` : "Ainda sem mês campeão")}</small>
+        </article>
+        <article class="dash-hi">
+          <span>Este mês</span>
+          <strong>${escapeHtml(money(stats.thisMonth.revenue))}</strong>
+          <small class="${deltaClass}">${escapeHtml(deltaLabel(delta))} · ${stats.thisMonth.count} pedido${stats.thisMonth.count === 1 ? "" : "s"}</small>
+        </article>
+        <article class="dash-hi">
+          <span>Mais vendido</span>
+          <strong>${escapeHtml(top ? top.name : "—")}</strong>
+          <small>${escapeHtml(top ? `${top.qty} unidade${top.qty === 1 ? "" : "s"}` : "Sem produto em destaque")}</small>
+        </article>
+      </div>
+      <div class="dash-charts">
+        <section class="dash-chart-card">
+          <p class="kicker">Últimos 14 dias</p>
+          <h2>Vendas por dia</h2>
+          ${barChart(stats.days, { aria: "Gráfico de vendas dos últimos 14 dias" })}
+        </section>
+        <section class="dash-chart-card">
+          <p class="kicker">Últimos 12 meses</p>
+          <h2>Vendas por mês</h2>
+          ${barChart(stats.months, { bestKey: best?.key || "", aria: "Gráfico de vendas dos últimos 12 meses" })}
+          <p class="dash-chart-note">${
+            best
+              ? `O mês mais forte foi <strong>${escapeHtml(best.label)}</strong> (${escapeHtml(money(best.revenue))}).`
+              : "Quando as vendas aparecerem, o mês mais forte fica marcado no gráfico."
+          }</p>
+        </section>
+      </div>
+      <div class="dash-breakdown">
+        <section class="dash-chart-card">
+          <p class="kicker">Produtos</p>
+          <h2>Mais pedidos</h2>
+          <ol class="dash-rank">${products}</ol>
+        </section>
+        <section class="dash-chart-card">
+          <p class="kicker">Entrega</p>
+          <h2>Como saiu</h2>
+          <ul class="dash-mix">
+            ${mixRow("Correios", stats.shipping.delivery, stats.revenue)}
+            ${mixRow("Retirada em Brasília", stats.shipping.pickup, stats.revenue)}
+            ${mixRow("Digital", stats.shipping.digital, stats.revenue)}
+          </ul>
+        </section>
+      </div>
+    `;
+  }
+
   function renderBoard() {
     renderKpis();
+    renderAnalytics();
     const list = document.getElementById("admin-list");
     const shown = visibleOrders();
     if (!ordersCache.length) {
@@ -370,4 +488,3 @@
     document.getElementById("admin-key").value = saved;
     load(saved);
   }
-})();
