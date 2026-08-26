@@ -109,19 +109,15 @@
     const phoneLabel = formatPhone(order.phone);
     const wa = waNumber(order.phone);
     const email = String(order.email || "").trim();
-    const pay = String(order.paymentId || "").trim();
     const waLink = wa
       ? `<a href="https://wa.me/${escapeHtml(wa)}" target="_blank" rel="noopener">WhatsApp ${escapeHtml(phoneLabel)}</a>`
       : "<span>WhatsApp não informado</span>";
     const mailLink = email
       ? `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`
       : "<span>E-mail não informado</span>";
-    const mp = pay
-      ? `venda nº ${escapeHtml(pay)} no Mercado Pago`
-      : "a venda deste pedido no Mercado Pago";
     return `<div class="contact-block">
       <p class="contact-links">${waLink}<span aria-hidden="true"> · </span>${mailLink}</p>
-      <p class="contact-fallback">Se o WhatsApp não responder, use o e-mail. Se os dois falharem, fale por ${mp}.</p>
+      <p class="contact-fallback">Se o WhatsApp não responder, use o e-mail. Se os dois falharem, fale pelo Mercado Pago desta venda.</p>
     </div>`;
   }
 

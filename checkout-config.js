@@ -5,12 +5,12 @@
   const host = typeof location !== "undefined" ? location.hostname : "";
   const port = typeof location !== "undefined" ? location.port : "";
   const local = host === "localhost" || host === "127.0.0.1";
-  const sameOriginApi = port === "3001" || port === "80" || port === "";
+  const staticPreview = port === "8080";
   window.CEME_CHECKOUT = {
     apiUrl: local
-      ? sameOriginApi
-        ? location.origin
-        : `${location.protocol}//${host}:3001`
+      ? staticPreview
+        ? `${location.protocol}//${host}:3001`
+        : location.origin
       : RENDER_API_URL,
     mpPublicKey: "",
     maxInstallments: 3,
