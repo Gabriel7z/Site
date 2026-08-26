@@ -369,7 +369,6 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
     .toLowerCase()
     .slice(0, 120);
   const phone = brazilianMobileDigits(payer?.phone);
-  const cpf = onlyDigits(payer?.cpf).slice(0, 11);
   const cep = onlyDigits(payer?.cep).slice(0, 8);
   const street = String(payer?.street || "").trim().slice(0, 120);
   const number = String(payer?.number || "").trim().slice(0, 16);
@@ -390,7 +389,6 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
   const phoneConfirmRaw = String(payer?.phoneConfirm || "").trim();
   const phoneConfirm = brazilianMobileDigits(payer?.phoneConfirm);
   if (phoneConfirmRaw && phoneConfirm !== phone) errors.push("phoneConfirm");
-  if (!isCpf(cpf)) errors.push("cpf");
 
   if (requireAddress) {
     if (!isCep(cep)) errors.push("cep");
@@ -412,7 +410,6 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
     name,
     email,
     phone,
-    cpf,
     cep,
     street,
     number,

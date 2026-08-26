@@ -75,29 +75,6 @@
     return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
   }
 
-  function isCpf(value) {
-    const cpf = onlyDigits(value);
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-    let sum = 0;
-    for (let i = 0; i < 9; i += 1) sum += Number(cpf[i]) * (10 - i);
-    let d1 = (sum * 10) % 11;
-    if (d1 === 10) d1 = 0;
-    if (d1 !== Number(cpf[9])) return false;
-    sum = 0;
-    for (let i = 0; i < 10; i += 1) sum += Number(cpf[i]) * (11 - i);
-    let d2 = (sum * 10) % 11;
-    if (d2 === 10) d2 = 0;
-    return d2 === Number(cpf[10]);
-  }
-
-  function maskCpf(value) {
-    const d = onlyDigits(value).slice(0, 11);
-    if (d.length <= 3) return d;
-    if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
-    if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
-    return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
-  }
-
   function maskCep(value) {
     const d = onlyDigits(value).slice(0, 8);
     if (d.length <= 5) return d;
@@ -193,7 +170,6 @@
       emailConfirm: get("pay-email-confirm"),
       phone: get("pay-phone"),
       phoneConfirm: get("pay-phone-confirm"),
-      cpf: get("pay-cpf"),
       cep: get("pay-cep"),
       street: get("pay-street"),
       number: get("pay-number"),
@@ -231,10 +207,6 @@
       setError("pay-phone-confirm", t("errPhoneConfirm"));
       ok = false;
     } else setError("pay-phone-confirm");
-    if (!isCpf(data.cpf)) {
-      setError("pay-cpf", t("errCpf"));
-      ok = false;
-    } else setError("pay-cpf");
 
     if (!needsAddress()) {
       ["pay-cep", "pay-street", "pay-number", "pay-neighborhood", "pay-city", "pay-state"].forEach((id) =>
@@ -412,7 +384,6 @@
       emailConfirm: data.emailConfirm,
       phone: data.phone,
       phoneConfirm: data.phoneConfirm,
-      cpf: data.cpf,
       cep: data.cep,
       street: data.street,
       number: data.number,
@@ -633,9 +604,6 @@
       });
     });
 
-    $("#pay-cpf")?.addEventListener("input", (e) => {
-      e.target.value = maskCpf(e.target.value);
-    });
     $("#pay-cep")?.addEventListener("input", (e) => {
       e.target.value = maskCep(e.target.value);
       if (onlyDigits(e.target.value).length === 8) fillAddressFromCep();

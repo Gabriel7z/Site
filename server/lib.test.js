@@ -98,6 +98,19 @@ test("valida dados de entrega e permite pedido sem endereço na retirada", () =>
     state: "df",
   });
   assert.equal(payer.state, "DF");
+  assert.equal(payer.cpf, undefined);
+  const noCpf = validatePayer({
+    name: "Maria Silva",
+    email: "maria@email.com",
+    phone: "61999991111",
+    cep: "70863540",
+    street: "CLN 211",
+    number: "211",
+    neighborhood: "Asa Norte",
+    city: "Brasília",
+    state: "DF",
+  });
+  assert.equal(noCpf.email, "maria@email.com");
   const pickup = validatePayer(
     {
       name: "Maria Silva",

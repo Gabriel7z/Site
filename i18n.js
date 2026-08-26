@@ -160,7 +160,7 @@ const I18N = {
   "checkoutConsent": "Li e aceito a política de privacidade e autorizo o uso dos meus dados para pagamento, entrega e contato sobre este pedido.",
   "formConsent": "Li e aceito a política de privacidade. Este envio abre o WhatsApp da CEME com os dados que preenchi.",
   "errPrivacy": "Para continuar, aceite a política de privacidade.",
-  "checkoutProcessors": "O CPF vai só ao Mercado Pago, na hora de pagar. Na CEME ficam nome, e-mail, WhatsApp, itens e endereço para postar e avisar o envio — sem cadastro de membro e sem guardar CPF.",
+  "checkoutProcessors": "O CPF é pedido só no Mercado Pago, na hora de pagar. Na CEME ficam nome, e-mail, WhatsApp, itens e endereço para postar e avisar o envio — sem cadastro de membro e sem guardar CPF.",
   "checkoutPixPending": "Ainda não identificamos o pagamento. Conclua o Pix no banco e tente de novo.",
   "cartTitle": "Seu pedido",
   "cartClose": "Fechar carrinho",

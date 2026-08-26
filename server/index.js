@@ -233,7 +233,6 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
         surname: names.slice(1).join(" ") || names[0],
         email: payer.email,
         phone: { area_code: payer.phone.slice(0, 2), number: payer.phone.slice(2) },
-        identification: { type: "CPF", number: payer.cpf },
         address: requireAddress
           ? {
               zip_code: payer.cep,
