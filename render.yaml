@@ -49,3 +49,9 @@ services:
         sync: false
       - key: GMAIL_APP_PASSWORD
         sync: false
+      - key: WHATSAPP_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_ID
+        sync: false
+      - key: STORE_ALERT_PHONE
+        sync: false

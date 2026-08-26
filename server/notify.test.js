@@ -3,9 +3,14 @@ import assert from "node:assert/strict";
 import {
   shippedMessage,
   shippedEmailSubject,
+  paidMessage,
+  paidEmailSubject,
+  newSaleMessage,
   whatsappSendUrl,
   gmailConfigured,
+  whatsappApiConfigured,
   notifyShipped,
+  notifyPaid,
 } from "./notify.js";
 
 test("monta o aviso de envio com rastreio", () => {
@@ -46,4 +51,43 @@ test("manda e-mail e devolve o link do WhatsApp ao marcar enviado", async () => 
   assert.match(result.whatsapp.url, /wa\.me\/5561988887777/);
   assert.equal(gmailConfigured({}), false);
   assert.equal(gmailConfigured({ GMAIL_USER: "a@b.c", GMAIL_APP_PASSWORD: "x" }), true);
+});
+
+test("monta o aviso de pagamento recebido", () => {
+  const text = paidMessage({
+    name: "Maria Silva",
+    orderId: "CEME-1",
+    total: 120,
+    trackingUrl: "https://exemplo.github.io/Site/pedidos.html?pedido=CEME-1",
+  });
+  assert.match(text, /recebemos o pagamento do seu pedido CEME-1/);
+  assert.match(text, /R\$\s*120/);
+  assert.equal(paidEmailSubject("CEME-1"), "Recebemos o pagamento do seu pedido CEME-1");
+  assert.match(newSaleMessage({ name: "Maria Silva", orderId: "CEME-1", total: 120 }), /Nova venda CEME-1/);
+});
+
+test("no pagamento tenta e-mail e WhatsApp sem disparar se a API da Meta não estiver ligada", async () => {
+  const sent = [];
+  const result = await notifyPaid(
+    {
+      orderId: "CEME-3",
+      total: 88,
+      customer: { name: "Ana", email: "ana@email.com", phone: "61988887777" },
+    },
+    {
+      env: { GMAIL_USER: "loja@email.com" },
+      sendEmail: async (payload) => sent.push(payload),
+    }
+  );
+  assert.equal(sent.length, 2);
+  assert.equal(sent[0].to, "ana@email.com");
+  assert.equal(sent[1].to, "loja@email.com");
+  assert.match(sent[0].text, /recebemos o pagamento do seu pedido CEME-3/);
+  assert.equal(result.email.sent, true);
+  assert.equal(result.whatsapp.sent, false);
+  assert.equal(whatsappApiConfigured({}), false);
+  assert.equal(
+    whatsappApiConfigured({ WHATSAPP_TOKEN: "x", WHATSAPP_PHONE_ID: "123" }),
+    true
+  );
 });

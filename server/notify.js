@@ -19,6 +19,30 @@ export function shippedEmailSubject(orderId) {
   return `Seu pedido ${orderId} acabou de ser enviado`;
 }
 
+export function paidMessage({ name = "", orderId = "", total = 0, trackingUrl = "" } = {}) {
+  const who = String(name || "").trim().split(/\s+/)[0] || "olá";
+  const id = String(orderId || "").trim();
+  const money = Number(total || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const lines = [
+    `Olá ${who}, recebemos o pagamento do seu pedido ${id} na ${STORE_NAME}.`,
+    `Total: ${money}.`,
+  ];
+  if (trackingUrl) lines.push(`Acompanhe o envio: ${trackingUrl}`);
+  lines.push("", STORE_NAME);
+  return lines.join("\n");
+}
+
+export function paidEmailSubject(orderId) {
+  return `Recebemos o pagamento do seu pedido ${orderId}`;
+}
+
+export function newSaleMessage({ name = "", orderId = "", total = 0 } = {}) {
+  const who = String(name || "").trim() || "Cliente";
+  const id = String(orderId || "").trim();
+  const money = Number(total || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return `Nova venda ${id} — ${who} — ${money}.`;
+}
+
 export function whatsappDigits(phone) {
   const digits = onlyDigits(phone);
   if (digits.length < 10) return "";
@@ -103,6 +127,73 @@ export async function sendWhatsAppApi({
     return { sent: false, reason: "api_failed", url };
   }
   return { sent: true, reason: "ok", url };
+}
+
+export async function notifyPaid(order, extras = {}) {
+  const trackingUrl = extras.trackingUrl || "";
+  const text = paidMessage({
+    name: order.customer?.name || order.customerName || "",
+    orderId: order.orderId,
+    total: order.total,
+    trackingUrl,
+  });
+  const subject = paidEmailSubject(order.orderId);
+  let email = { sent: false, reason: "no_email" };
+  let whatsapp = { sent: false, reason: "no_phone", url: "" };
+  let store = { sent: false, reason: "no_store" };
+  try {
+    email = await sendShippedEmail({
+      to: order.customer?.email,
+      subject,
+      text,
+      env: extras.env,
+      send: extras.sendEmail,
+    });
+  } catch {
+    email = { sent: false, reason: "send_failed" };
+  }
+  try {
+    whatsapp = await sendWhatsAppApi({
+      phone: order.customer?.phone || order.phone,
+      text,
+      env: extras.env,
+      fetchImpl: extras.fetchImpl,
+    });
+  } catch {
+    whatsapp = {
+      sent: false,
+      reason: "send_failed",
+      url: whatsappSendUrl(order.customer?.phone || order.phone, text),
+    };
+  }
+  const storePhone = String((extras.env || process.env).STORE_ALERT_PHONE || "").trim();
+  const storeEmail = String((extras.env || process.env).GMAIL_USER || "").trim();
+  const saleText = newSaleMessage({
+    name: order.customer?.name || order.customerName || "",
+    orderId: order.orderId,
+    total: order.total,
+  });
+  try {
+    if (storePhone) {
+      store = await sendWhatsAppApi({
+        phone: storePhone,
+        text: saleText,
+        env: extras.env,
+        fetchImpl: extras.fetchImpl,
+      });
+    } else if (storeEmail) {
+      store = await sendShippedEmail({
+        to: storeEmail,
+        subject: saleText,
+        text: `${saleText}\n${text}`,
+        env: extras.env,
+        send: extras.sendEmail,
+      });
+    }
+  } catch {
+    store = { sent: false, reason: "send_failed" };
+  }
+  return { text, subject, email, whatsapp, store };
 }
 
 export async function notifyShipped(order, extras = {}) {
