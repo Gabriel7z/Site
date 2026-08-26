@@ -29,7 +29,7 @@ import {
   normalizeTrackingCode,
   unpaidPaymentError,
 } from "./lib.js";
-import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
+import { notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
 import { allocateOrderId, findOrder, initStore, ordersBackend, readOrders, upsertOrder } from "./orders-store.js";
 
@@ -146,7 +146,26 @@ async function rememberOrder(orderId, patch) {
   const id = String(orderId || "").slice(0, 80);
   if (!/^CEME-[A-Z0-9-]+$/i.test(id)) return null;
   const prev = (await findOrder(id)) || { orderId: id };
-  return upsertOrder({ ...prev, ...patch, orderId: id, updatedAt: Date.now() });
+  const saved = await upsertOrder({ ...prev, ...patch, orderId: id, updatedAt: Date.now() });
+  if (isPaymentApproved(saved) && !isPaymentApproved(prev) && !prev.notifyPaid) {
+    const shop = String(process.env.PUBLIC_SITE_URL || "").replace(/\/$/, "");
+    const trackingUrl = shop ? `${shop}/pedidos.html?pedido=${encodeURIComponent(id)}` : "";
+    try {
+      const notify = await notifyPaid(saved, { trackingUrl });
+      return upsertOrder({
+        ...saved,
+        notifyPaid: {
+          email: !!notify.email?.sent,
+          whatsapp: !!notify.whatsapp?.sent,
+          store: !!notify.store?.sent,
+          attemptedAt: Date.now(),
+        },
+      });
+    } catch (err) {
+      console.error("notify_paid_failed", publicErrorCode(err));
+    }
+  }
+  return saved;
 }
 
 function requireAdmin(req, res) {
