@@ -99,7 +99,7 @@
       .map(
         (file) =>
           base
-            ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/download/${encodeURIComponent(file.id)}" download>${escapeHtml(file.name || "Baixar álbum completo")}</a></p>`
+            ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/download/${encodeURIComponent(file.id)}" download>Baixar álbum — ${escapeHtml(file.name || "completo")}</a></p>`
             : ""
       )
       .join("");
