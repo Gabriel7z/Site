@@ -170,16 +170,16 @@ test("gera payload Pix de demonstração", () => {
 test("CORS: live exige lista; demo aceita vazio; whitelist fecha o resto", () => {
   assert.equal(isOriginAllowed("https://evil.example", { mode: "live", allowedOrigins: [] }), false);
   assert.equal(
-    isOriginAllowed("https://gabriel7z.github.io", {
+    isOriginAllowed("https://exemplo.github.io", {
       mode: "live",
-      allowedOrigins: ["https://gabriel7z.github.io"],
+      allowedOrigins: ["https://exemplo.github.io"],
     }),
     true
   );
   assert.equal(
     isOriginAllowed("https://evil.example", {
       mode: "live",
-      allowedOrigins: ["https://gabriel7z.github.io"],
+      allowedOrigins: ["https://exemplo.github.io"],
     }),
     false
   );

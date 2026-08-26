@@ -119,7 +119,7 @@
     if (!res.ok) {
       showError(
         data.error === "unauthorized"
-          ? "Senha incorreta. Use a senha ADMIN_KEY (ceme-local)."
+          ? "Senha incorreta."
           : "Configure ADMIN_KEY no servidor."
       );
       return;
