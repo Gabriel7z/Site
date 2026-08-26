@@ -37,6 +37,7 @@ import {
   formatOrderId,
   orderSequence,
   nextOrderSequence,
+  ownerDashboardStats,
 } from "./lib.js";
 
 const require = createRequire(import.meta.url);
@@ -323,6 +324,19 @@ test("número do pedido é sequencial a partir de CEME-1", () => {
   assert.equal(orderSequence("CEME-ABC"), 0);
   assert.equal(nextOrderSequence([]), 1);
   assert.equal(nextOrderSequence(["CEME-1", "CEME-3", "CEME-ABC"]), 4);
+});
+
+test("painel do dono soma vendas e separa pendentes de enviados", () => {
+  const stats = ownerDashboardStats([
+    { orderId: "CEME-1", total: 120, shipped: false },
+    { orderId: "CEME-2", total: 240.5, shipped: true },
+    { orderId: "CEME-3", total: 88, shipped: false },
+  ]);
+  assert.equal(stats.count, 3);
+  assert.equal(stats.pending, 2);
+  assert.equal(stats.shipped, 1);
+  assert.equal(stats.revenue, 448.5);
+  assert.deepEqual(ownerDashboardStats([]), { count: 0, pending: 0, shipped: 0, revenue: 0 });
 });
 
 test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar", () => {

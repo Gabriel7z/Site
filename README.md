@@ -12,7 +12,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
 - Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
-- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. A loja vê a lista em `envios.html` (senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. Hospedagem e banco são **só o Render** (`render.yaml`).
+- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. O dono vê vendas, pendentes e enviados em `envios.html` (usuário **Dono**, senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. Hospedagem e banco são **só o Render** (`render.yaml`).
 
 ## Como abrir no seu computador
 
@@ -66,7 +66,7 @@ Com `APP_USR-` use `MP_TEST_MODE=false` — cai **R$ 0,10 de verdade** na sua co
 
 3. Pare o servidor (Ctrl+C) e rode de novo: `bash abrir-local.sh`
 4. Abra **http://127.0.0.1:3001**, compre 1 item, pague no Mercado Pago
-5. Confira o pedido em `envios.html` (senha `ceme-local`)
+5. Confira o pedido no painel do dono (`envios.html`, usuário Dono, senha `ceme-local`)
 
 Com token `TEST-`, no Checkout Pro use comprador de teste e o cartão Visa `4235 6477 2802 5682`, validade `11/30`, CVV `123`, nome `APRO`.
 

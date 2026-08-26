@@ -67,6 +67,6 @@ Troque pela URL do Render **dele**, se for diferente. Commit e push em `main`. O
 - `"sandbox":false`
 - `"mode":"live"`
 
-Uma compra de teste na conta **dele**: o pedido vira `CEME-1` em `envios.html` com a senha `ADMIN_KEY` nova.
+Uma compra de teste na conta **dele**: o pedido vira `CEME-1` no painel do dono (`envios.html`) com a senha `ADMIN_KEY` nova.
 
 Pronto: daqui em diante só as contas dele cobram, hospedam e guardam histórico.
