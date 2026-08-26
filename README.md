@@ -12,7 +12,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora
 - Layout responsivo (celular, tablet e desktop)
 - Pagamento no **Mercado Pago** (Pix, cartão e boleto no site deles; o cartão não passa pela CEME)
-- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. A loja vê a lista em `envios.html` (senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. O histórico fica no **Postgres** (`DATABASE_URL`). Sem banco, o arquivo local some no restart do Render.
+- Cada compra vira um **pedido identificado** (`CEME-1`, `CEME-2`…) com nome, itens e endereço para postar certo. O cliente acompanha em `pedidos.html`. A loja vê a lista em `envios.html` (senha `ADMIN_KEY`). **Não há** cadastro de membros nem clube de promoção. O histórico fica no **Postgres do Render** (`DATABASE_URL`). Sem banco, o arquivo local some no restart do serviço.
 
 ## Como abrir no seu computador
 
@@ -115,18 +115,20 @@ ALLOWED_ORIGINS=https://gabriel7z.github.io
 ```
 
 9. No site, em `checkout-config.js`, cole a URL pública da API em `apiUrl` (exemplo: `https://sua-api.onrender.com`).
-10. Crie um **Postgres** (Render ou Supabase) e cole a URI só no painel, em `DATABASE_URL`. Sem isso a lista de envios some quando o serviço dorme. Não cole a URI no GitHub nem no chat.
+10. Crie um **PostgreSQL no mesmo Render** da API e cole a Internal Database URL só no painel, em `DATABASE_URL`. Sem isso a lista de envios some quando o serviço dorme. Não cole a URI no GitHub nem no chat.
 11. Depois da venda aprovada, o valor aparece no [Mercado Pago](https://www.mercadopago.com.br) daquela conta. De lá vocês transferem para o banco.
 
-## Histórico de pedidos (Postgres)
+## Histórico de pedidos (Postgres no Render)
 
-O plano free do Render apaga o disco quando o serviço dorme ou redesdobra. Por isso o arquivo `server/data/orders.json` **não** serve para produção.
+A API já está no Render. O banco também fica **lá** — um painel, uma conta. Não use outro serviço de banco.
 
-1. No [Render](https://dashboard.render.com): **New → PostgreSQL** (plano pago, o menor serve). Ou use um projeto no [Supabase](https://supabase.com).
-2. Copie a **Internal Database URL** (Render) ou a **URI** (Supabase).
-3. No serviço `ceme-checkout`: **Environment → Add** `DATABASE_URL` = essa URI.
-4. **Manual Deploy** do serviço.
-5. Confira `https://ceme-checkout.onrender.com/api/health` — tem que aparecer `"storage":"postgres"`. Se continuar `"file"`, a variável não entrou.
+O disco do web service some quando o serviço dorme. Por isso o arquivo `server/data/orders.json` **não** serve para produção.
+
+1. No [Render](https://dashboard.render.com), na mesma conta do `ceme-checkout`: **New → PostgreSQL**. O plano mais barato serve.
+2. Copie a **Internal Database URL** (é a de dentro da rede do Render, não a External).
+3. Abra o serviço `ceme-checkout` → **Environment** → **Add** `DATABASE_URL` = essa URL.
+4. **Manual Deploy** do `ceme-checkout`.
+5. Abra `https://ceme-checkout.onrender.com/api/health` — tem que aparecer `"storage":"postgres"`. Se continuar `"file"`, a variável não entrou.
 
 Os números recomeçam em **CEME-1** neste banco novo. Não cole a URI, senha ou token neste repositório.
 
