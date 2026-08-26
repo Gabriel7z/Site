@@ -110,7 +110,7 @@ O dinheiro **não** cai no GitHub. Ele cai na **conta Mercado Pago em que você 
 
 Não use a conta de teste para vender. O molde está em `render.yaml` e o passo a passo em **`docs/passar-para-o-dono.md`**.
 
-Na conta dele: Blueprint → Apply → colar as chaves `APP_USR-` só no painel. Conferir `/api/health` com `"storage":"postgres"` e `"sandbox":false`.
+Na conta dele: Blueprint → Apply → colar as chaves `APP_USR-` só no painel. Conferir `/api/health` com `"storage":"postgres"`, `"durable":true` e `"sandbox":false`. Sem Postgres, pedido e gráfico somem no restart.
 
 O primeiro pedido no banco dele será `CEME-1`.
 

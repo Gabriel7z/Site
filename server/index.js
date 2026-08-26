@@ -34,7 +34,7 @@ import {
 } from "./lib.js";
 import { notifyArrival, notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
-import { allocateOrderId, findOrder, initStore, ordersBackend, readOrders, upsertOrder } from "./orders-store.js";
+import { allocateOrderId, findOrder, initStore, ordersBackend, ordersDurable, readOrders, upsertOrder } from "./orders-store.js";
 
 dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), ".env") });
 
@@ -232,6 +232,7 @@ app.get("/api/health", (_req, res) => {
     sandbox: SANDBOX,
     mode: MODE,
     storage: ordersBackend(),
+    durable: ordersDurable(),
   });
   void tickArrivalNotices();
 });
@@ -460,6 +461,8 @@ app.get("/api/orders", rateLimit, async (req, res) => {
   return res.json({
     orders: views,
     stats: ownerDashboardStats(views),
+    storage: ordersBackend(),
+    durable: ordersDurable(),
   });
 });
 
@@ -614,11 +617,15 @@ app.use((req, res, next) => {
 });
 app.use(express.static(SITE_ROOT, { index: "index.html", extensions: ["html"] }));
 
-await initStore().then(({ backend }) => {
-  if (MODE === "live" && backend !== "postgres") {
-    console.warn("DATABASE_URL ausente: o histórico de pedidos some no restart do Render.");
+await initStore().then(({ backend, durable }) => {
+  if (backend !== "postgres") {
+    console.warn(
+      durable
+        ? "Pedidos no disco /data. Ligue DATABASE_URL (Postgres) para o histórico não depender só do disco."
+        : "DATABASE_URL ausente e sem disco: o histórico de pedidos some no restart do Render."
+    );
   }
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Loja CEME em http://127.0.0.1:${PORT}  (mode=${MODE}, storage=${backend})`);
+    console.log(`Loja CEME em http://127.0.0.1:${PORT}  (mode=${MODE}, storage=${backend}, durable=${!!durable})`);
   });
 });

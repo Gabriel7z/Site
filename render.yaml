@@ -1,6 +1,6 @@
 # Único serviço de hospedagem da CEME: Render.
-# Um clique no painel (Blueprints → Apply) cria o Postgres e liga DATABASE_URL.
-# Não use Supabase nem outro banco.
+# Blueprints → Apply neste repositório cria o Postgres e o disco.
+# Sem isso, pedido, rastreio e gráfico somem no restart. Não use Supabase.
 
 databases:
   - name: ceme-orders
@@ -20,6 +20,10 @@ services:
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
+    disk:
+      name: ceme-orders-disk
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: DATABASE_URL
         fromDatabase:

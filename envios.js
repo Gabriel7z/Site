@@ -226,6 +226,29 @@ let currentFilter = "all";
     error.hidden = !message;
   }
 
+  function showStorageBanner({ storage, durable } = {}) {
+    const el = document.getElementById("owner-storage");
+    if (!el) return;
+    if (storage === "postgres") {
+      el.hidden = false;
+      el.className = "storage-banner is-ok";
+      el.textContent =
+        "Pedidos, rastreio e gráficos ficam no banco Postgres. Não somem no restart nem no deploy.";
+      return;
+    }
+    if (durable) {
+      el.hidden = false;
+      el.className = "storage-banner is-warn";
+      el.textContent =
+        "Pedidos estão no disco do Render. Ainda falta o Postgres: no painel, New → PostgreSQL e ligue DATABASE_URL no serviço ceme-checkout. Confira /api/health com “storage”: “postgres”.";
+      return;
+    }
+    el.hidden = false;
+    el.className = "storage-banner is-bad";
+    el.textContent =
+      "Atenção: este histórico ainda não é permanente. No Render, aplique o Blueprint deste repositório (cria Postgres + disco) ou crie um PostgreSQL e cole DATABASE_URL. Sem isso, gráfico e pedidos somem no próximo restart.";
+  }
+
   function setFilter(filter) {
     currentFilter = filter;
     document.querySelectorAll(".dash-tab").forEach((tab) => {
@@ -405,6 +428,19 @@ let currentFilter = "all";
     }
     sessionStorage.setItem(KEY_NAME, adminKey);
     ordersCache = data.orders || [];
+    let storage = data.storage;
+    let durable = data.durable;
+    if (storage == null) {
+      try {
+        const health = await fetch(`${base}/api/health`).then((res) => res.json());
+        storage = health.storage;
+        durable = health.durable;
+      } catch {
+        storage = "";
+        durable = false;
+      }
+    }
+    showStorageBanner({ storage, durable });
     showApp(true);
     renderBoard();
   }

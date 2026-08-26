@@ -31,8 +31,9 @@ Cada um desses nasce **na conta dele**.
 ## 3. Render (conta dele)
 
 1. [Blueprints](https://dashboard.render.com/blueprints) → **New Blueprint Instance** → este repositório → **Apply**.
-2. Isso cria o site `ceme-checkout` (sempre ligado) e o Postgres. O `DATABASE_URL` entra sozinho.
-3. No serviço, em **Environment**, ele cola **só no painel**:
+2. Isso cria o site `ceme-checkout` (sempre ligado), o **Postgres** e um **disco**. O `DATABASE_URL` entra sozinho. **Sem esse passo, pedido, rastreio e gráfico somem** no restart.
+3. Confira `https://ceme-checkout.onrender.com/api/health`: tem que aparecer `"storage":"postgres"` e `"durable":true`.
+4. No serviço, em **Environment**, ele cola **só no painel**:
 
 ```
 MP_ACCESS_TOKEN=APP_USR-...
@@ -52,7 +53,7 @@ STORE_ALERT_PHONE=
 
 Sem Gmail e sem API da Meta, o site **não dispara sozinho** no celular. Aí o painel abre o WhatsApp com o texto pronto. O número CEME **não** é o rastreio dos Correios: depois de marcar enviado, o cliente vê prazo de **3 dias** e recebe “saiu hoje” e, no dia anterior à previsão, “chega amanhã”.
 
-4. Se o Render não deixar o nome `ceme-checkout` (já usado na conta de teste), o serviço nascerá com outro endereço. Aí é a linha da etapa 4.
+5. Se o Render não deixar o nome `ceme-checkout` (já usado na conta de teste), o serviço nascerá com outro endereço. Aí é a linha da etapa 4.
 
 ## 4. Uma linha no código
 
@@ -69,6 +70,7 @@ Troque pela URL do Render **dele**, se for diferente. Commit e push em `main`. O
 `https://ceme-checkout.onrender.com/api/health` (ou a URL nova) tem que mostrar:
 
 - `"storage":"postgres"`
+- `"durable":true`
 - `"sandbox":false`
 - `"mode":"live"`
 

@@ -1919,6 +1919,27 @@ section {
   margin: 24px 0;
   color: var(--muted);
 }
+.storage-banner {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+}
+.storage-banner.is-ok {
+  border: 1px solid #c5d9c8;
+  background: #f3f8f3;
+  color: #2f6b3a;
+}
+.storage-banner.is-warn {
+  border: 1px solid #e2d0a8;
+  background: #fff8e8;
+  color: #6a4f12;
+}
+.storage-banner.is-bad {
+  border: 1px solid #e2b4b8;
+  background: #fff3f3;
+  color: #8a1f2b;
+}
 .order-card-head {
   display: flex;
   justify-content: space-between;

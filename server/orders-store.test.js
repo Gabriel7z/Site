@@ -13,6 +13,9 @@ const store = await import("./orders-store.js");
 test("arquivo local numera CEME-1, CEME-2 e guarda o pedido", async () => {
   const started = await store.initStore();
   assert.equal(started.backend, "file");
+  assert.equal(started.durable, false);
+  assert.equal(store.ordersBackend(), "file");
+  assert.equal(store.ordersDurable(), false);
   const first = await store.allocateOrderId();
   const second = await store.allocateOrderId();
   assert.equal(first, "CEME-1");
@@ -37,4 +40,14 @@ test("a sequência continua de onde parou", async () => {
   );
   const next = await store.allocateOrderId();
   assert.equal(next, "CEME-8");
+});
+
+test("disco permanente conta o histórico como durável", () => {
+  const disk = fs.mkdtempSync(path.join(os.tmpdir(), "ceme-disk-"));
+  process.env.ORDERS_DISK = disk;
+  assert.equal(store.hasPersistentDisk(), true);
+  assert.equal(store.ordersDurable(), true);
+  delete process.env.ORDERS_DISK;
+  assert.equal(store.hasPersistentDisk(), false);
+  assert.equal(store.ordersDurable(), false);
 });

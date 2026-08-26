@@ -11,6 +11,7 @@ dotenv.config({ path: path.join(SERVER_DIR, ".env") });
 
 const DEFAULT_DIR = path.join(SERVER_DIR, "data");
 const DEFAULT_FILE = path.join(DEFAULT_DIR, "orders.json");
+const DISK_DIR = "/data";
 
 let pool;
 
@@ -18,9 +19,22 @@ function databaseUrl() {
   return String(process.env.DATABASE_URL || "").trim();
 }
 
+export function hasPersistentDisk() {
+  const dir = String(process.env.ORDERS_DISK || DISK_DIR).trim();
+  try {
+    return Boolean(dir) && fs.existsSync(dir) && fs.statSync(dir).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 function ordersFile() {
   const custom = String(process.env.ORDERS_FILE || "").trim();
-  return custom || DEFAULT_FILE;
+  if (custom) return custom;
+  if (hasPersistentDisk()) {
+    return path.join(String(process.env.ORDERS_DISK || DISK_DIR).trim(), "orders.json");
+  }
+  return DEFAULT_FILE;
 }
 
 function usePostgres() {
@@ -29,6 +43,10 @@ function usePostgres() {
 
 export function ordersBackend() {
   return usePostgres() ? "postgres" : "file";
+}
+
+export function ordersDurable() {
+  return usePostgres() || hasPersistentDisk();
 }
 
 function sslFor(url) {
@@ -78,7 +96,7 @@ export async function initStore() {
   if (!usePostgres()) {
     const all = readFileOrders();
     writeFileOrders(all);
-    return { backend: "file" };
+    return { backend: "file", durable: ordersDurable() };
   }
   await withPg((db) =>
     db.query(`
@@ -96,7 +114,7 @@ export async function initStore() {
       await upsertOrder(order);
     }
   }
-  return { backend: "postgres" };
+  return { backend: "postgres", durable: true };
 }
 
 export async function allocateOrderId() {
@@ -148,19 +166,32 @@ export async function findOrder(orderId) {
   return result.rows[0] ? sanitizeStoredOrder(result.rows[0].payload) : null;
 }
 
+function mergeIntoFile(next) {
+  const all = readFileOrders();
+  const index = all.findIndex((order) => order.orderId === next.orderId);
+  if (index >= 0) {
+    all[index] = sanitizeStoredOrder({ ...all[index], ...next, orderId: next.orderId });
+  } else {
+    all.unshift(next);
+  }
+  writeFileOrders(all);
+  return index >= 0 ? all[index] : next;
+}
+
+function backupOrderToDisk(next) {
+  if (!usePostgres() || !hasPersistentDisk()) return;
+  try {
+    mergeIntoFile(next);
+  } catch (err) {
+    console.error("orders_backup_failed");
+  }
+}
+
 export async function upsertOrder(record) {
   if (!record?.orderId) return record;
   const next = sanitizeStoredOrder(record);
   if (!usePostgres()) {
-    const all = readFileOrders();
-    const index = all.findIndex((order) => order.orderId === next.orderId);
-    if (index >= 0) {
-      all[index] = sanitizeStoredOrder({ ...all[index], ...next, orderId: next.orderId });
-    } else {
-      all.unshift(next);
-    }
-    writeFileOrders(all);
-    return index >= 0 ? all[index] : next;
+    return mergeIntoFile(next);
   }
   await withPg((db) =>
     db.query(
@@ -171,6 +202,7 @@ export async function upsertOrder(record) {
       [next.orderId, JSON.stringify(next)]
     )
   );
+  backupOrderToDisk(next);
   return next;
 }
 
