@@ -357,6 +357,7 @@ test("pedido só vai para envio e acompanhamento depois do Mercado Pago aprovar"
     ["CEME-B"]
   );
   assert.equal(publicErrorCode({ code: "payment_pending" }), "payment_pending");
+  assert.equal(publicErrorCode({ code: "payment_not_confirmed" }), "payment_not_confirmed");
 });
 
 test("guarda nome, endereço e itens do pedido sem cadastro de membro", () => {
