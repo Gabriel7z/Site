@@ -27,6 +27,7 @@ import {
   isPaymentApproved,
   paidFulfillmentOrders,
   normalizeTrackingCode,
+  unpaidPaymentError,
 } from "./lib.js";
 import { notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
@@ -317,7 +318,7 @@ app.get("/api/order/:orderId/cupom.pdf", rateLimit, async (req, res) => {
   const stored = await findOrder(orderId);
   if (!stored) return res.status(404).json({ error: "not_found" });
   if (!isPaymentApproved(stored)) {
-    return res.status(404).json({ error: "payment_pending" });
+    return res.status(404).json({ error: unpaidPaymentError(stored?.status) || "not_found" });
   }
   try {
     const pdf = await buildCupomPdf(publicOrderView(stored), {
@@ -340,7 +341,7 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
   const stored = await findOrder(orderId);
   if (DEMO_PAYMENTS) {
     if (!isPaymentApproved(stored) && stored) {
-      return res.status(404).json({ error: "payment_pending" });
+      return res.status(404).json({ error: unpaidPaymentError(stored.status) });
     }
     if (!stored) return res.status(404).json({ error: "not_found" });
     return res.json(publicOrderView({ ...stored, status: stored.status || "approved", demo: true }));
@@ -374,12 +375,12 @@ app.get("/api/order/:orderId", rateLimit, async (req, res) => {
       }
     }
     if (!isPaymentApproved(latest)) {
-      return res.status(404).json({ error: "payment_pending" });
+      return res.status(404).json({ error: unpaidPaymentError(latest?.status) });
     }
     return res.json(publicOrderView(latest));
   } catch {
     if (isPaymentApproved(stored)) return res.json(publicOrderView(stored));
-    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
+    return res.status(404).json({ error: stored ? unpaidPaymentError(stored.status) : "not_found" });
   }
 });
 
@@ -399,7 +400,7 @@ app.post("/api/orders/:orderId/tracking", rateLimit, async (req, res) => {
   }
   const stored = await findOrder(orderId);
   if (!isPaymentApproved(stored)) {
-    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
+    return res.status(404).json({ error: stored ? unpaidPaymentError(stored.status) : "not_found" });
   }
   const trackingCode = normalizeTrackingCode(req.body?.trackingCode);
   if (!trackingCode) {
@@ -417,7 +418,7 @@ app.post("/api/orders/:orderId/shipped", rateLimit, async (req, res) => {
   }
   const stored = await findOrder(orderId);
   if (!isPaymentApproved(stored)) {
-    return res.status(404).json({ error: stored ? "payment_pending" : "not_found" });
+    return res.status(404).json({ error: stored ? unpaidPaymentError(stored.status) : "not_found" });
   }
 
   const trackingCode =

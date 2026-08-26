@@ -395,10 +395,14 @@
   }
 
   function finishOrder(result) {
+    if (result.status === "pending" || result.status === "in_process") {
+      setStep("pay");
+      setPayMessage(t("checkoutNotConfirmed"), "error");
+      return;
+    }
     state.orderId = result.orderId;
     $("#checkout-order-id").textContent = result.orderId;
-    const pending = result.status === "pending" || result.status === "in_process";
-    const paid = !pending;
+    const paid = true;
     const track = $("#checkout-track-link");
     if (track) {
       track.href = `pedidos.html?pedido=${encodeURIComponent(result.orderId)}`;
@@ -417,16 +421,12 @@
     }
     const title = $("#checkout-success-title");
     if (title) {
-      title.textContent = pending ? t("checkoutPendingTitle") : t("checkoutSuccessTitle");
+      title.textContent = t("checkoutSuccessTitle");
     }
     $("#checkout-success-text").textContent = t(
-      result.demo || state.demo
-        ? "checkoutDemoSuccess"
-        : pending
-          ? "checkoutPendingText"
-          : "checkoutSuccessText"
+      result.demo || state.demo ? "checkoutDemoSuccess" : "checkoutSuccessText"
     ).replace("{order}", result.orderId);
-    if (shop() && !pending) shop().clearCart();
+    if (shop()) shop().clearCart();
     setStep("done");
   }
 
@@ -511,20 +511,21 @@
         clearReturnQuery();
         return true;
       }
+      const mpStatus = String(params.get("status") || params.get("collection_status") || "").toLowerCase();
+      if (mpStatus && mpStatus !== "approved") {
+        setStep("pay");
+        setPayMessage(t("checkoutNotConfirmed"), "error");
+        clearReturnQuery();
+        return true;
+      }
       const qs = paymentId ? `?payment_id=${encodeURIComponent(paymentId)}` : "";
       const res = await fetch(`${apiBase()}/api/order/${encodeURIComponent(orderId)}${qs}`);
       const data = await res.json().catch(() => ({}));
       if (data.status === "approved") {
         finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "approved" });
-      } else if (
-        data.status === "pending" ||
-        data.status === "in_process" ||
-        data.error === "payment_pending"
-      ) {
-        finishOrder({ orderId: data.orderId || orderId, demo: !!data.demo, status: "pending" });
       } else {
         setStep("pay");
-        setPayMessage(t("checkoutDeclined"), "error");
+        setPayMessage(t("checkoutNotConfirmed"), "error");
       }
     } catch {
       setStep("pay");

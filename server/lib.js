@@ -19,6 +19,11 @@ export function isPaymentApproved(order) {
   return String(order?.status || "").toLowerCase() === "approved";
 }
 
+/** Pedido sem aprovação do Mercado Pago: não aparece na loja nem no painel. */
+export function unpaidPaymentError(status) {
+  return isPaymentApproved({ status }) ? "" : "payment_not_confirmed";
+}
+
 export function paidFulfillmentOrders(orders = []) {
   return orders.filter(isPaymentApproved);
 }
@@ -244,6 +249,8 @@ export function publicErrorCode(err) {
     "invalid_payment",
     "not_found",
     "payment_pending",
+    "payment_not_confirmed",
+    "payment_rejected",
     "pay_failed",
     "checkout_failed",
     "invalid_signature",
