@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=52">
+  <link rel="stylesheet" href="style.css?v=53">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -210,32 +210,32 @@
         <div class="section-head">
           <span class="kicker" style="color:#6b1e33" data-i18n="albumKicker">Álbum digital</span>
           <h2 data-i18n="albumTitle">Álbum Músicas NeuroConectivas</h2>
-          <p data-i18n="albumText">Ouça as prévias e compre o álbum digital no checkout da CEME, sem frete. A Hotmart continua como opção alternativa.</p>
+          <p data-i18n="albumText">Ouça prévias curtas e compre o álbum neste site, sem frete. O arquivo completo só fica disponível depois que o Mercado Pago aprovar o pagamento.</p>
         </div>
         <article class="album-card">
           <div class="album-cover">
             <img src="assets/img/musicas-neuroconectivas.jpg" alt="Capa do álbum Músicas NeuroConectivas" data-i18n-alt="albumCoverAlt">
           </div>
           <div class="album-body">
-            <p class="album-note" data-i18n="albumSampleNote">Amostra para o cliente: as prévias são ilustrativas. No produto real entram as faixas da Família CEME.</p>
+            <p class="album-note" data-i18n="albumSampleNote">As prévias são trechos curtos. O álbum completo sai no rastreio do pedido após o pagamento aprovado. Estas faixas são amostra até entrarem as músicas oficiais da Família CEME.</p>
             <p class="price album-price" data-price-brl="8">R$ 8,00</p>
             <ol class="album-tracks" id="album-tracks">
               <li>
-                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-1.mp3" aria-pressed="false">
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/preview-1.mp3" data-audio-label="1. Presença — prévia" aria-pressed="false">
                   <span class="audio-icon" aria-hidden="true"></span>
                   <span class="audio-label">1. Presença — prévia</span>
                 </button>
                 <audio preload="none"></audio>
               </li>
               <li>
-                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-2.mp3" aria-pressed="false">
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/preview-2.mp3" data-audio-label="2. Clareza — prévia" aria-pressed="false">
                   <span class="audio-icon" aria-hidden="true"></span>
                   <span class="audio-label">2. Clareza — prévia</span>
                 </button>
                 <audio preload="none"></audio>
               </li>
               <li>
-                <button class="audio-btn" type="button" data-audio="assets/audio/album/faixa-3.mp3" aria-pressed="false">
+                <button class="audio-btn" type="button" data-audio="assets/audio/album/preview-3.mp3" data-audio-label="3. Harmonia — prévia" aria-pressed="false">
                   <span class="audio-icon" aria-hidden="true"></span>
                   <span class="audio-label">3. Harmonia — prévia</span>
                 </button>
@@ -506,7 +506,7 @@
               </div>
             </div>
 
-            <p class="checkout-digital-note" id="checkout-digital-note" hidden data-i18n="checkoutDigitalNote">Seu pedido é digital ou de serviço — sem frete e sem endereço de entrega.</p>
+            <p class="checkout-digital-note" id="checkout-digital-note" hidden data-i18n="checkoutDigitalNote">Pedido digital ou de serviço: sem frete. Se incluir o álbum, o download libera depois do pagamento aprovado.</p>
 
             <fieldset class="ship-methods" id="ship-methods">
               <legend data-i18n="checkoutShippingMethod">Como prefere receber?</legend>
@@ -597,6 +597,7 @@
             <p class="checkout-order"><span data-i18n="checkoutOrder">Rastreio</span> <strong id="checkout-order-id"></strong></p>
             <p class="checkout-track-hint" id="checkout-track-hint"></p>
             <a class="btn btn-gold" id="checkout-cupom-link" href="#" hidden download data-i18n="checkoutCupomPdf">Baixar cupom PDF</a>
+            <a class="btn btn-gold" id="checkout-album-link" href="#" hidden download data-i18n="checkoutAlbumZip">Baixar álbum completo</a>
             <a class="btn btn-ghost" id="checkout-track-link" href="pedidos.html" data-i18n="checkoutTrackLink">Acompanhar envio</a>
             <button class="btn btn-gold" id="checkout-success-close" type="button" data-i18n="checkoutSuccessClose">Continuar no site</button>
           </section>
@@ -605,10 +606,10 @@
     </div>
   </div>
 
-  <script src="checkout-config.js?v=52"></script>
-  <script src="i18n.js?v=52"></script>
-  <script src="produtos.js?v=52"></script>
-  <script src="app.js?v=52"></script>
-  <script src="checkout.js?v=52"></script>
+  <script src="checkout-config.js?v=53"></script>
+  <script src="i18n.js?v=53"></script>
+  <script src="produtos.js?v=53"></script>
+  <script src="app.js?v=53"></script>
+  <script src="checkout.js?v=53"></script>
 </body>
 </html>

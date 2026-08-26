@@ -96,8 +96,17 @@ test("monta o aviso de pagamento recebido", () => {
   });
   assert.match(text, /recebemos o pagamento do seu pedido CEME-1/);
   assert.match(text, /R\$\s*120/);
+  assert.match(text, /pedidos\.html\?pedido=CEME-1/);
   assert.equal(paidEmailSubject("CEME-1"), "Recebemos o pagamento do seu pedido CEME-1");
   assert.match(newSaleMessage({ name: "Maria Silva", orderId: "CEME-1", total: 120 }), /Nova venda CEME-1/);
+  const album = paidMessage({
+    name: "Maria Silva",
+    orderId: "CEME-1",
+    total: 8,
+    downloadUrl: "https://ceme-checkout.onrender.com/api/order/CEME-1/download/musicas-neuroconectivas",
+  });
+  assert.match(album, /Baixe o álbum completo/);
+  assert.match(album, /download\/musicas-neuroconectivas/);
 });
 
 test("no pagamento tenta e-mail e WhatsApp sem disparar se a API da Meta não estiver ligada", async () => {

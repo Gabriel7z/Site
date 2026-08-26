@@ -403,6 +403,7 @@
     state.orderId = result.orderId;
     $("#checkout-order-id").textContent = result.orderId;
     const paid = true;
+    const hadAlbum = quote().items.some((item) => item.id === "musicas-neuroconectivas" || item.kind === "musica");
     const track = $("#checkout-track-link");
     if (track) {
       track.href = `pedidos.html?pedido=${encodeURIComponent(result.orderId)}`;
@@ -417,6 +418,17 @@
       } else {
         cupom.removeAttribute("href");
         cupom.hidden = true;
+      }
+    }
+    const album = $("#checkout-album-link");
+    if (album) {
+      const base = apiBase();
+      if (paid && hadAlbum && base && result.orderId && /^CEME-[A-Z0-9-]+$/i.test(result.orderId)) {
+        album.href = `${base}/api/order/${encodeURIComponent(result.orderId)}/download/musicas-neuroconectivas`;
+        album.hidden = false;
+      } else {
+        album.removeAttribute("href");
+        album.hidden = true;
       }
     }
     const title = $("#checkout-success-title");

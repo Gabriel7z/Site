@@ -33,6 +33,7 @@ import {
   ownerDashboardStats,
 } from "./lib.js";
 import { notifyArrival, notifyPaid, notifyShipped, shippedMessage, whatsappSendUrl } from "./notify.js";
+import { buildDigitalZip, canDownloadDigital, digitalDownloadsForOrder } from "./digital.js";
 import { buildCupomPdf, cupomFilename } from "./cupom.js";
 import { allocateOrderId, findOrder, initStore, ordersBackend, ordersDurable, readOrders, upsertOrder } from "./orders-store.js";
 
@@ -154,7 +155,17 @@ async function rememberOrder(orderId, patch) {
     const shop = String(process.env.PUBLIC_SITE_URL || "").replace(/\/$/, "");
     const trackingUrl = shop ? `${shop}/pedidos.html?pedido=${encodeURIComponent(id)}` : "";
     try {
-      const notify = await notifyPaid(saved, { trackingUrl });
+      const downloads = digitalDownloadsForOrder(saved);
+      const apiOrigin = publicApiOrigin({
+        publicApiUrl: process.env.PUBLIC_API_URL,
+        renderExternalUrl: process.env.RENDER_EXTERNAL_URL,
+        requestOrigin: shop,
+      }) || shop;
+      const downloadUrl =
+        downloads.length && apiOrigin
+          ? `${apiOrigin}/api/order/${encodeURIComponent(id)}/download/${encodeURIComponent(downloads[0].id)}`
+          : "";
+      const notify = await notifyPaid(saved, { trackingUrl, downloadUrl });
       return upsertOrder({
         ...saved,
         notifyPaid: {
@@ -368,6 +379,33 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
       error: code === "pay_failed" ? "checkout_failed" : code,
       fields: err.fields || undefined,
     });
+  }
+});
+
+app.get("/api/order/:orderId/download/:productId", rateLimit, async (req, res) => {
+  const orderId = String(req.params.orderId || "").slice(0, 80);
+  const productId = String(req.params.productId || "").slice(0, 80);
+  if (!/^CEME-[A-Z0-9-]+$/i.test(orderId) || !/^[a-z0-9-]+$/i.test(productId)) {
+    return res.status(400).json({ error: "invalid_payment" });
+  }
+  const stored = await findOrder(orderId);
+  if (!stored) return res.status(404).json({ error: "not_found" });
+  if (!isPaymentApproved(stored)) {
+    return res.status(404).json({ error: unpaidPaymentError(stored.status) });
+  }
+  if (!canDownloadDigital(stored, productId)) {
+    return res.status(404).json({ error: "not_found" });
+  }
+  try {
+    const pack = buildDigitalZip(productId);
+    if (!pack) return res.status(404).json({ error: "not_found" });
+    res.setHeader("Content-Type", "application/zip");
+    res.setHeader("Content-Disposition", `attachment; filename="${pack.zipName}"`);
+    res.setHeader("Cache-Control", "no-store");
+    return res.send(pack.buffer);
+  } catch (err) {
+    console.error("digital_zip_failed", publicErrorCode(err));
+    return res.status(502).json({ error: "pay_failed" });
   }
 });
 

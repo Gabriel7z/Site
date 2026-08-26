@@ -95,6 +95,14 @@
     const cupom = base
       ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/cupom.pdf" download>Baixar cupom PDF</a></p>`
       : "";
+    const downloads = (order.downloads || [])
+      .map(
+        (file) =>
+          base
+            ? `<p><a class="btn btn-gold" href="${escapeHtml(base)}/api/order/${encodeURIComponent(order.orderId)}/download/${encodeURIComponent(file.id)}" download>${escapeHtml(file.name || "Baixar álbum completo")}</a></p>`
+            : ""
+      )
+      .join("");
     box.innerHTML = `
       <p class="kicker">${escapeHtml(statusLabel(order))}</p>
       <h2>Rastreio ${escapeHtml(order.trackingId || order.orderId)}</h2>
@@ -104,6 +112,7 @@
       ${order.addressText ? `<p>${escapeHtml(order.addressText)}</p>` : ""}
       <ul>${items}</ul>
       ${tracking}
+      ${downloads}
       ${cupom}
     `;
     box.hidden = false;

@@ -210,7 +210,7 @@
       b.classList.remove("is-playing");
       b.setAttribute("aria-pressed", "false");
       const label = b.querySelector(".audio-label");
-      if (label) label.textContent = t("listenAudio");
+      if (label) label.textContent = b.dataset.audioLabel || t("listenAudio");
     });
     state.currentAudio = null;
   }
@@ -225,7 +225,10 @@
       btn.classList.add("is-playing");
       btn.setAttribute("aria-pressed", "true");
       const label = btn.querySelector(".audio-label");
-      if (label) label.textContent = t("pauseAudio");
+      if (label) {
+        if (!btn.dataset.audioLabel) btn.dataset.audioLabel = label.textContent;
+        label.textContent = t("pauseAudio");
+      }
       state.currentAudio = audio;
       audio.onended = () => stopAudio();
     } else {

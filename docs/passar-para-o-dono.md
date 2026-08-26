@@ -16,8 +16,7 @@ Cada um desses nasce **na conta dele**.
 ## 1. GitHub (conta dele)
 
 1. No repositório atual: **Settings → General → Transfer ownership** para o usuário ou organização dele.
-2. **Settings → Pages → Source**: GitHub Actions.
-3. Repositório **público** (Pages no plano Free).
+O GitHub Pages **não** publica a pasta `server/` (faixas completas do álbum). O download depois do pagamento sai só pela API no Render.
 4. Anote a URL nova, no formato `https://USUARIO.github.io/Site/`.
 
 ## 2. Mercado Pago (conta dele, a que recebe o dinheiro)

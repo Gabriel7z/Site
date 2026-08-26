@@ -29,10 +29,22 @@ jobs:
         with:
           enablement: true
 
+      - name: Public site without private files
+        run: |
+          mkdir -p .pages-dist
+          rsync -a \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.cursor/' \
+            --exclude '.pages-dist/' \
+            --exclude 'server/' \
+            --exclude 'node_modules/' \
+            ./ .pages-dist/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: .pages-dist
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -46,7 +46,7 @@ export function arrivesTomorrowSubject(orderId) {
   return `Sua entrega chega amanhã — pedido ${orderId}`;
 }
 
-export function paidMessage({ name = "", orderId = "", total = 0, trackingUrl = "" } = {}) {
+export function paidMessage({ name = "", orderId = "", total = 0, trackingUrl = "", downloadUrl = "" } = {}) {
   const who = String(name || "").trim().split(/\s+/)[0] || "olá";
   const id = String(orderId || "").trim();
   const money = Number(total || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -54,7 +54,8 @@ export function paidMessage({ name = "", orderId = "", total = 0, trackingUrl = 
     `Olá ${who}, recebemos o pagamento do seu pedido ${id} na ${STORE_NAME}.`,
     `Total: ${money}.`,
   ];
-  if (trackingUrl) lines.push(`Acompanhe o envio: ${trackingUrl}`);
+  if (downloadUrl) lines.push(`Baixe o álbum completo: ${downloadUrl}`);
+  if (trackingUrl) lines.push(`Acompanhe o pedido: ${trackingUrl}`);
   lines.push("", STORE_NAME);
   return lines.join("\n");
 }
@@ -158,11 +159,13 @@ export async function sendWhatsAppApi({
 
 export async function notifyPaid(order, extras = {}) {
   const trackingUrl = extras.trackingUrl || "";
+  const downloadUrl = extras.downloadUrl || "";
   const text = paidMessage({
     name: order.customer?.name || order.customerName || "",
     orderId: order.orderId,
     total: order.total,
     trackingUrl,
+    downloadUrl,
   });
   const subject = paidEmailSubject(order.orderId);
   let email = { sent: false, reason: "no_email" };

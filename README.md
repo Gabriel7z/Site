@@ -7,6 +7,7 @@ Loja da Linha CEME (Corpo, Emoção, Mente e Espírito): catálogo, carrinho e c
 - Página inicial com fundadores, Método CEME, ferramentas e depoimentos
 - Aba **Produtos** com os **15 moduladores biofísicos** (60 ml), cada um com imagem, áudio e valor
 - Mapa Holográfico, Garrafadas em Cápsula e álbum digital no mesmo carrinho
+- O álbum na loja só toca **prévias curtas**. As faixas completas saem no rastreio (`pedidos.html`) depois do pagamento **aprovado** no Mercado Pago
 - Checkout no site: dados, entrega (Correios ou retirada em Brasília) e redirecionamento ao **Checkout Pro**
 - Frete **grátis neste teste** (produtos a **R$ 0,10** para validar o Mercado Pago)
 - WhatsApp `(61) 99929-1377` continua como alternativa no carrinho e no formulário de prescritora

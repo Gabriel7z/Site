@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { publicDigitalDownloads } from "./digital.js";
 
 export const MAX_QTY = 20;
 export const MIN_INSTALLMENT = 20;
@@ -482,6 +483,7 @@ export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending",
       id: line.id,
       name: line.name,
       volume: line.volume || "",
+      kind: line.kind || "",
       qty: line.qty,
       unitPrice: line.unitPrice,
     })),
@@ -609,10 +611,13 @@ export function publicOrderView(order) {
     demo: !!order.demo,
     shippingMethod: order.shippingMethod || "none",
     items: (order.items || []).map((item) => ({
+      id: item.id || "",
       name: item.name,
       volume: item.volume || "",
+      kind: item.kind || "",
       qty: item.qty,
     })),
+    downloads: publicDigitalDownloads(order),
     customerName: order.customer?.name || "",
     addressText: formatAddress(order.address),
     trackingCode,

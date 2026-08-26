@@ -165,6 +165,25 @@ test("álbum digital não entra no frete", () => {
   assert.equal(quote.total, 8);
 });
 
+test("pedido pago do álbum lista o download; pendente não", () => {
+  const order = {
+    orderId: "CEME-9",
+    status: "approved",
+    shippingMethod: "none",
+    items: [{ id: "musicas-neuroconectivas", name: "Músicas NeuroConectivas", qty: 1 }],
+    customer: { name: "Ana" },
+  };
+  const paid = publicOrderView(order);
+  assert.equal(paid.downloads.length, 1);
+  assert.equal(paid.downloads[0].id, "musicas-neuroconectivas");
+  assert.equal(paid.downloads[0].filename, "musicas-neuroconectivas.zip");
+  assert.equal(publicOrderView({ ...order, status: "pending" }).downloads.length, 0);
+  assert.equal(
+    publicOrderView({ ...order, items: [{ id: "bioluz", name: "BioLuz", qty: 1 }] }).downloads.length,
+    0
+  );
+});
+
 test("gera payload Pix de demonstração", () => {
   const code = demoPixPayload("CEME-ABC", 135);
   assert.match(code, /CEMEPIX/);
