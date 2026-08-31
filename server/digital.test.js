@@ -25,7 +25,7 @@ test("só o pedido pago com o álbum libera download", () => {
   assert.equal(canDownloadDigital(albumOrder, "outro"), false);
   assert.equal(digitalDownloadsForOrder(albumOrder)[0].id, "musicas-neuroconectivas");
   assert.deepEqual(publicDigitalDownloads({ ...albumOrder, status: "pending" }), []);
-  assert.equal(publicDigitalDownloads(albumOrder)[0].filename, "musicas-neuroconectivas.zip");
+  assert.equal(publicDigitalDownloads(albumOrder)[0].filename, "declic-liberte-sua-expressao.zip");
 });
 
 test("monta um ZIP válido com as faixas do álbum", () => {
@@ -46,8 +46,8 @@ test("monta um ZIP válido com as faixas do álbum", () => {
   const albumZip = path.join(dir, album.zipName);
   fs.writeFileSync(albumZip, album.buffer);
   const albumList = execFileSync("unzip", ["-l", albumZip], { encoding: "utf8" });
-  assert.match(albumList, /01-presenca\.mp3/);
-  assert.match(albumList, /02-clareza\.mp3/);
-  assert.match(albumList, /03-harmonia\.mp3/);
+  assert.match(albumList, /01-faixa-1\.mp3/);
+  assert.match(albumList, /08-faixa-8\.mp3/);
+  assert.equal((albumList.match(/faixa-\d\.mp3/g) || []).length, 8);
   assert.equal(buildDigitalZip("nao-existe"), null);
 });

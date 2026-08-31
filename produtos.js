@@ -1175,70 +1175,70 @@ const PRODUCTS = [
   },
   {
     "id": "musicas-neuroconectivas",
-    "name": "Músicas NeuroConectivas",
+    "name": "Déclic — Liberte sua Expressão",
     "category": "frequencial",
     "volume": "digital",
     "price": 222,
-    "image": "assets/img/musicas-neuroconectivas.jpg",
+    "image": "assets/img/declic-liberte-sua-expressao.jpg",
     "audio": null,
     "kind": "musica",
-    "tagline": "Frequências sonoras para conexão neural",
-    "description": "As Músicas NeuroConectivas trazem frequências sonoras para apoiar conexão, foco e estados de presença no dia a dia, em sintonia com o Método CEME.",
+    "tagline": "Álbum digital · 8 faixas",
+    "description": "Déclic — Liberte sua Expressão: oito faixas num álbum só, para ouvir e comprar neste site. O disco completo libera depois do pagamento aprovado.",
     "indications": [
-      "Frequências sonoras de apoio",
-      "Favoráveis à conexão e à presença",
-      "Uso prático no cotidiano",
-      "Complemento ao Método CEME"
+      "8 faixas no mesmo álbum",
+      "Prévia curta na loja",
+      "Download após o pagamento",
+      "Sem Hotmart e sem faixa avulsa"
     ],
     "i18n": {
       "pt": {
-        "tagline": "Frequências sonoras para conexão neural",
-        "description": "As Músicas NeuroConectivas trazem frequências sonoras para apoiar conexão, foco e estados de presença no dia a dia, em sintonia com o Método CEME.",
+        "tagline": "Álbum digital · 8 faixas",
+        "description": "Déclic — Liberte sua Expressão: oito faixas num álbum só, para ouvir e comprar neste site. O disco completo libera depois do pagamento aprovado.",
         "indications": [
-          "Frequências sonoras de apoio",
-          "Favoráveis à conexão e à presença",
-          "Uso prático no cotidiano",
-          "Complemento ao Método CEME"
+          "8 faixas no mesmo álbum",
+          "Prévia curta na loja",
+          "Download após o pagamento",
+          "Sem Hotmart e sem faixa avulsa"
         ]
       },
       "en": {
-        "tagline": "Sound frequencies for neural connection",
-        "description": "NeuroConnective Music brings sound frequencies to support connection, focus and presence in daily life, aligned with the CEME Method.",
+        "tagline": "Digital album · 8 tracks",
+        "description": "Déclic — Liberte sua Expressão: eight tracks in one album, to listen and buy on this site. The full record unlocks after approved payment.",
         "indications": [
-          "Supportive sound frequencies",
-          "Favors connection and presence",
-          "Practical for everyday use",
-          "Complements the CEME Method"
+          "8 tracks in one album",
+          "Short preview in the shop",
+          "Download after payment",
+          "No Hotmart and no single-track sale"
         ]
       },
       "de": {
-        "tagline": "Klangfrequenzen für neuronale Verbindung",
-        "description": "NeuroConnective Musik bringt Klangfrequenzen, die Verbindung, Fokus und Präsenz im Alltag unterstützen – im Einklang mit der CEME-Methode.",
+        "tagline": "Digitales Album · 8 Titel",
+        "description": "Déclic — Liberte sua Expressão: acht Titel in einem Album, zum Hören und Kaufen auf dieser Website. Die volle Platte erscheint nach bestätigter Zahlung.",
         "indications": [
-          "Unterstützende Klangfrequenzen",
-          "Fördert Verbindung und Präsenz",
-          "Praktisch für den Alltag",
-          "Ergänzt die CEME-Methode"
+          "8 Titel in einem Album",
+          "Kurze Vorschau im Shop",
+          "Download nach der Zahlung",
+          "Ohne Hotmart und ohne Einzelverkauf"
         ]
       },
       "es": {
-        "tagline": "Frecuencias sonoras para conexión neural",
-        "description": "Las Músicas NeuroConectivas aportan frecuencias sonoras para apoyar conexión, enfoque y presencia en el día a día, en sintonía con el Método CEME.",
+        "tagline": "Álbum digital · 8 pistas",
+        "description": "Déclic — Liberte sua Expressão: ocho pistas en un solo álbum, para escuchar y comprar en este sitio. El disco completo se libera tras el pago aprobado.",
         "indications": [
-          "Frecuencias sonoras de apoyo",
-          "Favorecen la conexión y la presencia",
-          "Uso práctico en lo cotidiano",
-          "Complemento al Método CEME"
+          "8 pistas en el mismo álbum",
+          "Previa corta en la tienda",
+          "Descarga tras el pago",
+          "Sin Hotmart y sin pista suelta"
         ]
       },
       "fr": {
-        "tagline": "Fréquences sonores pour la connexion neurale",
-        "description": "Les Musiques NeuroConnectives apportent des fréquences sonores pour soutenir la connexion, le focus et les états de présence au quotidien, en harmonie avec la Méthode CEME.",
+        "tagline": "Album numérique · 8 titres",
+        "description": "Déclic — Liberte sua Expressão : huit titres dans un seul album, à écouter et acheter sur ce site. Le disque complet se débloque après le paiement approuvé.",
         "indications": [
-          "Fréquences sonores de soutien",
-          "Favorables à la connexion et à la présence",
-          "Usage pratique au quotidien",
-          "Complément à la Méthode CEME"
+          "8 titres dans le même album",
+          "Extrait court dans la boutique",
+          "Téléchargement après le paiement",
+          "Sans Hotmart et sans titre à l’unité"
         ]
       }
     }

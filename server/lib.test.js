@@ -176,7 +176,7 @@ test("pedido pago do álbum lista o download; pendente não", () => {
   const paid = publicOrderView(order);
   assert.equal(paid.downloads.length, 1);
   assert.equal(paid.downloads[0].id, "musicas-neuroconectivas");
-  assert.equal(paid.downloads[0].filename, "musicas-neuroconectivas.zip");
+  assert.equal(paid.downloads[0].filename, "declic-liberte-sua-expressao.zip");
   assert.equal(publicOrderView({ ...order, status: "pending" }).downloads.length, 0);
   assert.equal(
     publicOrderView({ ...order, items: [{ id: "bioluz", name: "BioLuz", qty: 1 }] }).downloads.length,

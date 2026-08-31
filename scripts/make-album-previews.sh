@@ -16,9 +16,14 @@ fi
 
 mkdir -p "$OUT"
 tracks=(
-  "1:01-presenca.mp3"
-  "2:02-clareza.mp3"
-  "3:03-harmonia.mp3"
+  "1:01-faixa-1.mp3"
+  "2:02-faixa-2.mp3"
+  "3:03-faixa-3.mp3"
+  "4:04-faixa-4.mp3"
+  "5:05-faixa-5.mp3"
+  "6:06-faixa-6.mp3"
+  "7:07-faixa-7.mp3"
+  "8:08-faixa-8.mp3"
 )
 
 for item in "${tracks[@]}"; do

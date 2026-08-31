@@ -7,13 +7,18 @@ const PRIVATE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 export const DIGITAL_PRODUCTS = {
   "musicas-neuroconectivas": {
     id: "musicas-neuroconectivas",
-    title: "Músicas NeuroConectivas",
-    zipName: "musicas-neuroconectivas.zip",
+    title: "Déclic — Liberte sua Expressão",
+    zipName: "declic-liberte-sua-expressao.zip",
     dir: "musicas-neuroconectivas",
     tracks: [
-      { file: "01-presenca.mp3", title: "Presença" },
-      { file: "02-clareza.mp3", title: "Clareza" },
-      { file: "03-harmonia.mp3", title: "Harmonia" },
+      { file: "01-faixa-1.mp3", title: "Faixa 1" },
+      { file: "02-faixa-2.mp3", title: "Faixa 2" },
+      { file: "03-faixa-3.mp3", title: "Faixa 3" },
+      { file: "04-faixa-4.mp3", title: "Faixa 4" },
+      { file: "05-faixa-5.mp3", title: "Faixa 5" },
+      { file: "06-faixa-6.mp3", title: "Faixa 6" },
+      { file: "07-faixa-7.mp3", title: "Faixa 7" },
+      { file: "08-faixa-8.mp3", title: "Faixa 8" },
     ],
   },
 };
