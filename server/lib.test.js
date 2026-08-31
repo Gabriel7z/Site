@@ -271,7 +271,7 @@ test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
   const extras = Object.fromEntries(PRODUCTS.filter((p) => p.kind).map((p) => [p.id, p.price]));
   assert.equal(extras["garrafadas-capsula"], 88);
   assert.equal(extras["mapa-holografico"], 149.99);
-  assert.equal(extras["musicas-neuroconectivas"], 8);
+  assert.equal(extras["musicas-neuroconectivas"], 222);
   const quote = quoteCart(
     PRODUCTS,
     sprays.map((product) => ({ id: product.id, qty: 1 }))

@@ -1178,7 +1178,7 @@ const PRODUCTS = [
     "name": "Músicas NeuroConectivas",
     "category": "frequencial",
     "volume": "digital",
-    "price": 8,
+    "price": 222,
     "image": "assets/img/musicas-neuroconectivas.jpg",
     "audio": null,
     "kind": "musica",
