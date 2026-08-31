@@ -358,12 +358,18 @@ button {
   line-height: 1.15;
 }
 .hero h1 {
-  font-size: clamp(2.1rem, 5vw, 4rem);
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
   margin-bottom: 16px;
 }
 .hero p {
-  max-width: 42ch;
+  max-width: 52ch;
   color: rgba(255, 251, 247, 0.88);
+  margin-bottom: 16px;
+}
+.hero .hero-method {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  color: var(--gold-soft);
   margin-bottom: 28px;
 }
 .hero-card {
