@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=54">
+  <link rel="stylesheet" href="style.css?v=55">
 </head>
 <body>
   <a class="skip" href="#conteudo" data-i18n="skip">Ir para o conteúdo</a>
@@ -54,6 +54,8 @@
           <li><a href="#album" data-i18n="navAlbum">Álbum</a></li>
           <li><a href="#livros" data-i18n="navBooks">Livros</a></li>
           <li><a href="#transformacoes" data-i18n="navStories">Transformações</a></li>
+          <li><a href="#relatos" data-i18n="navRelatos">Relatos</a></li>
+          <li><a href="#faq" data-i18n="navFaq">Perguntas</a></li>
           <li><a class="is-cta" href="#contato" data-i18n="navContact">Contato</a></li>
           <li><a class="staff-entry" href="envios.html" data-i18n="navStaff">Painel do dono</a></li>
         </ul>
@@ -337,6 +339,86 @@
       </div>
     </section>
 
+    <section class="alt" id="relatos">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker" style="color:#6b1e33" data-i18n="relatosKicker">Relatos</span>
+          <h2 data-i18n="relatosTitle">Revista grátis e o podcast da Família CEME</h2>
+          <p data-i18n="relatosText">Aqui estão dois materiais diferentes: a revista com o relato da Carla, de Juiz de Fora, e o podcast em que Luana e Rodrigo falam da família e do filho. São histórias pessoais. Não substituem consulta ou tratamento médico, e a loja não promete cura de doenças.</p>
+        </div>
+        <div class="relatos-grid">
+          <article class="revista-card">
+            <p class="kicker" data-i18n="revistaKicker">Revista · download grátis</p>
+            <h3 data-i18n="revistaTitle">Amor em Movimento — Carla, Juiz de Fora</h3>
+            <p data-i18n="revistaText">1ª edição, maio de 2026, 24 páginas. Relato de Carla sobre sua jornada com câncer de mama esquerda: ela fez quimioterapia e radioterapia e, em paralelo, o Método CEME. A voz é dela. Sem cadastro e sem pagamento.</p>
+            <p class="revista-note" data-i18n="revistaNote">Leitura livre. Não é bula, diagnóstico nem garantia de resultado.</p>
+            <a class="btn btn-gold" href="assets/docs/revista-amor-em-movimento-carla-frotta.pdf" download data-i18n="revistaDownload">Baixar a revista (PDF)</a>
+          </article>
+          <article class="revista-card">
+            <p class="kicker" data-i18n="podcastKicker">Podcast · Voa Coruja</p>
+            <h3 data-i18n="podcastTitle">Luana e Rodrigo: família, livro e o filho</h3>
+            <p data-i18n="podcastText">Neste episódio eles falam de amor-próprio, da família atípica e de como os moduladores nasceram da vivência com o filho — inclusive da dificuldade de absorção intestinal. Não é o vídeo da Carla.</p>
+            <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=SfAO-W-xRHQ" target="_blank" rel="noopener noreferrer" data-i18n="podcastWatch">Assistir no YouTube</a>
+          </article>
+        </div>
+        <div class="video-frame" style="margin-top:22px">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/SfAO-W-xRHQ"
+            title="Podcast Voa Coruja com Luana e Rodrigo Médri"
+            data-i18n-title="podcastIframeTitle"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="kicker" style="color:#6b1e33" data-i18n="faqKicker">Dúvidas</span>
+          <h2 data-i18n="faqTitle">Perguntas frequentes</h2>
+          <p data-i18n="faqText">Compra, entrega, álbum e os relatos. Se faltar alguma, o WhatsApp da loja continua no rodapé.</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary data-i18n="faqQ1">Como eu pago nesta loja?</summary>
+            <p data-i18n="faqA1">No Checkout Pro do Mercado Pago, com Pix, cartão ou boleto. O cartão é preenchido no site deles — a CEME não vê nem guarda número, validade ou CVV.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ2">Tem frete? Posso retirar em Brasília?</summary>
+            <p data-i18n="faqA2">Sim. Entrega pelos Correios ou retirada na CLN 211, Asa Norte. Frete grátis a partir de R$ 360. Pedido só de álbum digital não tem frete nem endereço.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ3">Como acompanho o pedido?</summary>
+            <p data-i18n="faqA3">Com o número CEME-1, CEME-2… em Acompanhar pedido. Esse número é o rastreio da loja, não o código dos Correios. Depois do envio físico, o prazo é de 3 dias (Brasília) e avisamos saiu hoje e chega amanhã.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ4">Como funciona o álbum digital?</summary>
+            <p data-i18n="faqA4">Na loja você ouve só prévias curtas. O álbum completo libera no rastreio depois que o Mercado Pago aprovar o pagamento. Sem cadastro de membro.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ5">A CEME pede CPF ou cria conta de cliente?</summary>
+            <p data-i18n="faqA5">Não. Não há cadastro de membro. O CPF é pedido só no Mercado Pago, na hora de pagar. Na CEME ficam nome, e-mail, WhatsApp, itens e endereço para postar e avisar.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ6">Tem revista ou vídeo de relatos?</summary>
+            <p data-i18n="faqA6">Sim, mais acima: a revista Amor em Movimento (Carla, Juiz de Fora) para baixar de graça, e o podcast da Família CEME no YouTube. São relatos pessoais, não prova clínica nem bula.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ7">Os produtos curam câncer ou autismo?</summary>
+            <p data-i18n="faqA7">A loja não promete cura de doenças. A revista conta a história da Carla na voz dela — ela também fez tratamento oncológico convencional. O podcast fala da família e do filho. Isso não substitui médico, diagnóstico nem o tratamento que cada pessoa já faz.</p>
+          </details>
+          <details>
+            <summary data-i18n="faqQ8">Como falo com a loja?</summary>
+            <p data-i18n="faqA8">WhatsApp (61) 99929-1377. O mesmo número aparece no rodapé e no pedido, se o pagamento já foi aprovado.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <section id="contato">
       <div class="wrap">
         <div class="cta-band" style="margin-bottom:36px">
@@ -422,6 +504,8 @@
         <p><a href="#livros" data-i18n="footerBooks">Livros</a></p>
         <p><a href="#ecossistema" data-i18n="footerEcossistema">Ecossistema</a></p>
         <p><a href="#documentario" data-i18n="footerDoc">Documentário</a></p>
+        <p><a href="#relatos" data-i18n="footerRelatos">Relatos</a></p>
+        <p><a href="#faq" data-i18n="footerFaq">Perguntas frequentes</a></p>
         <p><a href="#contato" data-i18n="footerPrescriber">Seja prescritora</a></p>
         <p><a href="pedidos.html" data-i18n="navTrack">Acompanhar pedido</a></p>
         <p><a href="envios.html" data-i18n="navStaff">Painel do dono</a></p>
@@ -635,10 +719,10 @@
     </div>
   </div>
 
-  <script src="checkout-config.js?v=53"></script>
-  <script src="i18n.js?v=53"></script>
-  <script src="produtos.js?v=53"></script>
-  <script src="app.js?v=53"></script>
-  <script src="checkout.js?v=53"></script>
+  <script src="checkout-config.js?v=55"></script>
+  <script src="i18n.js?v=55"></script>
+  <script src="produtos.js?v=55"></script>
+  <script src="app.js?v=55"></script>
+  <script src="checkout.js?v=55"></script>
 </body>
 </html>
