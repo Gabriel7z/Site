@@ -504,6 +504,7 @@ section {
 .grid-4,
 .grid-5,
 .tools,
+.coerencia-grid,
 .product-grid {
   display: grid;
   gap: 16px;
@@ -514,7 +515,8 @@ section {
 .grid-5 {
   grid-template-columns: repeat(5, 1fr);
 }
-.tools {
+.tools,
+.coerencia-grid {
   grid-template-columns: repeat(3, 1fr);
 }
 .tile {
@@ -1224,6 +1226,7 @@ section {
   .founders,
   .grid-4,
   .tools,
+  .coerencia-grid,
   .quotes,
   .relatos-grid,
   .product-grid,
@@ -1249,6 +1252,7 @@ section {
   .grid-4,
   .grid-5,
   .tools,
+  .coerencia-grid,
   .quotes,
   .relatos-grid,
   .product-grid,
