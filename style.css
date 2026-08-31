@@ -832,6 +832,9 @@ section {
   font-family: var(--font-serif);
   font-size: clamp(1.6rem, 3vw, 2.3rem);
 }
+.cta-band > div {
+  max-width: 38rem;
+}
 
 .form-card {
   background: var(--paper);
