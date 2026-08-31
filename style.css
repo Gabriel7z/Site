@@ -427,6 +427,21 @@ section {
 .lead {
   color: var(--muted);
 }
+.section-head h3 {
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  color: var(--burgundy);
+}
+.content-prose {
+  max-width: 720px;
+  margin: 0 0 32px;
+}
+.content-prose p {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.content-prose p:last-child {
+  margin-bottom: 0;
+}
 
 .alt {
   background: var(--cream);
