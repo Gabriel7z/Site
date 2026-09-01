@@ -269,7 +269,6 @@ test("catálogo oficial tem 15 sprays a R$ 120 e extras compráveis", () => {
   assert.equal(sprays.length, 15);
   assert.ok(sprays.every((p) => p.price === 120));
   const extras = Object.fromEntries(PRODUCTS.filter((p) => p.kind).map((p) => [p.id, p.price]));
-  assert.equal(extras["garrafadas-capsula"], 88);
   assert.equal(extras["campo-morfogenetico"], 149.99);
   assert.equal(extras["musicas-neuroconectivas"], 64);
   assert.equal(extras["musica-neuroconexao"], 222);

@@ -293,7 +293,6 @@
 
   function renderExtras() {
     renderSoloSection("#morfo-grid", "morfo");
-    renderSoloSection("#garrafadas-grid", "garrafada");
   }
 
   function renderFilters() {
@@ -343,8 +342,7 @@
     $("#modal-add").hidden = false;
     const usage = $("#modal-usage");
     if (usage) {
-      if (p.kind === "garrafada") usage.textContent = t("garrafadaUsage");
-      else if (p.kind === "morfo") usage.textContent = t("morfoUsage");
+      if (p.kind === "morfo") usage.textContent = t("morfoUsage");
       else if (p.kind === "musica") usage.textContent = t("musicaUsage");
       else if (p.kind === "neuro") usage.textContent = t("neuroUsage");
       else usage.textContent = t("usageHint");
