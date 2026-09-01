@@ -114,6 +114,11 @@
       if (key && dict[key] != null) el.setAttribute("title", dict[key]);
     });
 
+    $$(".audio-btn[data-audio]").forEach((btn) => {
+      const label = btn.querySelector(".audio-label[data-i18n]");
+      if (label) btn.dataset.audioLabel = label.textContent;
+    });
+
     const evalText = encodeURIComponent(t("waEval"));
     ["#cta-eval-hero", "#cta-eval-band", "#cta-eval-tools"].forEach((sel) => {
       const a = $(sel);
