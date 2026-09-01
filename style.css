@@ -686,21 +686,40 @@ section {
   justify-content: start;
 }
 
+.album-section {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(191, 0, 255, 0.22), transparent 46%),
+    radial-gradient(ellipse at 92% 18%, rgba(0, 200, 255, 0.16), transparent 42%),
+    linear-gradient(180deg, #0a0e27 0%, #14102e 100%);
+  color: #f7f1e8;
+}
+.album-section .section-head h2 {
+  color: #fffbf7;
+}
+.album-section .section-head p,
+.album-section .lead {
+  color: rgba(247, 241, 232, 0.78);
+}
+.album-kicker {
+  color: #ffd700;
+}
 .album-card {
   display: grid;
-  grid-template-columns: minmax(160px, 240px) 1fr;
+  grid-template-columns: minmax(240px, 340px) 1fr;
   gap: 28px;
   align-items: start;
-  background: var(--paper);
-  border: 1px solid var(--line);
+  background: rgba(10, 14, 39, 0.55);
+  border: 1px solid rgba(255, 215, 0, 0.28);
   border-radius: 24px;
   padding: 22px;
-  box-shadow: 0 10px 24px rgba(28, 20, 18, 0.04);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(191, 0, 255, 0.12);
 }
 .album-cover {
-  background: #efe6d8;
+  background: #0a0e27;
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.22), 0 18px 40px rgba(0, 0, 0, 0.4);
 }
 .album-cover img {
   width: 100%;
@@ -709,16 +728,18 @@ section {
 }
 .album-note,
 .album-hotmart-hint {
-  color: var(--muted);
+  color: rgba(247, 241, 232, 0.7);
   font-size: 0.92rem;
   margin-bottom: 12px;
 }
 .album-price {
   margin-bottom: 14px;
+  color: #ffd700;
 }
 .album-tracks {
   list-style: none;
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin: 0 0 18px;
 }
@@ -727,19 +748,30 @@ section {
   justify-content: flex-start;
   min-height: 46px;
   padding: 0 14px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 215, 0, 0.22);
   border-radius: 999px;
-  background: var(--cream);
-  color: var(--burgundy);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f7f1e8;
   font-weight: 600;
 }
+.album-tracks .audio-btn .audio-icon {
+  border-color: transparent transparent transparent #ffd700;
+}
 .album-tracks .audio-btn.is-playing {
-  background: var(--burgundy);
-  color: var(--paper);
-  border-color: var(--burgundy);
+  background: #bf00ff;
+  color: #fff;
+  border-color: #ffd700;
+}
+.album-tracks .audio-btn.is-playing .audio-icon {
+  background: linear-gradient(90deg, currentColor 0 3px, transparent 3px 7px, currentColor 7px 10px);
+  border: 0;
 }
 .album-body .btn {
   display: inline-flex;
+}
+.album-section .btn-ghost {
+  color: #ffd700;
+  border-color: #ffd700;
 }
 .album-hotmart-hint {
   margin-top: 10px;
@@ -1241,6 +1273,13 @@ section {
     grid-template-columns: minmax(110px, 160px) 1fr;
     gap: 16px;
   }
+  .album-card {
+    grid-template-columns: 1fr;
+  }
+  .album-cover {
+    max-width: 320px;
+    margin-inline: auto;
+  }
 }
 
 @media (max-width: 860px) {
@@ -1266,9 +1305,12 @@ section {
   .album-card {
     grid-template-columns: 1fr;
   }
+  .album-tracks {
+    grid-template-columns: 1fr;
+  }
   .album-cover,
   .book-cover {
-    max-width: 220px;
+    max-width: 280px;
     margin-inline: auto;
   }
   .family-two {
