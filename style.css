@@ -457,13 +457,14 @@ section {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 36px;
-  align-items: center;
+  align-items: start;
 }
 .founders img {
   width: 100%;
+  height: auto;
   border-radius: 24px;
-  object-fit: cover;
-  max-height: 520px;
+  object-fit: contain;
+  object-position: center top;
   box-shadow: var(--shadow);
 }
 .founder-bios {
