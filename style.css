@@ -732,7 +732,7 @@ section {
   font-size: 0.92rem;
   margin-bottom: 12px;
 }
-.album-price {
+.price.album-price {
   margin-bottom: 14px;
   color: #ffd700;
 }
