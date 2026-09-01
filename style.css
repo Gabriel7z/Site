@@ -686,6 +686,39 @@ section {
   justify-content: start;
 }
 
+.cover-offer {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.cover-offer-media {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: var(--cream);
+}
+.cover-offer-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.cover-offer-body .price {
+  margin: 16px 0;
+}
+.cover-offer-body .card-actions {
+  margin-top: 8px;
+}
+.cover-offer-body .btn {
+  margin-top: 10px;
+}
+.checkout-neuro-hint {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
 .album-section {
   position: relative;
   background:
@@ -1249,6 +1282,9 @@ section {
 }
 
 @media (max-width: 980px) {
+  .cover-offer {
+    grid-template-columns: 1fr;
+  }
   .wrap {
     width: min(1120px, calc(100% - 28px));
   }

@@ -115,7 +115,7 @@
     });
 
     const evalText = encodeURIComponent(t("waEval"));
-    ["#cta-eval-hero", "#cta-eval-band"].forEach((sel) => {
+    ["#cta-eval-hero", "#cta-eval-band", "#cta-eval-tools"].forEach((sel) => {
       const a = $(sel);
       if (a) a.href = `https://wa.me/${WHATSAPP}/?text=${evalText}`;
     });
@@ -292,7 +292,7 @@
   }
 
   function renderExtras() {
-    renderSoloSection("#mapa-grid", "mapa");
+    renderSoloSection("#morfo-grid", "morfo");
     renderSoloSection("#garrafadas-grid", "garrafada");
   }
 
@@ -344,8 +344,9 @@
     const usage = $("#modal-usage");
     if (usage) {
       if (p.kind === "garrafada") usage.textContent = t("garrafadaUsage");
-      else if (p.kind === "mapa") usage.textContent = t("mapaUsage");
+      else if (p.kind === "morfo") usage.textContent = t("morfoUsage");
       else if (p.kind === "musica") usage.textContent = t("musicaUsage");
+      else if (p.kind === "neuro") usage.textContent = t("neuroUsage");
       else usage.textContent = t("usageHint");
     }
     modal.hidden = false;

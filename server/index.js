@@ -276,7 +276,10 @@ app.post("/api/checkout", rateLimit, async (req, res) => {
     }
     const quote = quoteFromBody(req.body || {});
     const requireAddress = quote.hasPhysical && quote.shippingMethod === "delivery";
-    const payer = validatePayer(req.body?.payer || {}, { requireAddress });
+    const requireBirthDate = (quote.lines || []).some(
+      (line) => line.id === "musica-neuroconexao" || line.kind === "neuro"
+    );
+    const payer = validatePayer(req.body?.payer || {}, { requireAddress, requireBirthDate });
     const orderId = await allocateOrderId();
     const shop = siteUrl(req);
     const back = `${shop}/index.html`;

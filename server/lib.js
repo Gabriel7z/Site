@@ -370,13 +370,14 @@ export function isValidWebhookSignature({
   return true;
 }
 
-export function validatePayer(payer, { requireAddress = true } = {}) {
+export function validatePayer(payer, { requireAddress = true, requireBirthDate = false } = {}) {
   const name = String(payer?.name || "").trim().slice(0, 80);
   const email = String(payer?.email || "")
     .trim()
     .toLowerCase()
     .slice(0, 120);
   const phone = brazilianMobileDigits(payer?.phone);
+  const birthDate = String(payer?.birthDate || "").trim().slice(0, 10);
   const cep = onlyDigits(payer?.cep).slice(0, 8);
   const street = String(payer?.street || "").trim().slice(0, 120);
   const number = String(payer?.number || "").trim().slice(0, 16);
@@ -397,6 +398,15 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
   const phoneConfirmRaw = String(payer?.phoneConfirm || "").trim();
   const phoneConfirm = brazilianMobileDigits(payer?.phoneConfirm);
   if (phoneConfirmRaw && phoneConfirm !== phone) errors.push("phoneConfirm");
+  if (requireBirthDate) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) errors.push("birthDate");
+    else {
+      const d = new Date(`${birthDate}T12:00:00`);
+      const today = new Date();
+      const year = Number(birthDate.slice(0, 4));
+      if (Number.isNaN(d.getTime()) || d > today || year < 1900) errors.push("birthDate");
+    }
+  }
 
   if (requireAddress) {
     if (!isCep(cep)) errors.push("cep");
@@ -418,6 +428,7 @@ export function validatePayer(payer, { requireAddress = true } = {}) {
     name,
     email,
     phone,
+    birthDate: requireBirthDate ? birthDate : "",
     cep,
     street,
     number,
@@ -494,6 +505,7 @@ export function fulfillmentSnapshot({ orderId, quote, payer, status = "pending",
       name: payer?.name || "",
       phone: payer?.phone || "",
       email: payer?.email || "",
+      birthDate: payer?.birthDate || "",
     },
     shipped: false,
     shippedAt: null,
@@ -654,6 +666,7 @@ export function adminOrderView(order) {
     createdAt: order.createdAt,
     phone: order.customer?.phone || "",
     email: order.customer?.email || "",
+    birthDate: order.customer?.birthDate || "",
     paymentId: order.paymentId || "",
     hasEmail: Boolean(order.customer?.email),
     subtotal: order.subtotal,

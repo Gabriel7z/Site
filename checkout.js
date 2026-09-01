@@ -170,6 +170,7 @@
       emailConfirm: get("pay-email-confirm"),
       phone: get("pay-phone"),
       phoneConfirm: get("pay-phone-confirm"),
+      birthDate: get("pay-birth"),
       cep: get("pay-cep"),
       street: get("pay-street"),
       number: get("pay-number"),
@@ -180,9 +181,23 @@
     };
   }
 
+  function hasNeuroItem() {
+    return quote().items.some((item) => item.id === "musica-neuroconexao" || item.kind === "neuro");
+  }
+
   function needsAddress() {
     const { hasPhysical, shippingMethod } = quote();
     return hasPhysical && shippingMethod === "delivery";
+  }
+
+  function isBirthDate(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return false;
+    const d = new Date(`${value}T12:00:00`);
+    if (Number.isNaN(d.getTime())) return false;
+    const today = new Date();
+    if (d > today) return false;
+    const year = Number(value.slice(0, 4));
+    return year >= 1900 && year <= today.getFullYear();
   }
 
   function validateData(data) {
@@ -207,6 +222,18 @@
       setError("pay-phone-confirm", t("errPhoneConfirm"));
       ok = false;
     } else setError("pay-phone-confirm");
+
+    const neuroFields = document.getElementById("checkout-neuro-fields");
+    const needBirth = hasNeuroItem();
+    if (neuroFields) neuroFields.hidden = !needBirth;
+    if (needBirth) {
+      if (!isBirthDate(data.birthDate)) {
+        setError("pay-birth", t("errBirth"));
+        ok = false;
+      } else setError("pay-birth");
+    } else {
+      setError("pay-birth");
+    }
 
     if (!needsAddress()) {
       ["pay-cep", "pay-street", "pay-number", "pay-neighborhood", "pay-city", "pay-state"].forEach((id) =>
@@ -289,9 +316,20 @@
     const methods = $("#ship-methods");
     const address = $("#checkout-address");
     const digitalNote = $("#checkout-digital-note");
+    const neuroFields = $("#checkout-neuro-fields");
+    const hasNeuro = (q.items || []).some(
+      (item) => item.id === "musica-neuroconexao" || item.kind === "neuro"
+    );
     if (methods) methods.hidden = !q.hasPhysical;
     if (address) address.hidden = !q.hasPhysical || q.shippingMethod !== "delivery";
-    if (digitalNote) digitalNote.hidden = q.hasPhysical;
+    if (neuroFields) neuroFields.hidden = !hasNeuro;
+    const birth = $("#pay-birth");
+    if (birth) birth.required = hasNeuro;
+    if (digitalNote) {
+      digitalNote.hidden = q.hasPhysical && !hasNeuro;
+      if (hasNeuro && !q.hasPhysical) digitalNote.textContent = t("checkoutNeuroHint");
+      else if (!q.hasPhysical) digitalNote.textContent = t("checkoutDigitalNote");
+    }
   }
 
   function setStep(step) {
@@ -384,6 +422,7 @@
       emailConfirm: data.emailConfirm,
       phone: data.phone,
       phoneConfirm: data.phoneConfirm,
+      birthDate: data.birthDate,
       cep: data.cep,
       street: data.street,
       number: data.number,

@@ -1104,69 +1104,69 @@ const PRODUCTS = [
     }
   },
   {
-    "id": "mapa-holografico",
-    "name": "Mapa Holográfico",
+    "id": "campo-morfogenetico",
+    "name": "Análise do Campo Morfogenético",
     "category": "frequencial",
     "volume": "avaliação",
     "price": 149.99,
     "image": "assets/img/mapa-holografico.jpg",
     "audio": null,
-    "kind": "mapa",
-    "tagline": "Leitura vibracional e bioenergética",
-    "description": "O Mapa Holográfico é uma leitura vibracional e bioenergética para identificar bloqueios e orientar o cuidado nos quatro corpos — físico, emocional, mental e espiritual.",
+    "kind": "morfo",
+    "tagline": "Leitura do campo morfogenético",
+    "description": "A Análise do Campo Morfogenético é uma leitura do campo vivo de informação da pessoa — corpo, emoção, mente e espírito — para revelar padrões e orientar o cuidado no Método CEME.",
     "indications": [
-      "Leitura vibracional e bioenergética",
-      "Ajuda a identificar bloqueios",
+      "Leitura do campo morfogenético",
+      "Ajuda a revelar padrões e memórias",
       "Orienta o cuidado no Método CEME",
       "Atuação nos quatro corpos"
     ],
     "i18n": {
       "pt": {
-        "tagline": "Leitura vibracional e bioenergética",
-        "description": "O Mapa Holográfico é uma leitura vibracional e bioenergética para identificar bloqueios e orientar o cuidado nos quatro corpos — físico, emocional, mental e espiritual.",
+        "tagline": "Leitura do campo morfogenético",
+        "description": "A Análise do Campo Morfogenético é uma leitura do campo vivo de informação da pessoa — corpo, emoção, mente e espírito — para revelar padrões e orientar o cuidado no Método CEME.",
         "indications": [
-          "Leitura vibracional e bioenergética",
-          "Ajuda a identificar bloqueios",
+          "Leitura do campo morfogenético",
+          "Ajuda a revelar padrões e memórias",
           "Orienta o cuidado no Método CEME",
           "Atuação nos quatro corpos"
         ]
       },
       "en": {
-        "tagline": "Vibrational and bioenergetic reading",
-        "description": "The Holographic Map is a vibrational and bioenergetic reading to identify blocks and guide care across the four bodies — physical, emotional, mental and spiritual.",
+        "tagline": "Morphogenetic field reading",
+        "description": "The Morphogenetic Field Analysis is a reading of the person's living field of information — body, emotion, mind and spirit — to reveal patterns and guide care in the CEME Method.",
         "indications": [
-          "Vibrational and bioenergetic reading",
-          "Helps identify blocks",
+          "Morphogenetic field reading",
+          "Helps reveal patterns and memories",
           "Guides care within the CEME Method",
           "Works across the four bodies"
         ]
       },
       "de": {
-        "tagline": "Vibrationale und bioenergetische Lesung",
-        "description": "Die holografische Karte ist eine vibrationale und bioenergetische Lesung zur Erkennung von Blockaden und zur Orientierung der Pflege in den vier Körpern — physisch, emotional, mental und spirituell.",
+        "tagline": "Lesung des morphogenetischen Feldes",
+        "description": "Die Analyse des morphogenetischen Feldes liest das lebendige Informationsfeld der Person — Körper, Emotion, Geist und Seele — um Muster zu erkennen und die Pflege in der CEME-Methode zu orientieren.",
         "indications": [
-          "Vibrationale und bioenergetische Lesung",
-          "Hilft, Blockaden zu erkennen",
+          "Lesung des morphogenetischen Feldes",
+          "Hilft, Muster und Erinnerungen zu erkennen",
           "Orientiert die Pflege in der CEME-Methode",
           "Wirkt auf die vier Körper"
         ]
       },
       "es": {
-        "tagline": "Lectura vibracional y bioenergética",
-        "description": "El Mapa Holográfico es una lectura vibracional y bioenergética para identificar bloqueos y orientar el cuidado en los cuatro cuerpos — físico, emocional, mental y espiritual.",
+        "tagline": "Lectura del campo morfogenético",
+        "description": "El Análisis del Campo Morfogenético es una lectura del campo vivo de información de la persona — cuerpo, emoción, mente y espíritu — para revelar patrones y orientar el cuidado en el Método CEME.",
         "indications": [
-          "Lectura vibracional y bioenergética",
-          "Ayuda a identificar bloqueos",
+          "Lectura del campo morfogenético",
+          "Ayuda a revelar patrones y memorias",
           "Orienta el cuidado en el Método CEME",
           "Actúa en los cuatro cuerpos"
         ]
       },
       "fr": {
-        "tagline": "Lecture vibrationnelle et bioénergétique",
-        "description": "La Carte holographique est une lecture vibrationnelle et bioénergétique pour identifier les blocages et orienter le soin des quatre corps — physique, émotionnel, mental et spirituel.",
+        "tagline": "Lecture du champ morphogénétique",
+        "description": "L’Analyse du Champ Morphogénétique est une lecture du champ vivant d’information de la personne — corps, émotion, mental et esprit — pour révéler des schémas et orienter le soin dans la Méthode CEME.",
         "indications": [
-          "Lecture vibrationnelle et bioénergétique",
-          "Aide à identifier les blocages",
+          "Lecture du champ morphogénétique",
+          "Aide à révéler schémas et mémoires",
           "Oriente le soin dans la Méthode CEME",
           "Agit sur les quatre corps"
         ]
@@ -1178,7 +1178,7 @@ const PRODUCTS = [
     "name": "Déclic — Liberte sua Expressão",
     "category": "frequencial",
     "volume": "digital",
-    "price": 222,
+    "price": 64,
     "image": "assets/img/declic-liberte-sua-expressao.jpg",
     "audio": null,
     "kind": "musica",
@@ -1188,7 +1188,7 @@ const PRODUCTS = [
       "8 faixas no mesmo álbum",
       "Prévia curta na loja",
       "Download após o pagamento",
-      "Sem Hotmart e sem faixa avulsa"
+      "Sem faixa avulsa"
     ],
     "i18n": {
       "pt": {
@@ -1198,7 +1198,7 @@ const PRODUCTS = [
           "8 faixas no mesmo álbum",
           "Prévia curta na loja",
           "Download após o pagamento",
-          "Sem Hotmart e sem faixa avulsa"
+          "Sem faixa avulsa"
         ]
       },
       "en": {
@@ -1208,7 +1208,7 @@ const PRODUCTS = [
           "8 tracks in one album",
           "Short preview in the shop",
           "Download after payment",
-          "No Hotmart and no single-track sale"
+          "No single-track sale"
         ]
       },
       "de": {
@@ -1218,7 +1218,7 @@ const PRODUCTS = [
           "8 Titel in einem Album",
           "Kurze Vorschau im Shop",
           "Download nach der Zahlung",
-          "Ohne Hotmart und ohne Einzelverkauf"
+          "Ohne Einzelverkauf"
         ]
       },
       "es": {
@@ -1228,7 +1228,7 @@ const PRODUCTS = [
           "8 pistas en el mismo álbum",
           "Previa corta en la tienda",
           "Descarga tras el pago",
-          "Sin Hotmart y sin pista suelta"
+          "Sin pista suelta"
         ]
       },
       "fr": {
@@ -1238,11 +1238,82 @@ const PRODUCTS = [
           "8 titres dans le même album",
           "Extrait court dans la boutique",
           "Téléchargement après le paiement",
-          "Sans Hotmart et sans titre à l’unité"
+          "Sans titre à l’unité"
+        ]
+      }
+    }
+  },
+  {
+    "id": "musica-neuroconexao",
+    "name": "Neuro-conexão",
+    "category": "frequencial",
+    "volume": "personalizada",
+    "price": 222,
+    "image": "assets/img/musicas-neuroconectivas.jpg",
+    "audio": null,
+    "kind": "neuro",
+    "tagline": "Música personalizada com base na avaliação",
+    "description": "Neuro-conexão é uma música personalizada criada a partir da sua avaliação no Método CEME — uma frequência sonora sob medida para o seu processo.",
+    "indications": [
+      "Música personalizada",
+      "Com base na avaliação CEME",
+      "Entrega digital",
+      "Complemento ao Método CEME"
+    ],
+    "i18n": {
+      "pt": {
+        "tagline": "Música personalizada com base na avaliação",
+        "description": "Neuro-conexão é uma música personalizada criada a partir da sua avaliação no Método CEME — uma frequência sonora sob medida para o seu processo.",
+        "indications": [
+          "Música personalizada",
+          "Com base na avaliação CEME",
+          "Entrega digital",
+          "Complemento ao Método CEME"
+        ]
+      },
+      "en": {
+        "tagline": "Personalized music based on your assessment",
+        "description": "Neuro-conexão is a personalized piece created from your CEME Method assessment — a sound frequency tailored to your process.",
+        "indications": [
+          "Personalized music",
+          "Based on the CEME assessment",
+          "Digital delivery",
+          "Complements the CEME Method"
+        ]
+      },
+      "de": {
+        "tagline": "Personalisierte Musik auf Basis der Bewertung",
+        "description": "Neuro-conexão ist ein personalisiertes Stück auf Basis Ihrer CEME-Bewertung — eine Klangfrequenz für Ihren Prozess.",
+        "indications": [
+          "Personalisierte Musik",
+          "Auf Basis der CEME-Bewertung",
+          "Digitale Lieferung",
+          "Ergänzt die CEME-Methode"
+        ]
+      },
+      "es": {
+        "tagline": "Música personalizada según la evaluación",
+        "description": "Neuro-conexión es una música personalizada creada a partir de su evaluación en el Método CEME — una frecuencia sonora a medida para su proceso.",
+        "indications": [
+          "Música personalizada",
+          "Según la evaluación CEME",
+          "Entrega digital",
+          "Complemento al Método CEME"
+        ]
+      },
+      "fr": {
+        "tagline": "Musique personnalisée selon l’évaluation",
+        "description": "Neuro-conexão est une musique personnalisée créée à partir de votre évaluation dans la Méthode CEME — une fréquence sonore sur mesure pour votre processus.",
+        "indications": [
+          "Musique personnalisée",
+          "Selon l’évaluation CEME",
+          "Livraison numérique",
+          "Complément à la Méthode CEME"
         ]
       }
     }
   }
+
 ];
 
 if (typeof module !== "undefined") {
